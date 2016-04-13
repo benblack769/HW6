@@ -23,8 +23,8 @@ void run_server(int tcp_port, int udp_port, int maxmem);
 int main(int argc, char ** argv){
     //take mainly off the get_opt wikipedia page
     int c;
-    int tcp_portnum = 9201;
-    int udp_portnum = 9202;
+    int tcp_portnum = 9211;
+    int udp_portnum = 9212;
     int maxmem = 1 << 16;
     while ( (c = getopt(argc, argv, "m:p:u:")) != -1) {
         switch (c) {
@@ -299,7 +299,7 @@ void run_server(int tcp_port,int udp_port,int maxmem){
     udp_server ucon(my_io_service,udp_port,serv_cache);
 
     tcon.start_accept();
-    //ucon.start_receive();
+    ucon.start_receive();
 
     my_io_service.run();
 }
