@@ -4,9 +4,9 @@ import time
 cli_exec_name = "./client_time"
 
 def poll_processes(opened_procs):
-    procs_running = len(opened_procs)
     while procs_running:
         time.sleep(0.1)
+        procs_running = len(opened_procs)
         for op_obj in opened_procs:
             if op_obj.poll():
                 procs_running -= 1

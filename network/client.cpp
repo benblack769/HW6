@@ -140,7 +140,9 @@ void unpack_json(string json_str, string & key, string & value){
     key = j["key"];
     value = j["value"];
 }
-
+cache_t get_cache_connection(){
+    return new cache_obj();
+}
 cache_t create_cache(uint64_t maxmem,hash_func ){
     cache_t outc = new cache_obj();
     outc->send_message_tcp(false,"POST","memsize",to_string(maxmem));
@@ -185,5 +187,8 @@ uint64_t cache_space_used(cache_t cache){
 }
 void destroy_cache(cache_t cache){
     cache->send_message_tcp(false,"POST","shutdown");
+    delete cache;
+}
+void end_connection(cache_t cache){
     delete cache;
 }

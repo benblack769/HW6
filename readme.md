@@ -6,7 +6,7 @@ The system includes the operating system, the network between the server and the
 
 ### 2. Services and Outcomes
 
-The services those described in cache.h. Each call to any function can take any amount of time, including unbounded time. cache_get can either return the value associated with the key or NULL.
+The services those described in cache.h. Each call to any function can take any amount of time, including unbounded time. cache_get can either return the value associated with the key or NULL. Since it passes the tests, I will assume that if it returns non-null, it returns the correct answer.
 
 ### 3. Metrics
 
@@ -42,10 +42,14 @@ Network protocol
 
 ### 7. Workload
 
-Distribution of requests (roughly approximating distribution found with ETC in the memcache paper):
-30% delete
-3% set/update
-67% get
+Distribution of requests | Explanation
+--- | ---
+30% set deleted value | ???
+30% delete value | ???
+3% update old | ???
+67% get item | Around what memcache did
+
+These are a rough approximation of the distribution found with ETC in the memcache paper. It is not perfect since it is not clear how new values are brought into the cache from the database. Presumably, that happens when get is called, so.
 
 Distribution of key size:
 Normal distribution with mean = 30, standard deviation = 8 as from paper
@@ -56,4 +60,5 @@ Uniform distribution until 500 bytes, that will account for most of the requests
 
 For large sizes, there seems to be a uniform distribution of work per size. So
 
-### 8.
+
+### 8. Experimental Design
