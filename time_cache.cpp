@@ -6,8 +6,14 @@
 #include <string>
 #include <random>
 #include <ctime>
+#include <thread>
+#include <iostream>
 
 using namespace std;
+
+constexpr size_t MAX_NUM_THREADS = 10000;
+constexpr size_t MILS_PER_NANO = 1000000;
+
 uint64_t get_time_ns();
 
 constexpr uint64_t ns_in_s = 1000000000;
@@ -104,15 +110,33 @@ uint64_t rand_action_time(cache_t cache){
 		return get_action(cache);
 	}
 }
-
+uint64_t run_actions(cache_t cache,uint64_t num_actions){
+	uint64_t tot_time = 0;
+	for(int i = 0; i < num_actions; i++){
+		tot_time += rand_action_time(cache);
+	}
+	return tot_time / num_actions;
+}
+uint64_t arr[MAX_NUM_THREADS] = {0};
+void run_requests(cache_t cache,uint64_t t_num){
+	arr[t_num] = run_actions(cache,1000);
+}
+uint64_t time_threads(cache_t cache,uint64_t num_threads){
+	thread ts[MAX_NUM_THREADS];
+	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
+		ts[t_n] = thread(run_requests,cache,t_n);
+	}
+	uint64_t sum_time = 0;
+	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
+		ts[t_n].join();
+		sum_time += arr[t_n];
+	}
+	return sum_time / num_threads;
+}
 int main(int argc,char ** argv){
-	bool is_master = false;
 	if(argc < 2){
         printf("needs one argument\n");
         exit(1);
-	}
-	else if (argc == 3){
-		is_master = true;
 	}
 	char * num_str = argv[1];
     uint64_t num_clients = strtoumax(num_str,NULL,10);
@@ -122,21 +146,19 @@ int main(int argc,char ** argv){
 	init_values(this_num_items);
 	init_keys(this_num_items);
 
-	cache_t cache = is_master ? create_cache(maxmem,NULL) : get_cache_connection();
+	cache_t cache = create_cache(maxmem,NULL);
 
-	uint64_t tot_time = 0;
-	for(int i = 0; i < 1000; i++){
-		tot_time += rand_action_time(cache);
+	for(uint64_t n_t = 0; n_t < MAX_NUM_THREADS; n_t++){
+		uint64_t av_time = time_threads(cache,n_t);
+		cout << av_time << endl;
+		if(av_time > 1000000){
+			break;
+		}
 	}
-    printf("time taken = %f\n",tot_time / double(ns_in_s));
 
-	if(is_master){
-    	destroy_cache(cache);
-	}
-	else{
-		end_connection(cache);
-	}
-    return 0;
+	destroy_cache(cache);
+
+	return 0;
 }
 
 uint64_t get_time_ns(){
