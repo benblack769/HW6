@@ -20,8 +20,9 @@ uint64_t get_time_ns();
 constexpr uint64_t ns_in_s = 1000000000;
 constexpr uint64_t maxmem = 4000000000;
 constexpr uint64_t tot_num_items = 10000;
-array<string,tot_num_items> values;
-array<string,tot_num_items> keys;
+constexpr uint64_t num_actions = 1000;
+string values[tot_num_items];
+string keys[tot_num_items];
 std::default_random_engine generator(get_time_ns());
 
 uint64_t rand_key_size(){
@@ -111,28 +112,29 @@ uint64_t rand_action_time(cache_t cache){
 		return get_action(cache);
 	}
 }
-uint64_t run_actions(uint64_t num_actions){
-	cache_t cache = get_cache_connection();
-	uint64_t tot_time = 0;
+double run_actions(cache_t cache,uint64_t num_actions){
+	double tot_time = 0;
 	for(int i = 0; i < num_actions; i++){
 		tot_time += rand_action_time(cache);
 	}
-	end_connection(cache);
 	return tot_time / num_actions;
 }
-uint64_t arr[MAX_NUM_THREADS] = {0};
-void run_requests(uint64_t t_num){
-	arr[t_num] = run_actions(1000);
+double arr[MAX_NUM_THREADS];
+void run_requests(cache_t cache,uint64_t t_num){
+	arr[t_num] = run_actions(cache,num_actions);
 }
-uint64_t time_threads(uint64_t num_threads){
+double time_threads(uint64_t num_threads){
 	thread ts[MAX_NUM_THREADS];
+	cache_t caches[MAX_NUM_THREADS];
 	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
-		ts[t_n] = thread(run_requests,t_n);
+		caches[t_n] = get_cache_connection();
+		ts[t_n] = thread(run_requests,caches[t_n],t_n);
 	}
 	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
 		ts[t_n].join();
+		end_connection(caches[t_n]);
 	}
-	uint64_t sum_time = 0;
+	double sum_time = 0;
 	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
 		sum_time += arr[t_n];
 	}
@@ -146,8 +148,8 @@ int main(int argc,char ** argv){
 
 	for(uint64_t n_t = 1; n_t < MAX_NUM_THREADS; n_t++){
 		uint64_t av_time = time_threads(n_t);
-		cout << av_time << endl;
-		if(av_time > 1000000){
+		cout << n_t << "\t\t" << av_time << endl;
+		if(av_time > MILS_PER_NANO){
 			break;
 		}
 	}
