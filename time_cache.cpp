@@ -16,7 +16,7 @@ constexpr size_t MAX_NUM_THREADS = 100;
 constexpr size_t MILS_PER_NANO = 1000000;
 
 constexpr uint64_t tcp_start = 9100;
-constexpr uint64_t udp_start = tcp_start+MAX_NUM_THREADS;
+constexpr uint64_t udp_start = 9200;
 
 
 uint64_t get_time_ns();
@@ -24,7 +24,7 @@ uint64_t get_time_ns();
 constexpr uint64_t ns_in_s = 1000000000;
 constexpr uint64_t maxmem = 4000000000;
 constexpr uint64_t tot_num_items = 10000;
-constexpr uint64_t num_actions = 1000;
+constexpr uint64_t num_actions = 5;
 string values[tot_num_items];
 string keys[tot_num_items];
 std::default_random_engine generator(get_time_ns());

@@ -13,10 +13,6 @@ using json = nlohmann::json;
 
 using asio::ip::tcp;
 
-asio::io_service my_io_service;
-ip::tcp::resolver tcp_resolver(my_io_service);
-ip::udp::resolver udp_resolver(my_io_service);
-
 string tcp_port = "9100";
 string udp_port = "9200";
 string serv_name = "localhost";
@@ -35,8 +31,9 @@ public:
         asio::error_code error;
         size_t length = socket.read_some(asio::buffer(buffer), error);
 
-        if (error != asio::error::eof && error)
-            throw asio::system_error(error); // Some other error.
+        if (error != asio::error::eof && error){
+            throw asio::system_error(error);
+        }
 
         if(length == bufsize){
             //todo: output some sort of error
@@ -81,7 +78,6 @@ public:
 
     udp_connection(asio::io_service & service,udp::endpoint & reciver):
         socket(service){
-            cout << tcp_port << endl << udp_port << endl;
 
         socket.connect(reciver);
         set_block_timeout();
@@ -119,7 +115,14 @@ public:
 struct cache_obj{
     ip::tcp::resolver::iterator resit;
     udp::endpoint reciver;
-    cache_obj(){
+    asio::io_service my_io_service;
+    ip::tcp::resolver tcp_resolver;
+    ip::udp::resolver udp_resolver;
+    cache_obj():
+        my_io_service(),
+        tcp_resolver(my_io_service),
+        udp_resolver(my_io_service)
+    {
         resit = tcp_resolver.resolve({serv_name, tcp_port});
         reciver = *udp_resolver.resolve({serv_name, udp_port});
     }
@@ -160,7 +163,7 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
     *val_size = 0;
 
     string keystr((char*)key);
-    string retval = cache->send_message_udp(true,"GET",keystr);
+    string retval = cache->send_message_tcp(true,"GET",keystr);
 
     if(retval == errstr){
         return nullptr;

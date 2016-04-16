@@ -23,10 +23,10 @@ void run_server(int tcp_port,int num_tcp_ports, int udp_port,int num_udp_ports, 
 int main(int argc, char ** argv){
     //take mainly off the get_opt wikipedia page
     int c;
-    int tcp_portnum = 9211;
-    int udp_portnum = 9212;
-    int num_tcps = 1;
-    int num_udps = 1;
+    int tcp_portnum = 9100;
+    int udp_portnum = 9200;
+    int num_tcps = 100;
+    int num_udps = 100;
     int maxmem = 1 << 16;
     while ( (c = getopt(argc, argv, "m:p:u:t:s:")) != -1) {
         switch (c) {
@@ -173,7 +173,6 @@ public:
   static pointer create(asio::io_service& io_service,safe_cache * cache){
     return pointer(new tcp_con(io_service,cache));
   }
-
   tcp::socket& socket(){
     return socket_;
   }
@@ -201,6 +200,9 @@ public:
 
   void handle_read(const asio::error_code& error,
                    size_t bytes_written){
+        if(error){
+            throw asio::system_error(error);
+        }
       string s = to_string(b);
       strip(s);
       act_on_message(*this, s);
@@ -241,6 +243,9 @@ private:
     if (!error)
     {
       new_connection->start();
+    }
+    else{
+        throw asio::system_error(error);
     }
 
     start_accept();
@@ -288,6 +293,9 @@ public:
             return_error();
         }
     }
+    else{
+        throw asio::system_error(error);
+    }
     start_receive();
   }
   void handle_send(const asio::error_code& ,size_t )
@@ -304,7 +312,9 @@ void run_server(int tcp_port_start,int num_tcp_ports, int udp_port_start,int num
     safe_cache serv_cache(create_cache(maxmem,nullptr));
 
     vector<tcp_server> tcps;
+    tcps.reserve(num_tcp_ports);
     vector<udp_server> udps;
+    udps.reserve(num_tcp_ports);
     for(int i = 0; i < num_tcp_ports;i++){
         tcps.emplace_back(my_io_service,tcp_port_start+i,serv_cache);
         tcps.back().start_accept();
