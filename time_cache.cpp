@@ -78,7 +78,8 @@ uint64_t timeit(timed_fn_ty timed_fn){
 	return get_time_ns() - start;
 }
 uint64_t get_action(cache_t cache){
-	string & item = keys[rand_get_item()];
+	uint64_t get_item = rand_get_item();
+	string & item = keys[get_item];
 	return timeit([&](){
 		uint32_t null_val = 0;
 		cache_get(cache,to_key(item),&null_val);
@@ -102,10 +103,10 @@ uint64_t rand_action_time(cache_t cache){
 	static uniform_real_distribution<double> occurs_dis(0,120);//lower case letters
 	double distri_val = occurs_dis(generator);
 
-	if(distri_val < 30){
+	if(distri_val < 0){
 		return delete_action(cache);
 	}
-	else if(distri_val < 50){
+	else if(distri_val < 5){
 		return set_action(cache);
 	}
 	else{

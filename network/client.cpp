@@ -169,6 +169,8 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
         unpack_json(retval,retkeystr,valstr);
 
         if(keystr != retkeystr){
+            //this is a network logic error
+            cout << keystr <<  endl << retkeystr << endl << endl;
             return nullptr;
         }
 
