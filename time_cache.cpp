@@ -12,8 +12,12 @@
 
 using namespace std;
 
-constexpr size_t MAX_NUM_THREADS = 1000;
+constexpr size_t MAX_NUM_THREADS = 100;
 constexpr size_t MILS_PER_NANO = 1000000;
+
+constexpr uint64_t tcp_start = 9100;
+constexpr uint64_t udp_start = tcp_start+MAX_NUM_THREADS;
+
 
 uint64_t get_time_ns();
 
@@ -128,6 +132,8 @@ double time_threads(uint64_t num_threads){
 	thread ts[MAX_NUM_THREADS];
 	cache_t caches[MAX_NUM_THREADS];
 	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
+		tcp_port = to_string(tcp_start+t_n);
+		udp_port = to_string(udp_start+t_n);
 		caches[t_n] = get_cache_connection();
 		ts[t_n] = thread(run_requests,caches[t_n],t_n);
 	}
@@ -152,6 +158,9 @@ int main(int argc,char ** argv){
 		cout << n_t << "\t\t" << av_time << endl;
 		if(av_time > MILS_PER_NANO){
 			break;
+		}
+		if(n_t == MAX_NUM_THREADS-1){
+			cout << "reached max num of threads before millisecond time" << endl;
 		}
 	}
 

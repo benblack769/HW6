@@ -1,4 +1,5 @@
 #include <inttypes.h>
+#include <string>
 
 struct cache_obj;
 typedef struct cache_obj *cache_t;
@@ -6,6 +7,8 @@ typedef struct cache_obj *cache_t;
 typedef const uint8_t *key_type;
 typedef const void *val_type;
 
+extern std::string tcp_port;
+extern std::string udp_port;
 // For a given key string, return a pseudo-random integer:
 typedef uint64_t (*hash_func)(key_type key);
 extern "C"{

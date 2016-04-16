@@ -17,8 +17,8 @@ asio::io_service my_io_service;
 ip::tcp::resolver tcp_resolver(my_io_service);
 ip::udp::resolver udp_resolver(my_io_service);
 
-string tcp_port = "9211";
-string udp_port = "9212";
+string tcp_port = "9100";
+string udp_port = "9200";
 string serv_name = "localhost";
 
 class tcp_connection{
@@ -81,6 +81,7 @@ public:
 
     udp_connection(asio::io_service & service,udp::endpoint & reciver):
         socket(service){
+            cout << tcp_port << endl << udp_port << endl;
 
         socket.connect(reciver);
         set_block_timeout();
