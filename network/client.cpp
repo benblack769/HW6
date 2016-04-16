@@ -40,7 +40,7 @@ public:
 
         if(length == bufsize){
             //todo: output some sort of error
-            return "";
+            return errstr;
         }
 
         return string(buffer.begin(),buffer.begin()+length);

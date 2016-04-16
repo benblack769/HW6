@@ -6,18 +6,27 @@
 #include <string>
 #include <random>
 #include <ctime>
+#include <thread>
+#include <iostream>
+#include <array>
 
 using namespace std;
+
+constexpr size_t MAX_NUM_THREADS = 1000;
+constexpr size_t MILS_PER_NANO = 1000000;
+
 uint64_t get_time_ns();
 
 constexpr uint64_t ns_in_s = 1000000000;
 constexpr uint64_t maxmem = 4000000000;
 constexpr uint64_t tot_num_items = 10000;
-vector<string> values;
-vector<string> keys;
+constexpr uint64_t num_actions = 1000;
+string values[tot_num_items];
+string keys[tot_num_items];
 std::default_random_engine generator(get_time_ns());
 
 uint64_t rand_key_size(){
+	//the chance any two keys are the same is extrememly small, so ignore it
 	static normal_distribution<double> norm_dsit(30,8);
 	return max(uint64_t(2),uint64_t(norm_dsit(generator)));
 }
@@ -32,17 +41,16 @@ char rand_char(){
 }
 uint64_t rand_get_item(){
 	//todo: change to be more representative
-	static uniform_int_distribution<uint64_t> val_dist(0,values.size());
+	static uniform_int_distribution<uint64_t> val_dist(0,tot_num_items-1);
 	return val_dist(generator);
 }
 uint64_t rand_uniform_item(){
-	static uniform_int_distribution<uint64_t> unif_dist(0,values.size());
+	static uniform_int_distribution<uint64_t> unif_dist(0,tot_num_items-1);
 	return unif_dist(generator);
 }
 string rand_str(uint64_t size){
-	string str;
-	str.resize(size);
-	for(uint64_t i = 0; i < size; i++){
+	string str(size,' ');
+	for(uint64_t i = 0; i < size-1; i++){
 		str[i] = rand_char();
 	}
 	return str;
@@ -55,12 +63,12 @@ val_type to_val(string & val){
 }
 void init_values(uint64_t num_items){
 	for(uint64_t i = 0; i < num_items; i++){
-		values.push_back(rand_str(rand_val_size()));
+		values[i] = rand_str(rand_val_size());
 	}
 }
 void init_keys(uint64_t num_items){
 	for(uint64_t i = 0; i < num_items; i++){
-		keys.push_back(rand_str(rand_key_size()));
+		keys[i] = rand_str(rand_key_size());
 	}
 }
 template<typename timed_fn_ty>
@@ -104,39 +112,51 @@ uint64_t rand_action_time(cache_t cache){
 		return get_action(cache);
 	}
 }
-
-int main(int argc,char ** argv){
-	bool is_master = false;
-	if(argc < 2){
-        printf("needs one argument\n");
-        exit(1);
-	}
-	else if (argc == 3){
-		is_master = true;
-	}
-	char * num_str = argv[1];
-    uint64_t num_clients = strtoumax(num_str,NULL,10);
-
-	uint64_t this_num_items = tot_num_items / num_clients;
-
-	init_values(this_num_items);
-	init_keys(this_num_items);
-
-	cache_t cache = is_master ? create_cache(maxmem,NULL) : get_cache_connection();
-
-	uint64_t tot_time = 0;
-	for(int i = 0; i < 1000; i++){
+double run_actions(cache_t cache,uint64_t num_actions){
+	double tot_time = 0;
+	for(int i = 0; i < num_actions; i++){
 		tot_time += rand_action_time(cache);
 	}
-    printf("time taken = %f\n",tot_time / double(ns_in_s));
+	return tot_time / num_actions;
+}
+double arr[MAX_NUM_THREADS];
+void run_requests(cache_t cache,uint64_t t_num){
+	arr[t_num] = run_actions(cache,num_actions);
+}
+double time_threads(uint64_t num_threads){
+	thread ts[MAX_NUM_THREADS];
+	cache_t caches[MAX_NUM_THREADS];
+	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
+		caches[t_n] = get_cache_connection();
+		ts[t_n] = thread(run_requests,caches[t_n],t_n);
+	}
+	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
+		ts[t_n].join();
+		end_connection(caches[t_n]);
+	}
+	double sum_time = 0;
+	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
+		sum_time += arr[t_n];
+	}
+	return sum_time / num_threads;
+}
+int main(int argc,char ** argv){
+	cache_t cache = create_cache(maxmem,NULL);
 
-	if(is_master){
-    	destroy_cache(cache);
+	init_values(tot_num_items);
+	init_keys(tot_num_items);
+
+	for(uint64_t n_t = 1; n_t < MAX_NUM_THREADS; n_t++){
+		uint64_t av_time = time_threads(n_t);
+		cout << n_t << "\t\t" << av_time << endl;
+		if(av_time > MILS_PER_NANO){
+			break;
+		}
 	}
-	else{
-		end_connection(cache);
-	}
-    return 0;
+
+	destroy_cache(cache);
+
+	return 0;
 }
 
 uint64_t get_time_ns(){
