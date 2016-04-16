@@ -163,7 +163,7 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
     *val_size = 0;
 
     string keystr((char*)key);
-    string retval = cache->send_message_tcp(true,"GET",keystr);
+    string retval = cache->send_message_udp(true,"GET",keystr);
 
     if(retval == errstr){
         return nullptr;

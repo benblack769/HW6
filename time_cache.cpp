@@ -15,8 +15,8 @@ using namespace std;
 constexpr size_t MAX_NUM_THREADS = 100;
 constexpr size_t MILS_PER_NANO = 1000000;
 
-constexpr uint64_t tcp_start = 9100;
-constexpr uint64_t udp_start = 9200;
+constexpr uint64_t tcp_start = 9400;
+constexpr uint64_t udp_start = 9500;
 
 
 uint64_t get_time_ns();
@@ -24,7 +24,7 @@ uint64_t get_time_ns();
 constexpr uint64_t ns_in_s = 1000000000;
 constexpr uint64_t maxmem = 4000000000;
 constexpr uint64_t tot_num_items = 10000;
-constexpr uint64_t num_actions = 5;
+constexpr uint64_t num_actions = 1000;
 string values[tot_num_items];
 string keys[tot_num_items];
 std::default_random_engine generator(get_time_ns());
@@ -107,10 +107,10 @@ uint64_t rand_action_time(cache_t cache){
 	static uniform_real_distribution<double> occurs_dis(0,120);//lower case letters
 	double distri_val = occurs_dis(generator);
 
-	if(distri_val < 0){
+	if(distri_val < 30){
 		return delete_action(cache);
 	}
-	else if(distri_val < 5){
+	else if(distri_val < 50){
 		return set_action(cache);
 	}
 	else{

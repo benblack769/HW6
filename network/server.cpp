@@ -23,8 +23,8 @@ void run_server(int tcp_port,int num_tcp_ports, int udp_port,int num_udp_ports, 
 int main(int argc, char ** argv){
     //take mainly off the get_opt wikipedia page
     int c;
-    int tcp_portnum = 9100;
-    int udp_portnum = 9200;
+    int tcp_portnum = 9400;
+    int udp_portnum = 9500;
     int num_tcps = 100;
     int num_udps = 100;
     int maxmem = 1 << 16;
