@@ -10,11 +10,11 @@ The services those described in cache.h. Each call to any function can take any 
 
 ### 3. Metrics
 
-Sustained throughput, the maximum offered load (in requests per second) at which the mean response time remains under 1 millisecond.
+Sustained throughput, the maximum number of blocking calls are processed by the cache (in requests per second) at which the mean latency remains about 1 millisecond.
 
 Hit rate, the number of gets which are in the cache.
 
-Latency?
+For, UDP, the package loss rate, the number of gets which are in the cache, but the UDP packet is lost or takes too long. This will not be studied due to time limitations.
 
 ### 4. Parameters
 
@@ -26,6 +26,8 @@ Operating System of server
 Server memory
 Server CPU
 If swapping occurs frequently then server storage type (HDD, SSD etc).
+Server code
+Client code (impacts time from package received to value returned).
 
 #### Workload Parameters
 
@@ -33,23 +35,21 @@ maxmem of the cache on the server.
 number of items in cache (as opposed to their total size like maxmem)
 size of requests
 type of requests (get, set, delete)
-number of requests of each type per second period
+number of requests of each type per second time period
 
 ### 6. Factors to study
 
-Operating system?
-Network protocol
+Network protocol (for gets only)
 
 ### 7. Workload
 
-Distribution of requests | Explanation
---- | ---
-30% set deleted value | ???
-30% delete value | ???
-3% update old | ???
-67% get item | Around what memcache did
+#### Distribution of requests
 
-These are a rough approximation of the distribution found with ETC in the memcache paper. It is not perfect since it is not clear how new values are brought into the cache from the database. Presumably, that happens when get is called, so.
+* 5% set/update value
+* 1% delete value
+* 94% get item
+
+These are a very rough approximation of the distribution found with ETC in the memcache paper, noting that most of the deletes in the paper are not actually in the cache.
 
 #### Distribution of key size
 
@@ -78,7 +78,7 @@ The graph of which looks fairly similar to the data in the memcache paper.
 
 ### 8. Experimental Design
 
-
+Create a large number of threads on a single machine, each independently following the workload pattern. 
 
 
 

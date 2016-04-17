@@ -9,6 +9,7 @@
 #include <thread>
 #include <iostream>
 #include <array>
+#include <algorithm>
 
 using namespace std;
 
@@ -20,63 +21,45 @@ constexpr uint64_t udp_start = 9500;
 
 
 uint64_t get_time_ns();
+discrete_distribution<uint64_t> init_dist();
 
 constexpr uint64_t ns_in_s = 1000000000;
 constexpr uint64_t maxmem = 4000000000;
 constexpr uint64_t tot_num_items = 10000;
 constexpr uint64_t num_actions = 1000;
+
 string values[tot_num_items];
 string keys[tot_num_items];
-std::default_random_engine generator(get_time_ns());
 
-uint64_t rand_key_size(){
+using gen_ty = std::default_random_engine;
+
+uint64_t rand_key_size(gen_ty & generator){
 	normal_distribution<double> norm_dsit(30,8);
 	return max(uint64_t(2),uint64_t(norm_dsit(generator)));
 }
-void normalize(double to_val,vector<double>::iterator valbeg,vector<double>::iterator valend){
-	double sum = 0;
-	foreach(valbeg,valend,[&](double val){
-		sum += val;
-	});
-	foreach(valbeg,valend,[=](double & val){
-		val *= to_val * (1.0/sum);
-	});
-}
-discrete_distribution<uint64_t> init_dist(){
-	const uint64_t fhd = 500;
-	vector<double> vals({0,0});
-	for(uint64_t i = 2; i <= fhd; i++){
-		vals.push_back(1);
-	}
-	for(uint64_t i = fhd+1;i < 50000;i++){
-		vals.push_back(pow(10,-2.341611959e-4 * x));
-	}
-	normalize(0.9,vals.begin(),vals.begin() + fhd+1);
-	normalize(0.1,vals.begin()+fhd+1,vals.end());
-	return discrete_distribution<uint64_t> (vals.begin(),vals.end());
-}
-uint64_t rand_val_size(){
+
+uint64_t rand_val_size(gen_ty & generator){
 	static discrete_distribution<uint64_t> val_dist = init_dist();
 	//todo add large values to distribution
 	return val_dist(generator);
 }
-char rand_char(){
+char rand_char(gen_ty & generator){
 	uniform_int_distribution<char> lower_lettters_dist(96,96+26-1);//lower case letters
 	return lower_lettters_dist(generator);
 }
-uint64_t rand_get_item(){
+uint64_t rand_get_item(gen_ty & generator){
 	//todo: change to be more representative
- 	uniform_int_distribution<uint64_t> val_dist(0,values.size());
+ 	uniform_int_distribution<uint64_t> val_dist(0,tot_num_items-1);
 	return val_dist(generator);
 }
-uint64_t rand_uniform_item(){
-	uniform_int_distribution<uint64_t> unif_dist(0,values.size());
+uint64_t rand_uniform_item(gen_ty & generator){
+	uniform_int_distribution<uint64_t> unif_dist(0,tot_num_items-1);
 	return unif_dist(generator);
 }
-string rand_str(uint64_t size){
+string rand_str(gen_ty & generator,uint64_t size){
 	string str(size,' ');
 	for(uint64_t i = 0; i < size-1; i++){
-		str[i] = rand_char();
+		str[i] = rand_char(generator);
 	}
 	return str;
 }
@@ -86,14 +69,14 @@ key_type to_key(string & val){
 val_type to_val(string & val){
 	return reinterpret_cast<val_type>(val.c_str());
 }
-void init_values(uint64_t num_items){
+void init_values(gen_ty & generator,uint64_t num_items){
 	for(uint64_t i = 0; i < num_items; i++){
-		values[i] = rand_str(rand_val_size());
+		values[i] = rand_str(generator,rand_val_size(generator));
 	}
 }
-void init_keys(uint64_t num_items){
+void init_keys(gen_ty & generator,uint64_t num_items){
 	for(uint64_t i = 0; i < num_items; i++){
-		keys[i] = rand_str(rand_key_size());
+		keys[i] = rand_str(generator,rand_key_size(generator));
 	}
 }
 template<typename timed_fn_ty>
@@ -102,52 +85,53 @@ uint64_t timeit(timed_fn_ty timed_fn){
 	timed_fn();
 	return get_time_ns() - start;
 }
-uint64_t get_action(cache_t cache){
-	uint64_t get_item = rand_get_item();
+uint64_t get_action(gen_ty & generator,cache_t cache){
+	uint64_t get_item = rand_get_item(generator);
 	string & item = keys[get_item];
 	return timeit([&](){
 		uint32_t null_val = 0;
 		cache_get(cache,to_key(item),&null_val);
 	});
 }
-uint64_t delete_action(cache_t cache){
-	string & item = keys[rand_uniform_item()];
+uint64_t delete_action(gen_ty & generator,cache_t cache){
+	string & item = keys[rand_uniform_item(generator)];
 	return timeit([&](){
 		cache_delete(cache,to_key(item));
 	});
 }
-uint64_t set_action(cache_t cache){
-	uint64_t item_num = rand_uniform_item();
+uint64_t set_action(gen_ty & generator,cache_t cache){
+	uint64_t item_num = rand_uniform_item(generator);
 	string & key = keys[item_num];
 	string & value = values[item_num];
 	return timeit([&](){
 		cache_set(cache,to_key(key),to_val(value),value.size()+1);
 	});
 }
-uint64_t rand_action_time(cache_t cache){
-	uniform_real_distribution<double> occurs_dis(0,120);//lower case letters
+uint64_t rand_action_time(gen_ty & generator,cache_t cache){
+	uniform_real_distribution<double> occurs_dis(0,100);//lower case letters
 	double distri_val = occurs_dis(generator);
 
-	if(distri_val < 30){
-		return delete_action(cache);
+	if(distri_val < 1){
+		return delete_action(generator,cache);
 	}
-	else if(distri_val < 50){
-		return set_action(cache);
+	else if(distri_val < 6){
+		return set_action(generator,cache);
 	}
 	else{
-		return get_action(cache);
+		return get_action(generator,cache);
 	}
 }
-double run_actions(cache_t cache,uint64_t num_actions){
+double run_rand_actions(gen_ty & generator,cache_t cache,uint64_t num_actions){
 	double tot_time = 0;
 	for(int i = 0; i < num_actions; i++){
-		tot_time += rand_action_time(cache);
+		tot_time += rand_action_time(generator,cache);
 	}
 	return tot_time / num_actions;
 }
 double arr[MAX_NUM_THREADS];
 void run_requests(cache_t cache,uint64_t t_num){
-	arr[t_num] = run_actions(cache,num_actions);
+	gen_ty generator(t_num);
+	arr[t_num] = run_rand_actions(generator,cache,num_actions);
 }
 double time_threads(uint64_t num_threads){
 	thread ts[MAX_NUM_THREADS];
@@ -171,8 +155,9 @@ double time_threads(uint64_t num_threads){
 int main(int argc,char ** argv){
 	cache_t cache = create_cache(maxmem,NULL);
 
-	init_values(tot_num_items);
-	init_keys(tot_num_items);
+	gen_ty generator(1);
+	init_values(generator,tot_num_items);
+	init_keys(generator,tot_num_items);
 
 	for(uint64_t n_t = 1; n_t < MAX_NUM_THREADS; n_t++){
 		uint64_t av_time = time_threads(n_t);
@@ -194,4 +179,28 @@ uint64_t get_time_ns(){
 	struct timespec t;
 	clock_gettime(0,&t);
  	return 1000000000ULL * t.tv_sec + t.tv_nsec;
+}
+void normalize(double to_val,vector<double>::iterator valbeg,vector<double>::iterator valend){
+	double sum = 0;
+	for_each(valbeg,valend,[&](double val){
+		sum += val;
+	});
+	for_each(valbeg,valend,[=](double & val){
+		val *= to_val * (1.0/sum);
+	});
+}
+discrete_distribution<uint64_t> init_dist(){
+	const uint64_t fhd = 500;
+	vector<double> vals;
+	vals.push_back(0);
+	vals.push_back(0);
+	for(uint64_t i = 2; i <= fhd; i++){
+		vals.push_back(1);
+	}
+	for(uint64_t i = fhd+1;i <= 30000;i++){
+		vals.push_back(pow(10,-2.341611959e-4 * i));
+	}
+	normalize(0.9,vals.begin(),vals.begin() + fhd+1);
+	normalize(0.1,vals.begin()+fhd+1,vals.end());
+	return discrete_distribution<uint64_t> (vals.begin(),vals.end());
 }
