@@ -24,25 +24,57 @@ vector<string> keys;
 std::default_random_engine generator(get_time_ns());
 
 uint64_t rand_key_size(){
-	static normal_distribution<double> norm_dsit(30,8);
+	normal_distribution<double> norm_dsit(30,8);
 	return max(uint64_t(2),uint64_t(norm_dsit(generator)));
 }
+void normalize(double to_val,vector<double>::iterator valbeg,vector<double>::iterator valend){
+	double sum = 0;
+	foreach(valbeg,valend,[&](double val){
+		sum += val;
+	});
+	foreach(valbeg,valend,[=](double & val){
+		val *= to_val * (1.0/sum);
+	});
+}
+discrete_distribution<uint64_t> init_dist(){
+	const uint64_t fhd = 500;
+	vector<double> vals({0,0});
+	for(uint64_t i = 2; i <= fhd; i++){
+		vals.push_back(1);
+	}
+	for(uint64_t i = fhd+1;i < 50000;i++){
+		vals.push_back(pow(10,-2.341611959e-4 * x));
+	}
+	normalize(0.9,vals.begin(),vals.begin() + fhd+1);
+	normalize(0.1,vals.begin()+fhd+1,vals.end());
+	return discrete_distribution<uint64_t> (vals.begin(),vals.end());
+}
 uint64_t rand_val_size(){
+	static discrete_distribution<uint64_t> val_dist = init_dist();
 	//todo add large values to distribution
-	static uniform_int_distribution<uint64_t> val_dist(2,500);
-	return val_dist(generator);
+	uniform_real_distribution<double> overallval(0,1);
+	const double val_
+	if(overallval < 0.90){
+		uniform_int_distribution<uint64_t> val_dist(2,500);
+		return val_dist(generator);
+	}
+	else{
+		discrete_distribution<uint64_t> val_dist(500,20000);
+		double norm_val = pow(10,-2.341611959e-4 * x);
+		return val_dist(generator);
+	}
 }
 char rand_char(){
-	static uniform_int_distribution<char> lower_lettters_dist(96,96+26-1);//lower case letters
+	uniform_int_distribution<char> lower_lettters_dist(96,96+26-1);//lower case letters
 	return lower_lettters_dist(generator);
 }
 uint64_t rand_get_item(){
 	//todo: change to be more representative
-	static uniform_int_distribution<uint64_t> val_dist(0,values.size());
+ 	uniform_int_distribution<uint64_t> val_dist(0,values.size());
 	return val_dist(generator);
 }
 uint64_t rand_uniform_item(){
-	static uniform_int_distribution<uint64_t> unif_dist(0,values.size());
+	uniform_int_distribution<uint64_t> unif_dist(0,values.size());
 	return unif_dist(generator);
 }
 string rand_str(uint64_t size){
@@ -97,7 +129,7 @@ uint64_t set_action(cache_t cache){
 	});
 }
 uint64_t rand_action_time(cache_t cache){
-	static uniform_real_distribution<double> occurs_dis(0,120);//lower case letters
+	uniform_real_distribution<double> occurs_dis(0,120);//lower case letters
 	double distri_val = occurs_dis(generator);
 
 	if(distri_val < 30){

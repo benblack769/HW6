@@ -51,14 +51,29 @@ Distribution of requests | Explanation
 
 These are a rough approximation of the distribution found with ETC in the memcache paper. It is not perfect since it is not clear how new values are brought into the cache from the database. Presumably, that happens when get is called, so.
 
-Distribution of key size:
+#### Distribution of key size
+
 Normal distribution with mean = 30, standard deviation = 8 as from paper
 
-Distribution of value size.
+#### Distribution of value size
 
-Uniform distribution until 500 bytes, that will account for most of the requests, as seems to be roughly the case from the ETC Value size chart.
+90% go to a uniform distribution between 2 and 500
 
-For large sizes, there seems to be a uniform distribution of work per size. So
+10% go to a 10^(-2.341611959*10^-4 * n) distribution where 500 < n <= 30000
 
+##### Explanation
+
+Uniform distribution until 500 bytes as seems to be roughly the case from the ETC Value Size PDF chart.
+
+The other distribution is a exponential function that matches the following two points taken from the PDF chart.
+
+    f(501) = 10e-4
+    f(30000) = 10e-7
+
+Plugging this into an exponential fit function, and viola.
+
+    f(x) = 1.124210035 * 10^(-4) * 10^(-2.341611959*10^-4 * x)
+
+The graph of which looks fairly similar to the data in the memcache paper.
 
 ### 8. Experimental Design
