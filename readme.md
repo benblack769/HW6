@@ -70,10 +70,20 @@ The other distribution is a exponential function that matches the following two 
     f(501) = 10e-4
     f(30000) = 10e-7
 
-Plugging this into an exponential fit function, and viola.
+Plugging these numbers into an exponential fit function, and viola.
 
     f(x) = 1.124210035 * 10^(-4) * 10^(-2.341611959*10^-4 * x)
 
 The graph of which looks fairly similar to the data in the memcache paper.
 
 ### 8. Experimental Design
+
+
+
+
+
+
+
+
+
+s

@@ -52,17 +52,7 @@ discrete_distribution<uint64_t> init_dist(){
 uint64_t rand_val_size(){
 	static discrete_distribution<uint64_t> val_dist = init_dist();
 	//todo add large values to distribution
-	uniform_real_distribution<double> overallval(0,1);
-	const double val_
-	if(overallval < 0.90){
-		uniform_int_distribution<uint64_t> val_dist(2,500);
-		return val_dist(generator);
-	}
-	else{
-		discrete_distribution<uint64_t> val_dist(500,20000);
-		double norm_val = pow(10,-2.341611959e-4 * x);
-		return val_dist(generator);
-	}
+	return val_dist(generator);
 }
 char rand_char(){
 	uniform_int_distribution<char> lower_lettters_dist(96,96+26-1);//lower case letters
