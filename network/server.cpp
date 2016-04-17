@@ -19,14 +19,16 @@ class ExitException: public exception
     return "Exited cleanly";
   }
 };
-void run_server(int tcp_port, int udp_port, int maxmem);
+void run_server(int tcp_port,int num_tcp_ports, int udp_port,int num_udp_ports, int maxmem);
 int main(int argc, char ** argv){
     //take mainly off the get_opt wikipedia page
     int c;
-    int tcp_portnum = 9211;
-    int udp_portnum = 9212;
+    int tcp_portnum = 9400;
+    int udp_portnum = 9500;
+    int num_tcps = 100;
+    int num_udps = 100;
     int maxmem = 1 << 16;
-    while ( (c = getopt(argc, argv, "m:p:u:")) != -1) {
+    while ( (c = getopt(argc, argv, "m:p:u:t:s:")) != -1) {
         switch (c) {
         case 'm':
             maxmem = atoi(optarg);
@@ -37,13 +39,19 @@ int main(int argc, char ** argv){
         case 'u':
             udp_portnum = atoi(optarg);
             break;
+        case 't':
+            num_tcps = atoi(optarg);
+            break;
+        case 's':
+            num_udps = atoi(optarg);
+            break;
         default:
             cout << "bad command line argument";
             return 1;
         }
     }
     try{
-        run_server(tcp_portnum,udp_portnum,maxmem);
+        run_server(tcp_portnum,num_tcps,udp_portnum,num_udps,maxmem);
     }
     catch(ExitException &){
         //this is normal, do nothing
@@ -165,7 +173,6 @@ public:
   static pointer create(asio::io_service& io_service,safe_cache * cache){
     return pointer(new tcp_con(io_service,cache));
   }
-
   tcp::socket& socket(){
     return socket_;
   }
@@ -193,6 +200,9 @@ public:
 
   void handle_read(const asio::error_code& error,
                    size_t bytes_written){
+        if(error){
+            throw asio::system_error(error);
+        }
       string s = to_string(b);
       strip(s);
       act_on_message(*this, s);
@@ -233,6 +243,9 @@ private:
     if (!error)
     {
       new_connection->start();
+    }
+    else{
+        throw asio::system_error(error);
     }
 
     start_accept();
@@ -280,6 +293,9 @@ public:
             return_error();
         }
     }
+    else{
+        throw asio::system_error(error);
+    }
     start_receive();
   }
   void handle_send(const asio::error_code& ,size_t )
@@ -291,15 +307,21 @@ public:
   bufarr recbuf;
 };
 
-void run_server(int tcp_port,int udp_port,int maxmem){
+void run_server(int tcp_port_start,int num_tcp_ports, int udp_port_start,int num_udp_ports, int maxmem){
     asio::io_service my_io_service;
     safe_cache serv_cache(create_cache(maxmem,nullptr));
 
-    tcp_server tcon(my_io_service,tcp_port,serv_cache);
-    udp_server ucon(my_io_service,udp_port,serv_cache);
-
-    tcon.start_accept();
-    ucon.start_receive();
-
+    vector<tcp_server> tcps;
+    tcps.reserve(num_tcp_ports);
+    vector<udp_server> udps;
+    udps.reserve(num_tcp_ports);
+    for(int i = 0; i < num_tcp_ports;i++){
+        tcps.emplace_back(my_io_service,tcp_port_start+i,serv_cache);
+        tcps.back().start_accept();
+    }
+    for(int i = 0; i < num_udp_ports;i++){
+        udps.emplace_back(my_io_service,udp_port_start+i,serv_cache);
+        udps.back().start_receive();
+    }
     my_io_service.run();
 }
