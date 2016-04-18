@@ -24,10 +24,10 @@ uint64_t get_time_ns();
 discrete_distribution<uint64_t> init_dist();
 
 constexpr uint64_t ns_in_s = 1000000000ULL;
-constexpr uint64_t maxmem = 100000000ULL;
+constexpr uint64_t maxmem = 1000000000ULL;
 constexpr uint64_t APROX_MEAN_WEIGHTED_VALUE_SIZE = 700;//overestimate of value taken from paper
 constexpr uint64_t tot_num_items = maxmem / APROX_MEAN_WEIGHTED_VALUE_SIZE;
-constexpr uint64_t num_actions = 1000;
+constexpr uint64_t num_actions = 5000;
 
 string values[tot_num_items];
 string keys[tot_num_items];
