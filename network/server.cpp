@@ -23,8 +23,8 @@ void run_server(int tcp_port,int num_tcp_ports, int udp_port,int num_udp_ports, 
 int main(int argc, char ** argv){
     //take mainly off the get_opt wikipedia page
     int c;
-    int tcp_portnum = 9400;
-    int udp_portnum = 9500;
+    int tcp_portnum = 10700;
+    int udp_portnum = 10800;
     int num_tcps = 100;
     int num_udps = 100;
     int maxmem = 1 << 16;
@@ -314,7 +314,7 @@ void run_server(int tcp_port_start,int num_tcp_ports, int udp_port_start,int num
     vector<tcp_server> tcps;
     tcps.reserve(num_tcp_ports);
     vector<udp_server> udps;
-    udps.reserve(num_tcp_ports);
+    udps.reserve(num_udp_ports);
     for(int i = 0; i < num_tcp_ports;i++){
         tcps.emplace_back(my_io_service,tcp_port_start+i,serv_cache);
         tcps.back().start_accept();

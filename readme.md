@@ -76,9 +76,17 @@ Plugging these numbers into an exponential fit function, and viola.
 
 The graph of which looks fairly similar to the data in the memcache paper.
 
+#### Size of Cache
+
+Presumably, the memory of the cache is valuable, so I will try to use about half of the server memory for the cache, as to model a fully loaded server while avoiding swapping.
+
+#### Temporal Distribution of Requests
+
+This is excessively difficult to model properly and so I will assume a uniform temporal distribution and will make maxmem large enough to store all keys. This will limit the implications of the study to gets which are found, in main memory. Caches will not help with accesses being spread randomly over half of the main memory).
+
 ### 8. Experimental Design
 
-Create a large number of threads on a single machine, each independently following the workload pattern. 
+Create a large number of threads on a single machine, each independently following the workload pattern.
 
 
 

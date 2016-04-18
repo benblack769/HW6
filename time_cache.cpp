@@ -13,19 +13,20 @@
 
 using namespace std;
 
-constexpr size_t MAX_NUM_THREADS = 100;
+constexpr size_t MAX_NUM_THREADS = 95;//one minus the number of ports
 constexpr size_t MILS_PER_NANO = 1000000;
 
-constexpr uint64_t tcp_start = 9400;
-constexpr uint64_t udp_start = 9500;
+constexpr uint64_t tcp_start = 10700;
+constexpr uint64_t udp_start = 10800;
 
 
 uint64_t get_time_ns();
 discrete_distribution<uint64_t> init_dist();
 
-constexpr uint64_t ns_in_s = 1000000000;
-constexpr uint64_t maxmem = 4000000000;
-constexpr uint64_t tot_num_items = 10000;
+constexpr uint64_t ns_in_s = 1000000000ULL;
+constexpr uint64_t maxmem = 100000000ULL;
+constexpr uint64_t APROX_MEAN_WEIGHTED_VALUE_SIZE = 700;//overestimate of value taken from paper
+constexpr uint64_t tot_num_items = maxmem / APROX_MEAN_WEIGHTED_VALUE_SIZE;
 constexpr uint64_t num_actions = 1000;
 
 string values[tot_num_items];
@@ -35,7 +36,7 @@ using gen_ty = std::default_random_engine;
 
 uint64_t rand_key_size(gen_ty & generator){
 	normal_distribution<double> norm_dsit(30,8);
-	return max(uint64_t(2),uint64_t(norm_dsit(generator)));
+	return max(int64_t(2),int64_t(norm_dsit(generator)));
 }
 
 uint64_t rand_val_size(gen_ty & generator){
@@ -76,6 +77,8 @@ void init_values(gen_ty & generator,uint64_t num_items){
 }
 void init_keys(gen_ty & generator,uint64_t num_items){
 	for(uint64_t i = 0; i < num_items; i++){
+		//the chance that keys will not be unique is minimal, and so
+		//should not affect performance that much and so I will ignore it.
 		keys[i] = rand_str(generator,rand_key_size(generator));
 	}
 }
@@ -152,12 +155,27 @@ double time_threads(uint64_t num_threads){
 	}
 	return sum_time / num_threads;
 }
+void populate_cache(cache_t cache){
+	for(size_t i = 0; i < 10000; i++){
+		cache_set(cache,to_key(keys[i]),to_val(values[i]),values[i].size()+1);
+	}
+}
 int main(int argc,char ** argv){
-	cache_t cache = create_cache(maxmem,NULL);
-
 	gen_ty generator(1);
 	init_values(generator,tot_num_items);
 	init_keys(generator,tot_num_items);
+
+    tcp_port = to_string(tcp_start);
+    udp_port = to_string(udp_start);
+	cache_t cache = create_cache(maxmem,NULL);
+
+    tcp_port = to_string(tcp_start+1);
+    udp_port = to_string(udp_start+1);
+	cache_t pop_cache = get_cache_connection();
+
+	//populate_cache(pop_cache);
+
+	end_connection(pop_cache);
 
 	for(uint64_t n_t = 1; n_t < MAX_NUM_THREADS; n_t++){
 		uint64_t av_time = time_threads(n_t);

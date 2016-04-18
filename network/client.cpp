@@ -13,8 +13,8 @@ using json = nlohmann::json;
 
 using asio::ip::tcp;
 
-string tcp_port = "9100";
-string udp_port = "9200";
+string tcp_port = "10700";
+string udp_port = "10800";
 string serv_name = "localhost";
 
 class tcp_connection{
