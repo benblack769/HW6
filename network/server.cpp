@@ -27,15 +27,15 @@ void run_server(int tcp_port,int num_tcp_ports, int udp_port,int num_udp_ports, 
     uint8_t c;
 
     while (c = *str++)
-        hash = ((hash << 5) + hash) + c; // hash * 33 + c 
+        hash = ((hash << 5) + hash) + c; // hash * 33 + c
 
     return hash;
 }*/
 int main(int argc, char ** argv){
     //take mainly off the get_opt wikipedia page
     int c;
-    int tcp_portnum = 10700;
-    int udp_portnum = 10800;
+    int tcp_portnum = 10100;
+    int udp_portnum = 10200;
     int num_tcps = 100;
     int num_udps = 100;
     int maxmem = 1 << 16;
