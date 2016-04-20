@@ -1,7 +1,6 @@
 server
 client_tests
 client
-*.txt
 *.o
 *.autosave
 *.exe

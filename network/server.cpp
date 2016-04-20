@@ -20,6 +20,17 @@ class ExitException: public exception
   }
 };
 void run_server(int tcp_port,int num_tcp_ports, int udp_port,int num_udp_ports, int maxmem);
+/*uint64_t custom_hash(key_type *str){
+    //taken from internet
+    uint64_t hash = 5381;
+    uint8_t * iter_str = (uint8_t*)(str);
+    uint8_t c;
+
+    while (c = *str++)
+        hash = ((hash << 5) + hash) + c; // hash * 33 + c 
+
+    return hash;
+}*/
 int main(int argc, char ** argv){
     //take mainly off the get_opt wikipedia page
     int c;
