@@ -16,8 +16,8 @@ using namespace std;
 constexpr size_t MAX_NUM_THREADS = 95;//one minus the number of ports
 constexpr size_t MILS_PER_NANO = 1000000;
 
-constexpr uint64_t tcp_start = 10700;
-constexpr uint64_t udp_start = 10800;
+constexpr uint64_t tcp_start = 10100;
+constexpr uint64_t udp_start = 10200;
 
 
 uint64_t get_time_ns();
@@ -133,7 +133,7 @@ double run_rand_actions(gen_ty & generator,cache_t cache,uint64_t num_actions){
 }
 double arr[MAX_NUM_THREADS];
 void run_requests(cache_t cache,uint64_t t_num){
-	gen_ty generator(t_num);
+	gen_ty generator(t_num+123);
 	arr[t_num] = run_rand_actions(generator,cache,num_actions);
 }
 double time_threads(uint64_t num_threads){
@@ -165,12 +165,12 @@ int main(int argc,char ** argv){
 	init_values(generator,tot_num_items);
 	init_keys(generator,tot_num_items);
 
-    tcp_port = to_string(tcp_start);
-    udp_port = to_string(udp_start);
+    tcp_port = to_string(tcp_start+MAX_NUM_THREADS-1);
+    udp_port = to_string(udp_start+MAX_NUM_THREADS-1);
 	cache_t cache = create_cache(maxmem,NULL);
 
-    tcp_port = to_string(tcp_start+1);
-    udp_port = to_string(udp_start+1);
+    tcp_port = to_string(tcp_start+MAX_NUM_THREADS-2);
+    udp_port = to_string(udp_start+MAX_NUM_THREADS-2);
 	cache_t pop_cache = get_cache_connection();
 
     populate_cache(pop_cache);
