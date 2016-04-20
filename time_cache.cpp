@@ -114,10 +114,10 @@ uint64_t rand_action_time(gen_ty & generator,cache_t cache){
 	uniform_real_distribution<double> occurs_dis(0,100);//lower case letters
 	double distri_val = occurs_dis(generator);
 
-	if(distri_val < 1){
+	if(distri_val < 2){
 		return delete_action(generator,cache);
 	}
-	else if(distri_val < 6){
+	else if(distri_val < 7){
 		return set_action(generator,cache);
 	}
 	else{

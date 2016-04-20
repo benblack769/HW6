@@ -46,10 +46,10 @@ Network protocol (for gets only)
 #### Distribution of requests
 
 * 5% set/update value
-* 1% delete value
+* 2% delete value
 * 94% get item
 
-These are a very rough approximation of the distribution found with ETC in the memcache paper, noting that most of the deletes in the paper are not actually in the cache.
+These are a very rough approximation of the distribution found with ETC in the memcache paper, noting that most of the deletes in the paper are not actually in the cache, and so these are ignored.
 
 #### Distribution of key size
 
