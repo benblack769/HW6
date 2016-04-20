@@ -15,7 +15,7 @@ using asio::ip::tcp;
 
 string tcp_port = "10700";
 string udp_port = "10800";
-string serv_name = "134.10.103.232";
+string serv_name = "134.10.103.231";
 
 class tcp_connection{
 public:
@@ -163,7 +163,7 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
     *val_size = 0;
 
     string keystr((char*)key);
-    string retval = cache->send_message_udp(true,"GET",keystr);
+    string retval = cache->send_message_tcp(true,"GET",keystr);
 
     if(retval == errstr){
         return nullptr;
