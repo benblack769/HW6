@@ -176,11 +176,7 @@ int main(int argc,char ** argv){
     udp_port = to_string(udp_start+MAX_NUM_THREADS-2);
 	cache_t pop_cache = get_cache_connection();
 
-<<<<<<< HEAD
     populate_cache(pop_cache);
-=======
-	populate_cache(pop_cache);
->>>>>>> final_branch
 
 	end_connection(pop_cache);
 
