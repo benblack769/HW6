@@ -16,8 +16,8 @@ using namespace std;
 constexpr size_t MAX_NUM_THREADS = 95;//one minus the number of ports
 constexpr size_t MILS_PER_NANO = 1000000;
 
-constexpr uint64_t tcp_start = 10100;
-constexpr uint64_t udp_start = 10200;
+constexpr uint64_t tcp_start = 10700;
+constexpr uint64_t udp_start = 10800;
 
 
 uint64_t get_time_ns();

@@ -13,9 +13,9 @@ using json = nlohmann::json;
 
 using asio::ip::tcp;
 
-string tcp_port = "10100";
-string udp_port = "10200";
-string serv_name = "134.10.103.231";
+string tcp_port = "10700";
+string udp_port = "10800";
+string serv_name = "134.10.103.234";
 
 class tcp_connection{
 public:
