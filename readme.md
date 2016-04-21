@@ -2,7 +2,7 @@
 
 The goal is to measure the performance of the cache.
 
-The system includes the operating system, the network between the server and the client, the CPU and memory of both the server and the client.
+The system includes the operating system, the network between the server and the client, the CPU and memory of the server.
 
 ### 2. Services and Outcomes
 
@@ -39,7 +39,7 @@ number of requests of each type per second time period
 
 ### 6. Factors to study
 
-Network protocol (for gets only)
+Network protocol for gets
 
 ### 7. Workload
 
@@ -78,7 +78,7 @@ This is the graph of 100,000,000 values randomly distributed over this distribut
 
 ![alt text](https://github.com/weepingwillowben/HW6/blob/master/fit.png "random value graph")
 
-It does not look too dissimilar  to the data in the memcache paper.
+It does not look too dissimilar to the data in the memcache paper.
 
 #### Size of Cache
 
@@ -86,20 +86,44 @@ Presumably, the memory of the cache is valuable, so I tried to use about one gig
 
 #### Temporal Distribution of Requests
 
-This is excessively difficult to model properly and so I will assume a uniform temporal distribution and will make maxmem large enough to store all keys. This will limit the implications of the study to gets which are found, and reside in main memory. Caches will not help with accesses being spread randomly over a gigabyte.
+This is excessively difficult to model properly and so I will assume a uniform temporal distribution and will make maxmem large enough to store all keys. This will limit the implications of the study to that where if gets which are found, they reside in main memory. After all, hardware caches will not help with accesses being spread randomly over a gigabyte.
 
 ### 8. Experimental Design
 
 #### Implementation Details
 
-The cache is created, then a whole bunch of threads are created on the client side, call to the cache, and the time elapsed is measured.
+The cache is created, then a whole bunch of threads are created on the client side, call to the cache, and the time elapsed is measured. In order to ensure that the bottleneck is in the server, I checked that top said that the server executable was taking up around 100% of the cpu on the server side and that the client was not being bound by cpu in a similar way.
 
-TCP vs UDP and the number of threads are the only factors. The  
+The client was my own laptop with linux kernel 4.2.8 and a 4 core hyper-threaded processor, hooked up via Ethernet. The server was mandu.
 
+#### Actual Experimental Design
 
+TCP vs UDP and the number of threads are the only factors.
 
+### 9. Data Analysis
 
+#### UDP:
 
+![alt text](https://github.com/weepingwillowben/HW6/blob/master/udp_g.png "UDP throughput data")
 
+UDP flattens out very quickly, and clearly flattens out around 110000 requests per second.
 
-s
+#### TCP:
+
+![alt text](https://github.com/weepingwillowben/HW6/blob/master/tcp_g.png "TCP throughput data")
+
+TCP has a weird and inexplicable high point for two data points, at 8 and 9 threads, but ignoring that as weird, it flattens out at around 35500 requests per second.
+
+#### Percent of time in server cache code
+
+I inserted some code into the server that measured the average time per request spent in the actual cache_set, cache_get and cache_delete functions (rather than in the network interface code). The average time was about 0.0003 ms . 1000ms / 110000r/s = 0.009ms spent on each request in total on the server side for udp. So basically, only about 1/30th of the time was actually spent fetching things from the cache.
+
+### 10. Results
+
+Unfortunately, this data is not representative at all because of the issue described in the Size of Cache section.
+
+Despite this and even including the outliers, it is very clear that tcp is much slower than UDP.
+
+Another very weird phenomemon is that my own laptop hooked up by Ethernet is something like 30% faster for both udp and tcp than the polytopia machines despite the fact that the server is using all the cpu either way. So the client may still be a limiting factor in some bizarre way.
+
+1/30th of the time spent on cache code is abysmal (even if most of the gets are null), and shows that most of the work should be on the network code when working on optimizations.

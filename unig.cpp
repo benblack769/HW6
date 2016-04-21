@@ -1,3 +1,5 @@
+//compile with g++ -std=c++11 -O3 unig.cpp
+
 #include <random>
 #include <iostream>
 #include <algorithm>
