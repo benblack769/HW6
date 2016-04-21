@@ -120,10 +120,10 @@ I inserted some code into the server that measured the average time per request 
 
 ### 10. Results
 
-Unfortunately, this data is not representative at all because of the issue described in the Size of Cache section.
+Unfortunately, this data is not at all representative because of the issue described in the Size of Cache section.
 
 Despite this and even including the outliers, it is very clear that tcp is much slower than UDP.
 
-Another very weird phenomemon is that my own laptop hooked up by Ethernet is something like 30% faster for both udp and tcp than the polytopia machines despite the fact that the server is using all the cpu either way. So the client may still be a limiting factor in some bizarre way.
+Another very weird phenomemon is that my own laptop hooked up by Ethernet is something like 30% faster for both udp and tcp than the polytopia machines. I did not check that the server took all the cpu when the polytopia machines ran the client, but this still indicates that the client may still be a limiting factor in some bizarre way.
 
 1/30th of the time spent on cache code is abysmal (even if most of the gets are null), and shows that most of the work should be on the network code when working on optimizations.
