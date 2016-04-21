@@ -74,11 +74,11 @@ Plugging these numbers into an exponential fit function, and viola.
 
     f(x) = 1.124210035 * 10^(-4) * 10^(-2.341611959*10^-4 * x)
 
-This is the graph of 100,000,000 values randomly distributed over this distribution.
+This is the graph of 100,000,000 values randomly distributed over this distribution. It was created by running "unig.cpp".
 
 ![alt text](https://github.com/weepingwillowben/HW6/blob/master/fit.png "random value graph")
 
-It does not look too dissimilar to the data in the memcache paper.
+Note that it does not look too dissimilar to the data in the memcache paper.
 
 #### Size of Cache
 
