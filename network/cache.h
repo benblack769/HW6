@@ -38,4 +38,5 @@ uint64_t cache_space_used(cache_t cache);
 void destroy_cache(cache_t cache);
 //for destroying a cache that one does not create
 void end_connection(cache_t cache);
-}
+void call_head_no_return(cache_t cache);
+};
