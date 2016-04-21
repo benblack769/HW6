@@ -15,7 +15,7 @@ using asio::ip::tcp;
 
 string tcp_port = "10700";
 string udp_port = "10900";
-string serv_name = "134.10.103.234";
+string serv_name = "134.10.103.231";
 
 class tcp_connection{
 public:

@@ -168,15 +168,15 @@ int main(int argc,char ** argv){
 	init_values(generator,tot_num_items);
 	init_keys(generator,tot_num_items);
 
-    tcp_port = to_string(tcp_start+MAX_NUM_THREADS-1);
-    udp_port = to_string(udp_start+MAX_NUM_THREADS-1);
+    tcp_port = to_string(tcp_start+MAX_NUM_THREADS+1);
+    udp_port = to_string(udp_start+MAX_NUM_THREADS+1);
 	cache_t cache = create_cache(maxmem,NULL);
 
-    tcp_port = to_string(tcp_start+MAX_NUM_THREADS-2);
-    udp_port = to_string(udp_start+MAX_NUM_THREADS-2);
+    tcp_port = to_string(tcp_start+MAX_NUM_THREADS+2);
+    udp_port = to_string(udp_start+MAX_NUM_THREADS+2);
 	cache_t pop_cache = get_cache_connection();
 
-    populate_cache(pop_cache);
+    //populate_cache(pop_cache);
 
 	end_connection(pop_cache);
 

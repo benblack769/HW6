@@ -46,7 +46,7 @@ Network protocol (for gets only)
 #### Distribution of requests
 
 * 5% set/update value
-* 2% delete value
+* 1% delete value
 * 94% get item
 
 These are a very rough approximation of the distribution found with ETC in the memcache paper, noting that most of the deletes in the paper are not actually in the cache, and so these are ignored.
@@ -74,11 +74,15 @@ Plugging these numbers into an exponential fit function, and viola.
 
     f(x) = 1.124210035 * 10^(-4) * 10^(-2.341611959*10^-4 * x)
 
-The graph of which looks fairly similar to the data in the memcache paper.
+This is the graph of 100,000,000 values randomly distributed over this distribution.
+
+![alt text](https://github.com/weepingwillowben/HW6/blob/master/fit.png "random value graph")
+
+It does not look too dissimilar  to the data in the memcache paper.
 
 #### Size of Cache
 
-Presumably, the memory of the cache is valuable, so I will try to use about one gigabyte for the cache, as to model a fully loaded server while avoiding swapping.
+Presumably, the memory of the cache is valuable, so I tried to use about one gigabyte for the cache, as to model a fully loaded server while avoiding swapping. Unfortunately, this turned out to be impossible, due to a weird bug where the client crashed if I tried to send too many set requests at the beginning. So the cache is slowly filling up as the test is progressing, which means that most of the gets are of null values, and there will be more hits when there are more threads. So the data is not as representative as I would hope.
 
 #### Temporal Distribution of Requests
 
@@ -86,7 +90,11 @@ This is excessively difficult to model properly and so I will assume a uniform t
 
 ### 8. Experimental Design
 
-I will only be measuring TCP and UDP vs varying 
+#### Implementation Details
+
+The cache is created, then a whole bunch of threads are created on the client side, call to the cache, and the time elapsed is measured.
+
+TCP vs UDP and the number of threads are the only factors. The  
 
 
 
