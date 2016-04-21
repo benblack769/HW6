@@ -13,11 +13,11 @@
 
 using namespace std;
 
-constexpr size_t MAX_NUM_THREADS = 95;//one minus the number of ports
+constexpr size_t MAX_NUM_THREADS = 155;//one minus the number of ports
 constexpr size_t MILS_PER_NANO = 1000000;
 
 constexpr uint64_t tcp_start = 10700;
-constexpr uint64_t udp_start = 10800;
+constexpr uint64_t udp_start = 10900;
 
 
 uint64_t get_time_ns();
@@ -143,6 +143,9 @@ double time_threads(uint64_t num_threads){
 		tcp_port = to_string(tcp_start+t_n);
 		udp_port = to_string(udp_start+t_n);
 		caches[t_n] = get_cache_connection();
+		if(t_n == 0){
+			call_head_no_return(caches[t_n]);
+		}
 		ts[t_n] = thread(run_requests,caches[t_n],t_n);
 	}
 	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
@@ -156,7 +159,7 @@ double time_threads(uint64_t num_threads){
 	return sum_time / num_threads;
 }
 void populate_cache(cache_t cache){
-	for(size_t i = 0; i < 10000; i++){
+	for(size_t i = 0; i < tot_num_items; i++){
 		cache_set(cache,to_key(keys[i]),to_val(values[i]),values[i].size()+1);
 	}
 }
@@ -173,14 +176,18 @@ int main(int argc,char ** argv){
     udp_port = to_string(udp_start+MAX_NUM_THREADS-2);
 	cache_t pop_cache = get_cache_connection();
 
+<<<<<<< HEAD
     populate_cache(pop_cache);
+=======
+	populate_cache(pop_cache);
+>>>>>>> final_branch
 
 	end_connection(pop_cache);
 
 	for(uint64_t n_t = 1; n_t < MAX_NUM_THREADS; n_t++){
-		uint64_t av_time = time_threads(n_t);
-		cout << n_t << "\t\t" << av_time << endl;
-		if(av_time > MILS_PER_NANO){
+		double av_ms_time = time_threads(n_t) / MILS_PER_NANO;
+		cout << n_t << "\t\t" << av_ms_time << "\t\t" << n_t / (av_ms_time / 1000.0) << endl;
+		if(av_ms_time > 1.5){
 			break;
 		}
 		if(n_t == MAX_NUM_THREADS-1){

@@ -86,7 +86,7 @@ This is excessively difficult to model properly and so I will assume a uniform t
 
 ### 8. Experimental Design
 
-Create a large number of threads on a single machine, each independently following the workload pattern.
+I will only be measuring TCP and UDP vs varying 
 
 
 
