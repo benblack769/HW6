@@ -13,21 +13,22 @@
 
 using namespace std;
 
-constexpr size_t MAX_NUM_THREADS = 155;//one minus the number of ports
-constexpr size_t MILS_PER_NANO = 1000000;
+constexpr uint64_t MILS_PER_NANO = 1000000;
 
-constexpr uint64_t tcp_start = 10700;
-constexpr uint64_t udp_start = 10900;
+constexpr int64_t tcp_start = 10700;
+constexpr int64_t udp_start = 10900;
 
 
 uint64_t get_time_ns();
 discrete_distribution<uint64_t> init_dist();
 
 constexpr uint64_t ns_in_s = 1000000000ULL;
-constexpr uint64_t maxmem = 1000000000ULL;
-constexpr uint64_t APROX_MEAN_WEIGHTED_VALUE_SIZE = 700;//overestimate of value taken from paper
-constexpr uint64_t tot_num_items = maxmem / APROX_MEAN_WEIGHTED_VALUE_SIZE;
-constexpr uint64_t num_actions = 5000;
+constexpr uint64_t mem_to_store = 10000000ULL;
+constexpr uint64_t maxmem = 0.81 * mem_to_store;
+constexpr double APROX_MEAN_WEIGHTED_VALUE_SIZE = 461.258;//measured with unig.cpp
+constexpr uint64_t tot_num_items = mem_to_store / APROX_MEAN_WEIGHTED_VALUE_SIZE;
+constexpr size_t NUM_THREADS = 125;//one minus the number of ports
+constexpr uint64_t num_actions = 2000000 / NUM_THREADS;
 
 string values[tot_num_items];
 string keys[tot_num_items];
@@ -48,12 +49,7 @@ char rand_char(gen_ty & generator){
 	uniform_int_distribution<char> lower_lettters_dist(96,96+26-1);//lower case letters
 	return lower_lettters_dist(generator);
 }
-uint64_t rand_get_item(gen_ty & generator){
-	//todo: change to be more representative
- 	uniform_int_distribution<uint64_t> val_dist(0,tot_num_items-1);
-	return val_dist(generator);
-}
-uint64_t rand_uniform_item(gen_ty & generator){
+uint64_t uniform_rand_item(gen_ty & generator){
 	uniform_int_distribution<uint64_t> unif_dist(0,tot_num_items-1);
 	return unif_dist(generator);
 }
@@ -89,7 +85,7 @@ uint64_t timeit(timed_fn_ty timed_fn){
 	return get_time_ns() - start;
 }
 uint64_t get_action(gen_ty & generator,cache_t cache){
-	uint64_t get_item = rand_get_item(generator);
+	uint64_t get_item = uniform_rand_item(generator);
 	string & item = keys[get_item];
 	return timeit([&](){
 		uint32_t null_val = 0;
@@ -97,18 +93,23 @@ uint64_t get_action(gen_ty & generator,cache_t cache){
 	});
 }
 uint64_t delete_action(gen_ty & generator,cache_t cache){
-	string & item = keys[rand_uniform_item(generator)];
+	string & item = keys[uniform_rand_item(generator)];
 	return timeit([&](){
 		cache_delete(cache,to_key(item));
 	});
 }
 uint64_t set_action(gen_ty & generator,cache_t cache){
-	uint64_t item_num = rand_uniform_item(generator);
+	uint64_t item_num = uniform_rand_item(generator);
 	string & key = keys[item_num];
 	string & value = values[item_num];
 	return timeit([&](){
 		cache_set(cache,to_key(key),to_val(value),value.size()+1);
 	});
+}
+cache_t get_cache(int64_t tcp_portnum,int64_t udp_portnum){
+	tcp_port = to_string(tcp_portnum);
+	udp_port = to_string(udp_portnum);
+	return get_cache_connection();
 }
 uint64_t rand_action_time(gen_ty & generator,cache_t cache){
 	uniform_real_distribution<double> occurs_dis(0,100);//lower case letters
@@ -131,32 +132,30 @@ double run_rand_actions(gen_ty & generator,cache_t cache,uint64_t num_actions){
 	}
 	return tot_time / num_actions;
 }
-double arr[MAX_NUM_THREADS];
+double arr[NUM_THREADS];
 void run_requests(cache_t cache,uint64_t t_num){
-	gen_ty generator(t_num+123);
+	gen_ty generator(t_num);
 	arr[t_num] = run_rand_actions(generator,cache,num_actions);
 }
-double time_threads(uint64_t num_threads){
-	thread ts[MAX_NUM_THREADS];
-	cache_t caches[MAX_NUM_THREADS];
-	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
-		tcp_port = to_string(tcp_start+t_n);
-		udp_port = to_string(udp_start+t_n);
-		caches[t_n] = get_cache_connection();
+double time_threads(){
+	thread ts[NUM_THREADS];
+	cache_t caches[NUM_THREADS];
+	for(uint64_t t_n = 0; t_n < NUM_THREADS; t_n++){
+		caches[t_n] = get_cache(tcp_start+t_n,udp_start+t_n);
 		if(t_n == 0){
 			call_head_no_return(caches[t_n]);
 		}
 		ts[t_n] = thread(run_requests,caches[t_n],t_n);
 	}
-	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
+	for(uint64_t t_n = 0; t_n < NUM_THREADS; t_n++){
 		ts[t_n].join();
 		end_connection(caches[t_n]);
 	}
 	double sum_time = 0;
-	for(uint64_t t_n = 0; t_n < num_threads; t_n++){
+	for(uint64_t t_n = 0; t_n < NUM_THREADS; t_n++){
 		sum_time += arr[t_n];
 	}
-	return sum_time / num_threads;
+	return sum_time / NUM_THREADS;
 }
 void populate_cache(cache_t cache){
 	for(size_t i = 0; i < tot_num_items; i++){
@@ -168,30 +167,23 @@ int main(int argc,char ** argv){
 	init_values(generator,tot_num_items);
 	init_keys(generator,tot_num_items);
 
-    tcp_port = to_string(tcp_start+MAX_NUM_THREADS+1);
-    udp_port = to_string(udp_start+MAX_NUM_THREADS+1);
+    tcp_port = to_string(tcp_start+NUM_THREADS+1);
+    udp_port = to_string(udp_start+NUM_THREADS+1);
 	cache_t cache = create_cache(maxmem,NULL);
 
-    tcp_port = to_string(tcp_start+MAX_NUM_THREADS+2);
-    udp_port = to_string(udp_start+MAX_NUM_THREADS+2);
-	cache_t pop_cache = get_cache_connection();
+	cache_t pop_cache = get_cache(tcp_start+NUM_THREADS+2,udp_start+NUM_THREADS+2);
 
-    //populate_cache(pop_cache);
+    populate_cache(pop_cache);
 
 	end_connection(pop_cache);
 
-	for(uint64_t n_t = 1; n_t < MAX_NUM_THREADS; n_t++){
-		double av_ms_time = time_threads(n_t) / MILS_PER_NANO;
-		cout << n_t << "\t\t" << av_ms_time << "\t\t" << n_t / (av_ms_time / 1000.0) << endl;
-		if(av_ms_time > 1.5){
-			break;
-		}
-		if(n_t == MAX_NUM_THREADS-1){
-			cout << "reached max num of threads before millisecond time" << endl;
-		}
-	}
+	double av_ms_time = time_threads() / MILS_PER_NANO;
 
-	destroy_cache(cache);
+	cout << "number of threads = " << NUM_THREADS << "\n";
+	cout << "average time in ms = " << av_ms_time << "\n";
+	cout << "average throughput = " <<  NUM_THREADS / (av_ms_time / 1000.0) << "\n";
+
+	destroy_cache(cache);//closes server
 
 	return 0;
 }

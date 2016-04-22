@@ -34,10 +34,10 @@ void run_server(int tcp_port,int num_tcp_ports, int udp_port,int num_udp_ports, 
 int main(int argc, char ** argv){
     //take mainly off the get_opt wikipedia page
     int c;
-    int tcp_portnum = 10100;
-    int udp_portnum = 10200;
-    int num_tcps = 100;
-    int num_udps = 100;
+    int tcp_portnum = 10700;
+    int udp_portnum = 10900;
+    int num_tcps = 130;
+    int num_udps = 130;
     int maxmem = 1 << 16;
     while ( (c = getopt(argc, argv, "m:p:u:t:s:")) != -1) {
         switch (c) {

@@ -32,13 +32,17 @@ discrete_distribution<uint64_t> init_dist(){
 uint64_t counts[max_val];
 int main(){
     constexpr uint64_t rands = 100000000ULL;
+	uint64_t tot_count = 0;
     default_random_engine generator(1);
     discrete_distribution<uint64_t> rand_dist =  init_dist();
     for(int64_t i = 0; i < rands; i++){
+		uint64_t rand_n = rand_dist(generator);
         counts[rand_dist(generator)]++;
+		tot_count += rand_n;
     }
-    for(size_t i = 0;i < max_val;i++){
-        cout << i << "\t\t" << counts[i] / double(rands) << "\n";
-    }
+	cout << tot_count / double(rands) << endl;
+    //for(size_t i = 0;i < max_val;i++){
+    //    cout << i << "\t\t" << counts[i] / double(rands) << "\n";
+    //}
     return 0;
 }
