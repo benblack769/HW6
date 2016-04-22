@@ -167,15 +167,16 @@ int main(int argc,char ** argv){
 	init_values(generator,tot_num_items);
 	init_keys(generator,tot_num_items);
 
-    tcp_port = to_string(tcp_start+NUM_THREADS+1);
-    udp_port = to_string(udp_start+NUM_THREADS+1);
+	uint64_t init_tcp_port = tcp_start+NUM_THREADS+1;
+	uint64_t init_udp_port = udp_start+NUM_THREADS+1;
+
+    tcp_port = to_string(init_tcp_port);
+    udp_port = to_string(init_udp_port);
 	cache_t cache = create_cache(maxmem,NULL);
 
-	cache_t pop_cache = get_cache(tcp_start+NUM_THREADS+2,udp_start+NUM_THREADS+2);
+    populate_cache(cache);
 
-    populate_cache(pop_cache);
-
-	end_connection(pop_cache);
+	end_connection(cache);
 
 	double av_ms_time = time_threads() / MILS_PER_NANO;
 
@@ -183,7 +184,7 @@ int main(int argc,char ** argv){
 	cout << "average time in ms = " << av_ms_time << "\n";
 	cout << "average throughput = " <<  NUM_THREADS / (av_ms_time / 1000.0) << "\n";
 
-	destroy_cache(cache);//closes server
+	destroy_cache(get_cache(init_tcp_port,init_udp_port));//closes server
 
 	return 0;
 }
