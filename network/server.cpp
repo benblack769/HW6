@@ -112,12 +112,11 @@ void get(con_ty& con, string key)
     } else {
         con.return_error();
     }
-    cout << num_hits / double(num_total) << "\n";
 }
 template <typename con_ty>
 void put(con_ty& con, string key, string value)
 {
-    cache_set(con.cache(), (key_type)(key.c_str()), (void*)(value.c_str()), value.size());
+    cache_set(con.cache(), (key_type)(key.c_str()), (void*)(value.c_str()), value.size()+1);
 }
 template <typename con_ty>
 void delete_(con_ty& con, string key)
@@ -285,7 +284,6 @@ public:
     }
     void write_message(string s)
     {
-        s.reserve(bufsize);
         socket_.async_send_to(asio::buffer(s.c_str(), s.size() + 1), endpoint,
             boost::bind(&udp_server::handle_send, this, asio::placeholders::error(), asio::placeholders::bytes_transferred()));
     }

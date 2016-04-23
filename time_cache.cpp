@@ -23,7 +23,7 @@ uint64_t get_time_ns();
 discrete_distribution<uint64_t> init_dist();
 
 constexpr uint64_t ns_in_s = 1000000000ULL;
-constexpr uint64_t mem_to_store = 100000ULL;
+constexpr uint64_t mem_to_store = 1000000ULL;
 constexpr uint64_t maxmem = 0.81 * mem_to_store;
 constexpr double APROX_MEAN_WEIGHTED_VALUE_SIZE = 461.258;//measured with unig.cpp
 constexpr uint64_t tot_num_items = uint64_t(mem_to_store / APROX_MEAN_WEIGHTED_VALUE_SIZE);
@@ -115,10 +115,10 @@ uint64_t rand_action_time(gen_ty & generator,cache_t cache){
 	uniform_real_distribution<double> occurs_dis(0,100);//lower case letters
 	double distri_val = occurs_dis(generator);
 
-	if(distri_val < 2){
+	if(distri_val < 1){
 		return delete_action(generator,cache);
 	}
-	else if(distri_val < 7){
+	else if(distri_val < 6){
 		return set_action(generator,cache);
 	}
 	else{
