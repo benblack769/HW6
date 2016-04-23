@@ -23,12 +23,12 @@ uint64_t get_time_ns();
 discrete_distribution<uint64_t> init_dist();
 
 constexpr uint64_t ns_in_s = 1000000000ULL;
-constexpr uint64_t mem_to_store = 10000000ULL;
+constexpr uint64_t mem_to_store = 50000000ULL;
 constexpr uint64_t maxmem = 0.81 * mem_to_store;
 constexpr double APROX_MEAN_WEIGHTED_VALUE_SIZE = 461.258;//measured with unig.cpp
 constexpr uint64_t tot_num_items = mem_to_store / APROX_MEAN_WEIGHTED_VALUE_SIZE;
 constexpr size_t NUM_THREADS = 125;//one minus the number of ports
-constexpr uint64_t num_actions = 2000000 / NUM_THREADS;
+constexpr uint64_t num_actions = 5000000 / NUM_THREADS;
 
 string values[tot_num_items];
 string keys[tot_num_items];

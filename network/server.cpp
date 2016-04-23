@@ -99,12 +99,17 @@ template<typename con_ty>
 void get(con_ty & con,string key){
     uint32_t val_size = 0;
     val_type v = cache_get(con.cache(),(key_type)(key.c_str()),&val_size);
+    static uint64_t num_total = 0;
+    static uint64_t num_hits = 0;
+    num_total++;
     if(v != nullptr){
         string output = make_json(key,string((char *)(v)));
         con.write_message(output);
+        num_hits++;
     }else{
         con.return_error();
     }
+    cout << num_total / double(num_hits) << "\n";
 }
 template<typename con_ty>
 void put(con_ty & con,string key,string value){
