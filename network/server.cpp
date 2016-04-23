@@ -95,7 +95,6 @@ public:
         return impl;
     }
 };
-
 template<typename con_ty>
 void get(con_ty & con,string key){
     uint32_t val_size = 0;
