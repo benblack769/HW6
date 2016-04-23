@@ -387,8 +387,8 @@ void epoll_reactor::run(bool block, op_queue<operation>& ops)
   }
 
   // Block on the epoll descriptor.
-  epoll_event events[128];
-  int num_events = epoll_wait(epoll_fd_, events, 128, timeout);
+  epoll_event events[1024];
+  int num_events = epoll_wait(epoll_fd_, events, 1024, timeout);
 
 #if defined(ASIO_HAS_TIMERFD)
   bool check_timers = (timer_fd_ == -1);

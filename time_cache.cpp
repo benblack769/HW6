@@ -23,10 +23,10 @@ uint64_t get_time_ns();
 discrete_distribution<uint64_t> init_dist();
 
 constexpr uint64_t ns_in_s = 1000000000ULL;
-constexpr uint64_t mem_to_store = 50000000ULL;
+constexpr uint64_t mem_to_store = 100000ULL;
 constexpr uint64_t maxmem = 0.81 * mem_to_store;
 constexpr double APROX_MEAN_WEIGHTED_VALUE_SIZE = 461.258;//measured with unig.cpp
-constexpr uint64_t tot_num_items = mem_to_store / APROX_MEAN_WEIGHTED_VALUE_SIZE;
+constexpr uint64_t tot_num_items = uint64_t(mem_to_store / APROX_MEAN_WEIGHTED_VALUE_SIZE);
 constexpr size_t NUM_THREADS = 125;//one minus the number of ports
 constexpr uint64_t num_actions = 5000000 / NUM_THREADS;
 
@@ -46,7 +46,7 @@ uint64_t rand_val_size(gen_ty & generator){
 	return val_dist(generator);
 }
 char rand_char(gen_ty & generator){
-	uniform_int_distribution<char> lower_lettters_dist(96,96+26-1);//lower case letters
+    uniform_int_distribution<char> lower_lettters_dist(97,96+26-1);//lower case letters
 	return lower_lettters_dist(generator);
 }
 uint64_t uniform_rand_item(gen_ty & generator){
@@ -55,7 +55,7 @@ uint64_t uniform_rand_item(gen_ty & generator){
 }
 string rand_str(gen_ty & generator,uint64_t size){
 	string str(size,' ');
-	for(uint64_t i = 0; i < size-1; i++){
+    for(uint64_t i = 0; i < size; i++){
 		str[i] = rand_char(generator);
 	}
 	return str;
@@ -142,9 +142,6 @@ double time_threads(){
 	cache_t caches[NUM_THREADS];
 	for(uint64_t t_n = 0; t_n < NUM_THREADS; t_n++){
 		caches[t_n] = get_cache(tcp_start+t_n,udp_start+t_n);
-		if(t_n == 0){
-			call_head_no_return(caches[t_n]);
-		}
 		ts[t_n] = thread(run_requests,caches[t_n],t_n);
 	}
 	for(uint64_t t_n = 0; t_n < NUM_THREADS; t_n++){

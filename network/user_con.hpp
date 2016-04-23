@@ -32,8 +32,7 @@ bool is_white_space(char c){
 }
 
 void strip(std::string & str){
-    size_t strs = str.size();
-    for(int i = strs-1; i >= 0;i--){
+    for(int i = str.size()-1; i >= 0;i--){
         if(!is_white_space(str[i])){
             str.resize(i+1);
             break;

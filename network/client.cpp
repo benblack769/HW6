@@ -15,7 +15,7 @@ using asio::ip::tcp;
 
 string tcp_port = "10700";
 string udp_port = "10900";
-string serv_name = "134.10.103.234";
+string serv_name = "localhost";//"134.10.103.234";
 
 class tcp_connection{
 public:
@@ -99,13 +99,6 @@ public:
         }
     }
     void write_message(std::string s){
-        /*bufarr buf;
-        if(s.length() > bufsize-1){
-            throw runtime_error("bad message is passed to udp_connection");
-        }
-        std::copy(s.begin(),s.end(),buf.begin());
-        buf[s.length()] = 0;*/
-
         socket.send(asio::buffer(s.c_str(),s.size()+1));
     }
     void return_error(std::string myerr){
@@ -128,6 +121,9 @@ struct cache_obj{
     }
     string send_message_tcp(bool getmes,string head,string word1,string word2=string()){
         tcp_connection con(my_io_service,resit);
+        if(head == "GET"){
+            int x = 0;
+        }
         string finstr = head + " /" + word1 + (word2.size() == 0 ? "" : "/" + word2);
         con.write_message(finstr);
         return getmes ? con.get_message() : string();
@@ -170,7 +166,14 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
     }
     else{
         string valstr,retkeystr;
+        try{
         unpack_json(retval,retkeystr,valstr);
+
+        }
+        catch(...){
+            cout << retval << endl;
+            exit(1);
+        }
 
         if(keystr != retkeystr){
             //this is a network logic error
