@@ -1,0 +1,636 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 10.03      0.42     0.42 21364367     0.00     0.00  info_gotten(policy_obj*, pinfo_obj*)
+  9.07      0.80     0.38  1148786     0.00     0.00  start_thread(asio::io_service*)
+  6.68      1.08     0.28  7389062     0.00     0.00  asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool)
+  5.85      1.33     0.25  1128968     0.00     0.00  cache_set(cache_obj*, unsigned char const*, void const*, unsigned int)
+  5.01      1.54     0.21  5751807     0.00     0.00  def_hash_fn(unsigned char const*)
+  3.82      1.70     0.16  3992906     0.00     0.00  asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool)
+  3.82      1.86     0.16  2217702     0.00     0.00  cache_get(cache_obj*, unsigned char const*, unsigned int*)
+  3.58      2.01     0.15  2123918     0.00     0.00  udp_server::return_error()
+  3.34      2.15     0.14   965811     0.00     0.00  tcp_server::start_accept()
+  3.10      2.28     0.13  2236978     0.00     0.00  udp_server::handle_receive(std::error_code const&, unsigned long)
+  2.98      2.40     0.13   989416     0.00     0.00  asio::detail::reactive_socket_accept_op_base<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp>::do_perform(asio::detail::reactor_op*)
+  2.86      2.52     0.12  2259080     0.00     0.00  asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long)
+  2.86      2.64     0.12   994224     0.00     0.00  asio::detail::reactive_socket_accept_op<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>, boost::_bi::list3<boost::_bi::value<tcp_server*>, boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1> (*)()> > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long)
+  2.75      2.76     0.12 13438413     0.00     0.00  strip(std::string&)
+  2.63      2.87     0.11  3192458     0.00     0.00  asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >::operator()(std::error_code const&, unsigned long, int)
+  2.63      2.98     0.11  1194610     0.00     0.00  asio::detail::reactive_socket_service_base::destroy(asio::detail::reactive_socket_service_base::base_implementation_type&)
+  2.63      3.09     0.11        1     0.11     4.08  asio::detail::task_io_service::run(std::error_code&)
+  2.39      3.19     0.10  2264627     0.00     0.00  asio::detail::reactive_socket_recv_op_base<asio::mutable_buffers_1>::do_perform(asio::detail::reactor_op*)
+  2.39      3.29     0.10  2256193     0.00     0.00  asio::detail::reactive_socket_sendto_op_base<asio::const_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*)
+  2.39      3.39     0.10  4214773     0.00     0.00  asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long)
+  2.39      3.49     0.10   969508     0.00     0.00  tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&)
+  1.91      3.57     0.08  1111679     0.00     0.00  void act_on_message<tcp_con>(tcp_con&, std::string)
+  1.91      3.65     0.08  7615296     0.00     0.00  char* std::string::_S_construct<__gnu_cxx::__normal_iterator<char*, std::string> >(__gnu_cxx::__normal_iterator<char*, std::string>, __gnu_cxx::__normal_iterator<char*, std::string>, std::allocator<char> const&, std::forward_iterator_tag)
+  1.67      3.72     0.07  4472176     0.00     0.00  asio::detail::reactive_socket_recvfrom_op_base<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*)
+  1.67      3.79     0.07  1163132     0.00     0.00  tcp_con::handle_read(std::error_code const&, unsigned long)
+  1.43      3.85     0.06   140898     0.00     0.00  asio::detail::epoll_reactor::run(bool, asio::detail::op_queue<asio::detail::task_io_service_operation>&)
+  1.19      3.90     0.05  1207947     0.00     0.00  add_to_cache(cache_obj*, unsigned char const*, void const*, unsigned int)
+  1.19      3.95     0.05  1142980     0.00     0.00  ids_to_delete_if_added(policy_obj*, unsigned int)
+  0.95      3.99     0.04  2150614     0.00     0.00  void get<udp_server>(udp_server&, std::string)
+  0.60      4.01     0.03                             is_white_space(char)
+  0.48      4.03     0.02  2209457     0.00     0.00  asio::detail::reactive_socket_recvfrom_op<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long)
+  0.48      4.05     0.02  1218637     0.00     0.00  create_info(policy_obj*, void*, unsigned int)
+  0.48      4.07     0.02   938452     0.00     0.00  asio::detail::epoll_reactor::register_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&)
+  0.48      4.09     0.02                             asio::detail::do_throw_error(std::error_code const&)
+  0.24      4.10     0.01  2621116     0.00     0.00  asio::detail::reactive_socket_sendto_op<asio::const_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long)
+  0.24      4.11     0.01  2107812     0.00     0.00  void act_on_message<udp_server>(udp_server&, std::string)
+  0.24      4.12     0.01  1211692     0.00     0.00  asio::detail::socket_ops::close(int, unsigned char&, bool, std::error_code&)
+  0.24      4.13     0.01                             asio::detail::epoll_reactor::~epoll_reactor()
+  0.24      4.14     0.01                             asio::detail::socket_holder::~socket_holder()
+  0.24      4.15     0.01                             asio::detail::task_io_service::~task_io_service()
+  0.24      4.16     0.01                             std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_release()
+  0.24      4.17     0.01                             void std::vector<udp_server, std::allocator<udp_server> >::_M_emplace_back_aux<asio::io_service&, int, safe_cache&>(asio::io_service&, int&&, safe_cache&)
+  0.12      4.18     0.01  2431717     0.00     0.00  make_copy(void const*, unsigned long)
+  0.12      4.18     0.01                             cache_set_impl(cache_obj*, unsigned char const*, void const*, unsigned int)
+  0.12      4.19     0.01                             c_delete(void**)
+  0.12      4.19     0.01                             asio::detail::reactive_socket_service_base::do_open(asio::detail::reactive_socket_service_base::base_implementation_type&, int, int, int, std::error_code&)
+  0.00      4.19     0.00  6266973     0.00     0.00  asio::asio_handler_is_continuation(...)
+  0.00      4.19     0.00  2542429     0.00     0.00  udp_server::handle_send(std::error_code const&, unsigned long)
+  0.00      4.19     0.00  1234648     0.00     0.00  delete_info(policy_obj*, pinfo_obj*)
+  0.00      4.19     0.00  1192490     0.00     0.00  asio::detail::op_queue<asio::detail::task_io_service_operation>::~op_queue()
+  0.00      4.19     0.00  1178533     0.00     0.00  boost::detail::sp_counted_impl_p<tcp_con>::~sp_counted_impl_p()
+  0.00      4.19     0.00  1159691     0.00     0.00  asio::detail::task_io_service::post_deferred_completions(asio::detail::op_queue<asio::detail::task_io_service_operation>&)
+  0.00      4.19     0.00   958767     0.00     0.00  asio::detail::service_registry::do_use_service(asio::io_service::service::key const&, asio::io_service::service* (*)(asio::io_service&))
+  0.00      4.19     0.00    15085     0.00     0.00  make_json(std::string, std::string)
+  0.00      4.19     0.00      482     0.00     0.00  asio::detail::posix_mutex::posix_mutex()
+  0.00      4.19     0.00        7     0.00     0.00  std::_Sp_counted_ptr_inplace<std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >, std::allocator<std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> > >, (__gnu_cxx::_Lock_policy)2>::_M_get_deleter(std::type_info const&)
+  0.00      4.19     0.00        2     0.00     0.00  void post<tcp_con>(tcp_con&, std::string, std::string)
+  0.00      4.19     0.00        1     0.00     0.00  _GLOBAL__sub_I_errcstr
+  0.00      4.19     0.00        1     0.00     0.00  create_cache(unsigned long, unsigned long (*)(unsigned char const*))
+  0.00      4.19     0.00        1     0.00     0.00  create_policy(unsigned long)
+  0.00      4.19     0.00        1     0.00     0.00  cache_space_used(cache_obj*)
+  0.00      4.19     0.00        1     0.00     0.00  asio::detail::task_io_service::work_cleanup::~work_cleanup()
+  0.00      4.19     0.00        1     0.00     0.00  asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&)
+  0.00      4.19     0.00        1     0.00     0.00  asio::io_service::service* asio::detail::service_registry::create<asio::detail::epoll_reactor>(asio::io_service&)
+  0.00      4.19     0.00        1     0.00     0.00  asio::io_service::service* asio::detail::service_registry::create<asio::stream_socket_service<asio::ip::tcp> >(asio::io_service&)
+  0.00      4.19     0.00        1     0.00     0.00  asio::io_service::service* asio::detail::service_registry::create<asio::datagram_socket_service<asio::ip::udp> >(asio::io_service&)
+  0.00      4.19     0.00        1     0.00     0.00  asio::io_service::service* asio::detail::service_registry::create<asio::socket_acceptor_service<asio::ip::tcp> >(asio::io_service&)
+  0.00      4.19     0.00        1     0.00     0.00  asio::detail::service_registry::service_registry<asio::detail::task_io_service, unsigned long>(asio::io_service&, asio::detail::task_io_service*, unsigned long)
+  0.00      4.19     0.00        1     0.00     0.00  asio::detail::reactive_socket_send_op<asio::const_buffers_1, asio::detail::write_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::const_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf0<void, tcp_con>, boost::_bi::list1<boost::_bi::value<boost::shared_ptr<tcp_con> > > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long)
+  0.00      4.19     0.00        1     0.00     0.00  asio::detail::eventfd_select_interrupter::open_descriptors()
+  0.00      4.19     0.00        1     0.00     0.00  asio::detail::task_io_service_thread_info::~task_io_service_thread_info()
+  0.00      4.19     0.00        1     0.00     0.00  asio::detail::reactive_socket_send_op_base<asio::const_buffers_1>::do_perform(asio::detail::reactor_op*)
+  0.00      4.19     0.00        1     0.00     0.00  asio::detail::write_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::const_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf0<void, tcp_con>, boost::_bi::list1<boost::_bi::value<boost::shared_ptr<tcp_con> > > > >::operator()(std::error_code const&, unsigned long, int)
+  0.00      4.19     0.00        1     0.00     0.00  tcp_con::write_message(std::string)
+  0.00      4.19     0.00        1     0.00     0.00  std::vector<udp_server, std::allocator<udp_server> >::reserve(unsigned long)
+  0.00      4.19     0.00        1     0.00     0.00  std::vector<std::thread, std::allocator<std::thread> >::reserve(unsigned long)
+  0.00      4.19     0.00        1     0.00     0.00  _init
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+ 
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this 
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 0.24% of 4.19 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     97.4    0.00    4.08                 run_server(int, int, int, int, int) [1]
+                0.11    3.97       1/1           asio::detail::task_io_service::run(std::error_code&) [2]
+                0.00    0.00     200/965811      tcp_server::start_accept() [21]
+                0.00    0.00     200/4472176     asio::detail::reactive_socket_recvfrom_op_base<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*) [31]
+                0.00    0.00     400/482         asio::detail::posix_mutex::posix_mutex() [68]
+                0.00    0.00     200/6266973     asio::asio_handler_is_continuation(...) [60]
+                0.00    0.00       7/7           std::_Sp_counted_ptr_inplace<std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >, std::allocator<std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> > >, (__gnu_cxx::_Lock_policy)2>::_M_get_deleter(std::type_info const&) [69]
+                0.00    0.00       1/1           asio::detail::service_registry::service_registry<asio::detail::task_io_service, unsigned long>(asio::io_service&, asio::detail::task_io_service*, unsigned long) [80]
+                0.00    0.00       1/1           create_cache(unsigned long, unsigned long (*)(unsigned char const*)) [71]
+                0.00    0.00       1/1           std::vector<udp_server, std::allocator<udp_server> >::reserve(unsigned long) [85]
+                0.00    0.00       1/1           asio::io_service::service* asio::detail::service_registry::create<asio::socket_acceptor_service<asio::ip::tcp> >(asio::io_service&) [79]
+                0.00    0.00       1/1           asio::io_service::service* asio::detail::service_registry::create<asio::datagram_socket_service<asio::ip::udp> >(asio::io_service&) [78]
+                0.00    0.00       1/1           std::vector<std::thread, std::allocator<std::thread> >::reserve(unsigned long) [86]
+-----------------------------------------------
+                0.11    3.97       1/1           run_server(int, int, int, int, int) [1]
+[2]     97.4    0.11    3.97       1         asio::detail::task_io_service::run(std::error_code&) [2]
+                0.49    2.20  531761/785108      asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [4]
+                0.23    1.05  253347/785108      asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [8]
+                0.01    0.00   17719/140898      asio::detail::epoll_reactor::run(bool, asio::detail::op_queue<asio::detail::task_io_service_operation>&) [32]
+                0.00    0.00  325242/2621116     asio::detail::reactive_socket_sendto_op<asio::const_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [38]
+                0.00    0.00     412/2209457     asio::detail::reactive_socket_recvfrom_op<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [5]
+-----------------------------------------------
+[3]     94.5    0.72    3.24  785108+7831755 <cycle 1 as a whole> [3]
+                0.10    1.55 4214773             asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [4]
+                0.12    0.82 2259080             asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [8]
+                0.12    0.69  994224             asio::detail::reactive_socket_accept_op<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>, boost::_bi::list3<boost::_bi::value<tcp_server*>, boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1> (*)()> > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [11]
+                0.38    0.18 1148786             start_thread(asio::io_service*) <cycle 1> [16]
+-----------------------------------------------
+                             3683012             start_thread(asio::io_service*) <cycle 1> [16]
+                0.49    2.20  531761/785108      asio::detail::task_io_service::run(std::error_code&) [2]
+[4]     39.4    0.10    1.55 4214773         asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [4]
+                0.02    1.34 2205956/2209457     asio::detail::reactive_socket_recvfrom_op<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [5]
+                0.13    0.02  989416/989416      asio::detail::reactive_socket_accept_op_base<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp>::do_perform(asio::detail::reactor_op*) [24]
+                0.04    0.00 2264461/4472176     asio::detail::reactive_socket_recvfrom_op_base<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*) [31]
+                0.01    0.00  227606/2264627     asio::detail::reactive_socket_recv_op_base<asio::mutable_buffers_1>::do_perform(asio::detail::reactor_op*) [28]
+                              994224             asio::detail::reactive_socket_accept_op<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>, boost::_bi::list3<boost::_bi::value<tcp_server*>, boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1> (*)()> > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [11]
+                              224316             asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [8]
+-----------------------------------------------
+                0.00    0.00     412/2209457     asio::detail::task_io_service::run(std::error_code&) [2]
+                0.00    0.00    3089/2209457     start_thread(asio::io_service*) <cycle 1> [16]
+                0.02    1.34 2205956/2209457     asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [4]
+[5]     32.5    0.02    1.34 2209457         asio::detail::reactive_socket_recvfrom_op<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [5]
+                0.13    1.21 2236978/2236978     udp_server::handle_receive(std::error_code const&, unsigned long) [6]
+-----------------------------------------------
+                0.13    1.21 2236978/2236978     asio::detail::reactive_socket_recvfrom_op<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [5]
+[6]     32.0    0.13    1.21 2236978         udp_server::handle_receive(std::error_code const&, unsigned long) [6]
+                0.01    0.91 2107812/2107812     void act_on_message<udp_server>(udp_server&, std::string) [9]
+                0.08    0.11 2150574/7389062     asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+                0.08    0.00 4281278/21364367     info_gotten(policy_obj*, pinfo_obj*) [18]
+                0.02    0.00 2206378/13438413     strip(std::string&) [27]
+                0.00    0.00 2139215/6266973     asio::asio_handler_is_continuation(...) [60]
+-----------------------------------------------
+                0.03    0.33  985853/3192458     tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) [13]
+                0.08    0.74 2206605/3192458     asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [8]
+[7]     28.2    0.11    1.07 3192458         asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >::operator()(std::error_code const&, unsigned long, int) [7]
+                0.07    0.82 1163132/1163132     tcp_con::handle_read(std::error_code const&, unsigned long) [10]
+                0.08    0.11 2043990/7389062     asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+                0.00    0.00 1018510/6266973     asio::asio_handler_is_continuation(...) [60]
+-----------------------------------------------
+                              224316             asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [4]
+                             1781417             start_thread(asio::io_service*) <cycle 1> [16]
+                0.23    1.05  253347/785108      asio::detail::task_io_service::run(std::error_code&) [2]
+[8]     22.4    0.12    0.82 2259080         asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [8]
+                0.08    0.74 2206605/3192458     asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >::operator()(std::error_code const&, unsigned long, int) [7]
+                0.00    0.00 1178133/1178533     boost::detail::sp_counted_impl_p<tcp_con>::~sp_counted_impl_p() [64]
+                0.00    0.00       1/1           _init [87]
+                             1148350             start_thread(asio::io_service*) <cycle 1> [16]
+-----------------------------------------------
+                0.01    0.91 2107812/2107812     udp_server::handle_receive(std::error_code const&, unsigned long) [6]
+[9]     21.8    0.01    0.91 2107812         void act_on_message<udp_server>(udp_server&, std::string) [9]
+                0.04    0.63 2150614/2150614     void get<udp_server>(udp_server&, std::string) [14]
+                0.13    0.00 6565338/21364367     info_gotten(policy_obj*, pinfo_obj*) [18]
+                0.06    0.00 6648068/13438413     strip(std::string&) [27]
+                0.04    0.00 4251386/7615296     char* std::string::_S_construct<__gnu_cxx::__normal_iterator<char*, std::string> >(__gnu_cxx::__normal_iterator<char*, std::string>, __gnu_cxx::__normal_iterator<char*, std::string>, std::allocator<char> const&, std::forward_iterator_tag) [30]
+-----------------------------------------------
+                0.07    0.82 1163132/1163132     asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >::operator()(std::error_code const&, unsigned long, int) [7]
+[10]    21.2    0.07    0.82 1163132         tcp_con::handle_read(std::error_code const&, unsigned long) [10]
+                0.08    0.68 1111679/1111679     void act_on_message<tcp_con>(tcp_con&, std::string) [12]
+                0.05    0.00 2356532/21364367     info_gotten(policy_obj*, pinfo_obj*) [18]
+                0.01    0.00 1133472/13438413     strip(std::string&) [27]
+-----------------------------------------------
+                              994224             asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [4]
+[11]    19.4    0.12    0.69  994224         asio::detail::reactive_socket_accept_op<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>, boost::_bi::list3<boost::_bi::value<tcp_server*>, boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1> (*)()> > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [11]
+                0.10    0.59  969508/969508      tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) [13]
+                0.00    0.00     400/1178533     boost::detail::sp_counted_impl_p<tcp_con>::~sp_counted_impl_p() [64]
+                                 436             start_thread(asio::io_service*) <cycle 1> [16]
+-----------------------------------------------
+                0.08    0.68 1111679/1111679     tcp_con::handle_read(std::error_code const&, unsigned long) [10]
+[12]    18.2    0.08    0.68 1111679         void act_on_message<tcp_con>(tcp_con&, std::string) [12]
+                0.25    0.26 1128968/1128968     cache_set(cache_obj*, unsigned char const*, void const*, unsigned int) [17]
+                0.12    0.00 5933955/21364367     info_gotten(policy_obj*, pinfo_obj*) [18]
+                0.04    0.00 3363910/7615296     char* std::string::_S_construct<__gnu_cxx::__normal_iterator<char*, std::string> >(__gnu_cxx::__normal_iterator<char*, std::string>, __gnu_cxx::__normal_iterator<char*, std::string>, std::allocator<char> const&, std::forward_iterator_tag) [30]
+                0.03    0.00 3450493/13438413     strip(std::string&) [27]
+                0.00    0.00       2/2           void post<tcp_con>(tcp_con&, std::string, std::string) [49]
+-----------------------------------------------
+                0.10    0.59  969508/969508      asio::detail::reactive_socket_accept_op<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>, boost::_bi::list3<boost::_bi::value<tcp_server*>, boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1> (*)()> > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [11]
+[13]    16.5    0.10    0.59  969508         tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) [13]
+                0.03    0.33  985853/3192458     asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >::operator()(std::error_code const&, unsigned long, int) [7]
+                0.14    0.09  965611/965811      tcp_server::start_accept() [21]
+-----------------------------------------------
+                0.04    0.63 2150614/2150614     void act_on_message<udp_server>(udp_server&, std::string) [9]
+[14]    16.1    0.04    0.63 2150614         void get<udp_server>(udp_server&, std::string) [14]
+                0.15    0.24 2123918/2123918     udp_server::return_error() [19]
+                0.16    0.08 2217702/2217702     cache_get(cache_obj*, unsigned char const*, unsigned int*) [20]
+                0.00    0.00   15089/7389062     asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+                0.00    0.00   58451/21364367     info_gotten(policy_obj*, pinfo_obj*) [18]
+                0.00    0.00   15085/15085       make_json(std::string, std::string) [67]
+                0.00    0.00   14405/6266973     asio::asio_handler_is_continuation(...) [60]
+-----------------------------------------------
+                0.00    0.00       1/7389062     asio::detail::write_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::const_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf0<void, tcp_con>, boost::_bi::list1<boost::_bi::value<boost::shared_ptr<tcp_con> > > > >::operator()(std::error_code const&, unsigned long, int) [50]
+                0.00    0.00   15089/7389062     void get<udp_server>(udp_server&, std::string) [14]
+                0.04    0.05  958632/7389062     tcp_server::start_accept() [21]
+                0.08    0.11 2043990/7389062     asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >::operator()(std::error_code const&, unsigned long, int) [7]
+                0.08    0.11 2150574/7389062     udp_server::handle_receive(std::error_code const&, unsigned long) [6]
+                0.08    0.12 2220776/7389062     udp_server::return_error() [19]
+[15]    15.9    0.28    0.38 7389062         asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+                0.16    0.00 3992906/3992906     asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) [23]
+                0.10    0.00 2256193/2256193     asio::detail::reactive_socket_sendto_op_base<asio::const_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*) [29]
+                0.09    0.00 2037021/2264627     asio::detail::reactive_socket_recv_op_base<asio::mutable_buffers_1>::do_perform(asio::detail::reactor_op*) [28]
+                0.03    0.00 2207515/4472176     asio::detail::reactive_socket_recvfrom_op_base<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*) [31]
+                0.00    0.00       1/1           asio::detail::reactive_socket_send_op_base<asio::const_buffers_1>::do_perform(asio::detail::reactor_op*) [84]
+-----------------------------------------------
+                                 436             asio::detail::reactive_socket_accept_op<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>, boost::_bi::list3<boost::_bi::value<tcp_server*>, boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1> (*)()> > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [11]
+                             1148350             asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [8]
+[16]    13.4    0.38    0.18 1148786         start_thread(asio::io_service*) <cycle 1> [16]
+                0.11    0.01 1194610/1194610     asio::detail::reactive_socket_service_base::destroy(asio::detail::reactive_socket_service_base::base_implementation_type&) [25]
+                0.05    0.00  123179/140898      asio::detail::epoll_reactor::run(bool, asio::detail::op_queue<asio::detail::task_io_service_operation>&) [32]
+                0.01    0.00 2295874/2621116     asio::detail::reactive_socket_sendto_op<asio::const_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [38]
+                0.00    0.00    3089/2209457     asio::detail::reactive_socket_recvfrom_op<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [5]
+                0.00    0.00       1/1           asio::detail::reactive_socket_send_op<asio::const_buffers_1, asio::detail::write_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::const_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf0<void, tcp_con>, boost::_bi::list1<boost::_bi::value<boost::shared_ptr<tcp_con> > > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [81]
+                0.00    0.00       1/1           asio::detail::task_io_service::work_cleanup::~work_cleanup() [74]
+                0.00    0.00       1/1           asio::detail::task_io_service_thread_info::~task_io_service_thread_info() [83]
+                             3683012             asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [4]
+                             1781417             asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [8]
+-----------------------------------------------
+                0.25    0.26 1128968/1128968     void act_on_message<tcp_con>(tcp_con&, std::string) [12]
+[17]    11.9    0.25    0.26 1128968         cache_set(cache_obj*, unsigned char const*, void const*, unsigned int) [17]
+                0.05    0.07 1207947/1207947     add_to_cache(cache_obj*, unsigned char const*, void const*, unsigned int) [26]
+                0.09    0.00 2377617/5751807     def_hash_fn(unsigned char const*) [22]
+                0.05    0.00 1142980/1142980     ids_to_delete_if_added(policy_obj*, unsigned int) [33]
+                0.00    0.00 1234648/1234648     delete_info(policy_obj*, pinfo_obj*) [62]
+-----------------------------------------------
+                0.00    0.00       1/21364367     void post<tcp_con>(tcp_con&, std::string, std::string) [49]
+                0.00    0.00   14959/21364367     cache_get(cache_obj*, unsigned char const*, unsigned int*) [20]
+                0.00    0.00   58451/21364367     void get<udp_server>(udp_server&, std::string) [14]
+                0.04    0.00 2153853/21364367     udp_server::return_error() [19]
+                0.05    0.00 2356532/21364367     tcp_con::handle_read(std::error_code const&, unsigned long) [10]
+                0.08    0.00 4281278/21364367     udp_server::handle_receive(std::error_code const&, unsigned long) [6]
+                0.12    0.00 5933955/21364367     void act_on_message<tcp_con>(tcp_con&, std::string) [12]
+                0.13    0.00 6565338/21364367     void act_on_message<udp_server>(udp_server&, std::string) [9]
+[18]    10.0    0.42    0.00 21364367         info_gotten(policy_obj*, pinfo_obj*) [18]
+-----------------------------------------------
+                0.15    0.24 2123918/2123918     void get<udp_server>(udp_server&, std::string) [14]
+[19]     9.4    0.15    0.24 2123918         udp_server::return_error() [19]
+                0.08    0.12 2220776/7389062     asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+                0.04    0.00 2153853/21364367     info_gotten(policy_obj*, pinfo_obj*) [18]
+                0.00    0.00 2147349/6266973     asio::asio_handler_is_continuation(...) [60]
+-----------------------------------------------
+                0.16    0.08 2217702/2217702     void get<udp_server>(udp_server&, std::string) [14]
+[20]     5.7    0.16    0.08 2217702         cache_get(cache_obj*, unsigned char const*, unsigned int*) [20]
+                0.08    0.00 2182416/5751807     def_hash_fn(unsigned char const*) [22]
+                0.00    0.00   14959/21364367     info_gotten(policy_obj*, pinfo_obj*) [18]
+-----------------------------------------------
+                0.00    0.00     200/965811      run_server(int, int, int, int, int) [1]
+                0.14    0.09  965611/965811      tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) [13]
+[21]     5.4    0.14    0.09  965811         tcp_server::start_accept() [21]
+                0.04    0.05  958632/7389062     asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+                0.00    0.00  958763/958766      asio::detail::service_registry::do_use_service(asio::io_service::service::key const&, asio::io_service::service* (*)(asio::io_service&)) <cycle 2> [66]
+                0.00    0.00  947293/6266973     asio::asio_handler_is_continuation(...) [60]
+-----------------------------------------------
+                0.04    0.00 1191774/5751807     add_to_cache(cache_obj*, unsigned char const*, void const*, unsigned int) [26]
+                0.08    0.00 2182416/5751807     cache_get(cache_obj*, unsigned char const*, unsigned int*) [20]
+                0.09    0.00 2377617/5751807     cache_set(cache_obj*, unsigned char const*, void const*, unsigned int) [17]
+[22]     5.0    0.21    0.00 5751807         def_hash_fn(unsigned char const*) [22]
+-----------------------------------------------
+                0.16    0.00 3992906/3992906     asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+[23]     3.8    0.16    0.00 3992906         asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) [23]
+-----------------------------------------------
+                0.13    0.02  989416/989416      asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [4]
+[24]     3.5    0.13    0.02  989416         asio::detail::reactive_socket_accept_op_base<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp>::do_perform(asio::detail::reactor_op*) [24]
+                0.02    0.00  938452/938452      asio::detail::epoll_reactor::register_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&) [36]
+-----------------------------------------------
+                0.11    0.01 1194610/1194610     start_thread(asio::io_service*) <cycle 1> [16]
+[25]     2.9    0.11    0.01 1194610         asio::detail::reactive_socket_service_base::destroy(asio::detail::reactive_socket_service_base::base_implementation_type&) [25]
+                0.01    0.00 1211692/1211692     asio::detail::socket_ops::close(int, unsigned char&, bool, std::error_code&) [39]
+                0.00    0.00 1192490/1192490     asio::detail::op_queue<asio::detail::task_io_service_operation>::~op_queue() [63]
+                0.00    0.00 1159691/1159691     asio::detail::task_io_service::post_deferred_completions(asio::detail::op_queue<asio::detail::task_io_service_operation>&) [65]
+-----------------------------------------------
+                0.05    0.07 1207947/1207947     cache_set(cache_obj*, unsigned char const*, void const*, unsigned int) [17]
+[26]     2.8    0.05    0.07 1207947         add_to_cache(cache_obj*, unsigned char const*, void const*, unsigned int) [26]
+                0.04    0.00 1191774/5751807     def_hash_fn(unsigned char const*) [22]
+                0.02    0.00 1218637/1218637     create_info(policy_obj*, void*, unsigned int) [35]
+                0.01    0.00 2431717/2431717     make_copy(void const*, unsigned long) [45]
+-----------------------------------------------
+                0.00    0.00       2/13438413     void post<tcp_con>(tcp_con&, std::string, std::string) [49]
+                0.01    0.00 1133472/13438413     tcp_con::handle_read(std::error_code const&, unsigned long) [10]
+                0.02    0.00 2206378/13438413     udp_server::handle_receive(std::error_code const&, unsigned long) [6]
+                0.03    0.00 3450493/13438413     void act_on_message<tcp_con>(tcp_con&, std::string) [12]
+                0.06    0.00 6648068/13438413     void act_on_message<udp_server>(udp_server&, std::string) [9]
+[27]     2.7    0.12    0.00 13438413         strip(std::string&) [27]
+-----------------------------------------------
+                0.01    0.00  227606/2264627     asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [4]
+                0.09    0.00 2037021/2264627     asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+[28]     2.4    0.10    0.00 2264627         asio::detail::reactive_socket_recv_op_base<asio::mutable_buffers_1>::do_perform(asio::detail::reactor_op*) [28]
+-----------------------------------------------
+                0.10    0.00 2256193/2256193     asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+[29]     2.4    0.10    0.00 2256193         asio::detail::reactive_socket_sendto_op_base<asio::const_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*) [29]
+-----------------------------------------------
+                0.04    0.00 3363910/7615296     void act_on_message<tcp_con>(tcp_con&, std::string) [12]
+                0.04    0.00 4251386/7615296     void act_on_message<udp_server>(udp_server&, std::string) [9]
+[30]     1.9    0.08    0.00 7615296         char* std::string::_S_construct<__gnu_cxx::__normal_iterator<char*, std::string> >(__gnu_cxx::__normal_iterator<char*, std::string>, __gnu_cxx::__normal_iterator<char*, std::string>, std::allocator<char> const&, std::forward_iterator_tag) [30]
+-----------------------------------------------
+                0.00    0.00     200/4472176     run_server(int, int, int, int, int) [1]
+                0.03    0.00 2207515/4472176     asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+                0.04    0.00 2264461/4472176     asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [4]
+[31]     1.7    0.07    0.00 4472176         asio::detail::reactive_socket_recvfrom_op_base<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*) [31]
+-----------------------------------------------
+                0.01    0.00   17719/140898      asio::detail::task_io_service::run(std::error_code&) [2]
+                0.05    0.00  123179/140898      start_thread(asio::io_service*) <cycle 1> [16]
+[32]     1.4    0.06    0.00  140898         asio::detail::epoll_reactor::run(bool, asio::detail::op_queue<asio::detail::task_io_service_operation>&) [32]
+-----------------------------------------------
+                0.05    0.00 1142980/1142980     cache_set(cache_obj*, unsigned char const*, void const*, unsigned int) [17]
+[33]     1.2    0.05    0.00 1142980         ids_to_delete_if_added(policy_obj*, unsigned int) [33]
+-----------------------------------------------
+                                                 <spontaneous>
+[34]     0.6    0.03    0.00                 is_white_space(char) [34]
+-----------------------------------------------
+                0.02    0.00 1218637/1218637     add_to_cache(cache_obj*, unsigned char const*, void const*, unsigned int) [26]
+[35]     0.5    0.02    0.00 1218637         create_info(policy_obj*, void*, unsigned int) [35]
+-----------------------------------------------
+                0.02    0.00  938452/938452      asio::detail::reactive_socket_accept_op_base<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp>::do_perform(asio::detail::reactor_op*) [24]
+[36]     0.5    0.02    0.00  938452         asio::detail::epoll_reactor::register_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&) [36]
+                0.00    0.00      82/482         asio::detail::posix_mutex::posix_mutex() [68]
+-----------------------------------------------
+                                                 <spontaneous>
+[37]     0.5    0.02    0.00                 asio::detail::do_throw_error(std::error_code const&) [37]
+-----------------------------------------------
+                0.00    0.00  325242/2621116     asio::detail::task_io_service::run(std::error_code&) [2]
+                0.01    0.00 2295874/2621116     start_thread(asio::io_service*) <cycle 1> [16]
+[38]     0.2    0.01    0.00 2621116         asio::detail::reactive_socket_sendto_op<asio::const_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [38]
+                0.00    0.00 2542429/2542429     udp_server::handle_send(std::error_code const&, unsigned long) [61]
+-----------------------------------------------
+                0.01    0.00 1211692/1211692     asio::detail::reactive_socket_service_base::destroy(asio::detail::reactive_socket_service_base::base_implementation_type&) [25]
+[39]     0.2    0.01    0.00 1211692         asio::detail::socket_ops::close(int, unsigned char&, bool, std::error_code&) [39]
+-----------------------------------------------
+                                                 <spontaneous>
+[40]     0.2    0.01    0.00                 asio::detail::epoll_reactor::~epoll_reactor() [40]
+-----------------------------------------------
+                                                 <spontaneous>
+[41]     0.2    0.01    0.00                 asio::detail::socket_holder::~socket_holder() [41]
+-----------------------------------------------
+                                                 <spontaneous>
+[42]     0.2    0.01    0.00                 asio::detail::task_io_service::~task_io_service() [42]
+-----------------------------------------------
+                                                 <spontaneous>
+[43]     0.2    0.01    0.00                 std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_release() [43]
+-----------------------------------------------
+                                                 <spontaneous>
+[44]     0.2    0.01    0.00                 void std::vector<udp_server, std::allocator<udp_server> >::_M_emplace_back_aux<asio::io_service&, int, safe_cache&>(asio::io_service&, int&&, safe_cache&) [44]
+-----------------------------------------------
+                0.01    0.00 2431717/2431717     add_to_cache(cache_obj*, unsigned char const*, void const*, unsigned int) [26]
+[45]     0.1    0.01    0.00 2431717         make_copy(void const*, unsigned long) [45]
+-----------------------------------------------
+                                                 <spontaneous>
+[46]     0.1    0.01    0.00                 cache_set_impl(cache_obj*, unsigned char const*, void const*, unsigned int) [46]
+-----------------------------------------------
+                                                 <spontaneous>
+[47]     0.1    0.01    0.00                 c_delete(void**) [47]
+-----------------------------------------------
+                                                 <spontaneous>
+[48]     0.1    0.01    0.00                 asio::detail::reactive_socket_service_base::do_open(asio::detail::reactive_socket_service_base::base_implementation_type&, int, int, int, std::error_code&) [48]
+-----------------------------------------------
+                0.00    0.00       2/2           void act_on_message<tcp_con>(tcp_con&, std::string) [12]
+[49]     0.0    0.00    0.00       2         void post<tcp_con>(tcp_con&, std::string, std::string) [49]
+                0.00    0.00       1/1           tcp_con::write_message(std::string) [51]
+                0.00    0.00       1/21364367     info_gotten(policy_obj*, pinfo_obj*) [18]
+                0.00    0.00       2/13438413     strip(std::string&) [27]
+                0.00    0.00       1/1           cache_space_used(cache_obj*) [73]
+-----------------------------------------------
+                0.00    0.00       1/1           tcp_con::write_message(std::string) [51]
+[50]     0.0    0.00    0.00       1         asio::detail::write_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::const_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf0<void, tcp_con>, boost::_bi::list1<boost::_bi::value<boost::shared_ptr<tcp_con> > > > >::operator()(std::error_code const&, unsigned long, int) [50]
+                0.00    0.00       1/7389062     asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+                0.00    0.00       1/6266973     asio::asio_handler_is_continuation(...) [60]
+-----------------------------------------------
+                0.00    0.00       1/1           void post<tcp_con>(tcp_con&, std::string, std::string) [49]
+[51]     0.0    0.00    0.00       1         tcp_con::write_message(std::string) [51]
+                0.00    0.00       1/1           asio::detail::write_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::const_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf0<void, tcp_con>, boost::_bi::list1<boost::_bi::value<boost::shared_ptr<tcp_con> > > > >::operator()(std::error_code const&, unsigned long, int) [50]
+-----------------------------------------------
+[52]     0.0    0.00    0.00  958766+2       <cycle 2 as a whole> [52]
+                0.00    0.00  958767             asio::detail::service_registry::do_use_service(asio::io_service::service::key const&, asio::io_service::service* (*)(asio::io_service&)) <cycle 2> [66]
+                0.00    0.00       1             asio::io_service::service* asio::detail::service_registry::create<asio::stream_socket_service<asio::ip::tcp> >(asio::io_service&) <cycle 2> [77]
+-----------------------------------------------
+                0.00    0.00       1/6266973     asio::detail::write_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::const_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf0<void, tcp_con>, boost::_bi::list1<boost::_bi::value<boost::shared_ptr<tcp_con> > > > >::operator()(std::error_code const&, unsigned long, int) [50]
+                0.00    0.00     200/6266973     run_server(int, int, int, int, int) [1]
+                0.00    0.00   14405/6266973     void get<udp_server>(udp_server&, std::string) [14]
+                0.00    0.00  947293/6266973     tcp_server::start_accept() [21]
+                0.00    0.00 1018510/6266973     asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >::operator()(std::error_code const&, unsigned long, int) [7]
+                0.00    0.00 2139215/6266973     udp_server::handle_receive(std::error_code const&, unsigned long) [6]
+                0.00    0.00 2147349/6266973     udp_server::return_error() [19]
+[60]     0.0    0.00    0.00 6266973         asio::asio_handler_is_continuation(...) [60]
+-----------------------------------------------
+                0.00    0.00 2542429/2542429     asio::detail::reactive_socket_sendto_op<asio::const_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [38]
+[61]     0.0    0.00    0.00 2542429         udp_server::handle_send(std::error_code const&, unsigned long) [61]
+-----------------------------------------------
+                0.00    0.00 1234648/1234648     cache_set(cache_obj*, unsigned char const*, void const*, unsigned int) [17]
+[62]     0.0    0.00    0.00 1234648         delete_info(policy_obj*, pinfo_obj*) [62]
+-----------------------------------------------
+                0.00    0.00 1192490/1192490     asio::detail::reactive_socket_service_base::destroy(asio::detail::reactive_socket_service_base::base_implementation_type&) [25]
+[63]     0.0    0.00    0.00 1192490         asio::detail::op_queue<asio::detail::task_io_service_operation>::~op_queue() [63]
+-----------------------------------------------
+                0.00    0.00     400/1178533     asio::detail::reactive_socket_accept_op<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>, boost::_bi::list3<boost::_bi::value<tcp_server*>, boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1> (*)()> > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [11]
+                0.00    0.00 1178133/1178533     asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [8]
+[64]     0.0    0.00    0.00 1178533         boost::detail::sp_counted_impl_p<tcp_con>::~sp_counted_impl_p() [64]
+-----------------------------------------------
+                0.00    0.00 1159691/1159691     asio::detail::reactive_socket_service_base::destroy(asio::detail::reactive_socket_service_base::base_implementation_type&) [25]
+[65]     0.0    0.00    0.00 1159691         asio::detail::task_io_service::post_deferred_completions(asio::detail::op_queue<asio::detail::task_io_service_operation>&) [65]
+-----------------------------------------------
+                                   1             asio::io_service::service* asio::detail::service_registry::create<asio::stream_socket_service<asio::ip::tcp> >(asio::io_service&) <cycle 2> [77]
+                0.00    0.00       1/958766      asio::io_service::service* asio::detail::service_registry::create<asio::datagram_socket_service<asio::ip::udp> >(asio::io_service&) [78]
+                0.00    0.00       2/958766      asio::io_service::service* asio::detail::service_registry::create<asio::socket_acceptor_service<asio::ip::tcp> >(asio::io_service&) [79]
+                0.00    0.00  958763/958766      tcp_server::start_accept() [21]
+[66]     0.0    0.00    0.00  958767         asio::detail::service_registry::do_use_service(asio::io_service::service::key const&, asio::io_service::service* (*)(asio::io_service&)) <cycle 2> [66]
+                0.00    0.00       1/1           asio::io_service::service* asio::detail::service_registry::create<asio::detail::epoll_reactor>(asio::io_service&) [76]
+                                   1             asio::io_service::service* asio::detail::service_registry::create<asio::stream_socket_service<asio::ip::tcp> >(asio::io_service&) <cycle 2> [77]
+-----------------------------------------------
+                0.00    0.00   15085/15085       void get<udp_server>(udp_server&, std::string) [14]
+[67]     0.0    0.00    0.00   15085         make_json(std::string, std::string) [67]
+-----------------------------------------------
+                0.00    0.00      82/482         asio::detail::epoll_reactor::register_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&) [36]
+                0.00    0.00     400/482         run_server(int, int, int, int, int) [1]
+[68]     0.0    0.00    0.00     482         asio::detail::posix_mutex::posix_mutex() [68]
+-----------------------------------------------
+                0.00    0.00       7/7           run_server(int, int, int, int, int) [1]
+[69]     0.0    0.00    0.00       7         std::_Sp_counted_ptr_inplace<std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >, std::allocator<std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> > >, (__gnu_cxx::_Lock_policy)2>::_M_get_deleter(std::type_info const&) [69]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [214]
+[70]     0.0    0.00    0.00       1         _GLOBAL__sub_I_errcstr [70]
+-----------------------------------------------
+                0.00    0.00       1/1           run_server(int, int, int, int, int) [1]
+[71]     0.0    0.00    0.00       1         create_cache(unsigned long, unsigned long (*)(unsigned char const*)) [71]
+                0.00    0.00       1/1           create_policy(unsigned long) [72]
+-----------------------------------------------
+                0.00    0.00       1/1           create_cache(unsigned long, unsigned long (*)(unsigned char const*)) [71]
+[72]     0.0    0.00    0.00       1         create_policy(unsigned long) [72]
+-----------------------------------------------
+                0.00    0.00       1/1           void post<tcp_con>(tcp_con&, std::string, std::string) [49]
+[73]     0.0    0.00    0.00       1         cache_space_used(cache_obj*) [73]
+-----------------------------------------------
+                0.00    0.00       1/1           start_thread(asio::io_service*) <cycle 1> [16]
+[74]     0.0    0.00    0.00       1         asio::detail::task_io_service::work_cleanup::~work_cleanup() [74]
+-----------------------------------------------
+                0.00    0.00       1/1           asio::io_service::service* asio::detail::service_registry::create<asio::socket_acceptor_service<asio::ip::tcp> >(asio::io_service&) [79]
+[75]     0.0    0.00    0.00       1         asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) [75]
+-----------------------------------------------
+                0.00    0.00       1/1           asio::detail::service_registry::do_use_service(asio::io_service::service::key const&, asio::io_service::service* (*)(asio::io_service&)) <cycle 2> [66]
+[76]     0.0    0.00    0.00       1         asio::io_service::service* asio::detail::service_registry::create<asio::detail::epoll_reactor>(asio::io_service&) [76]
+                0.00    0.00       1/1           asio::detail::eventfd_select_interrupter::open_descriptors() [82]
+-----------------------------------------------
+                                   1             asio::detail::service_registry::do_use_service(asio::io_service::service::key const&, asio::io_service::service* (*)(asio::io_service&)) <cycle 2> [66]
+[77]     0.0    0.00    0.00       1         asio::io_service::service* asio::detail::service_registry::create<asio::stream_socket_service<asio::ip::tcp> >(asio::io_service&) <cycle 2> [77]
+                                   1             asio::detail::service_registry::do_use_service(asio::io_service::service::key const&, asio::io_service::service* (*)(asio::io_service&)) <cycle 2> [66]
+-----------------------------------------------
+                0.00    0.00       1/1           run_server(int, int, int, int, int) [1]
+[78]     0.0    0.00    0.00       1         asio::io_service::service* asio::detail::service_registry::create<asio::datagram_socket_service<asio::ip::udp> >(asio::io_service&) [78]
+                0.00    0.00       1/958766      asio::detail::service_registry::do_use_service(asio::io_service::service::key const&, asio::io_service::service* (*)(asio::io_service&)) <cycle 2> [66]
+-----------------------------------------------
+                0.00    0.00       1/1           run_server(int, int, int, int, int) [1]
+[79]     0.0    0.00    0.00       1         asio::io_service::service* asio::detail::service_registry::create<asio::socket_acceptor_service<asio::ip::tcp> >(asio::io_service&) [79]
+                0.00    0.00       2/958766      asio::detail::service_registry::do_use_service(asio::io_service::service::key const&, asio::io_service::service* (*)(asio::io_service&)) <cycle 2> [66]
+                0.00    0.00       1/1           asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) [75]
+-----------------------------------------------
+                0.00    0.00       1/1           run_server(int, int, int, int, int) [1]
+[80]     0.0    0.00    0.00       1         asio::detail::service_registry::service_registry<asio::detail::task_io_service, unsigned long>(asio::io_service&, asio::detail::task_io_service*, unsigned long) [80]
+-----------------------------------------------
+                0.00    0.00       1/1           start_thread(asio::io_service*) <cycle 1> [16]
+[81]     0.0    0.00    0.00       1         asio::detail::reactive_socket_send_op<asio::const_buffers_1, asio::detail::write_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::const_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf0<void, tcp_con>, boost::_bi::list1<boost::_bi::value<boost::shared_ptr<tcp_con> > > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [81]
+-----------------------------------------------
+                0.00    0.00       1/1           asio::io_service::service* asio::detail::service_registry::create<asio::detail::epoll_reactor>(asio::io_service&) [76]
+[82]     0.0    0.00    0.00       1         asio::detail::eventfd_select_interrupter::open_descriptors() [82]
+-----------------------------------------------
+                0.00    0.00       1/1           start_thread(asio::io_service*) <cycle 1> [16]
+[83]     0.0    0.00    0.00       1         asio::detail::task_io_service_thread_info::~task_io_service_thread_info() [83]
+-----------------------------------------------
+                0.00    0.00       1/1           asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) [15]
+[84]     0.0    0.00    0.00       1         asio::detail::reactive_socket_send_op_base<asio::const_buffers_1>::do_perform(asio::detail::reactor_op*) [84]
+-----------------------------------------------
+                0.00    0.00       1/1           run_server(int, int, int, int, int) [1]
+[85]     0.0    0.00    0.00       1         std::vector<udp_server, std::allocator<udp_server> >::reserve(unsigned long) [85]
+-----------------------------------------------
+                0.00    0.00       1/1           run_server(int, int, int, int, int) [1]
+[86]     0.0    0.00    0.00       1         std::vector<std::thread, std::allocator<std::thread> >::reserve(unsigned long) [86]
+-----------------------------------------------
+                0.00    0.00       1/1           asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) <cycle 1> [8]
+[87]     0.0    0.00    0.00       1         _init [87]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [70] _GLOBAL__sub_I_errcstr  [6] udp_server::handle_receive(std::error_code const&, unsigned long) [5] asio::detail::reactive_socket_recvfrom_op<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long)
+  [35] create_info(policy_obj*, void*, unsigned int) [60] asio::asio_handler_is_continuation(...) [83] asio::detail::task_io_service_thread_info::~task_io_service_thread_info()
+  [22] def_hash_fn(unsigned char const*) [39] asio::detail::socket_ops::close(int, unsigned char&, bool, std::error_code&) [28] asio::detail::reactive_socket_recv_op_base<asio::mutable_buffers_1>::do_perform(asio::detail::reactor_op*)
+  [62] delete_info(policy_obj*, pinfo_obj*) [68] asio::detail::posix_mutex::posix_mutex() [84] asio::detail::reactive_socket_send_op_base<asio::const_buffers_1>::do_perform(asio::detail::reactor_op*)
+  [18] info_gotten(policy_obj*, pinfo_obj*) [4] asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [25] asio::detail::reactive_socket_service_base::destroy(asio::detail::reactive_socket_service_base::base_implementation_type&)
+  [26] add_to_cache(cache_obj*, unsigned char const*, void const*, unsigned int) [36] asio::detail::epoll_reactor::register_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&) [48] asio::detail::reactive_socket_service_base::do_open(asio::detail::reactive_socket_service_base::base_implementation_type&, int, int, int, std::error_code&)
+  [71] create_cache(unsigned long, unsigned long (*)(unsigned char const*)) [32] asio::detail::epoll_reactor::run(bool, asio::detail::op_queue<asio::detail::task_io_service_operation>&) [15] asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool)
+  [16] start_thread(asio::io_service*) [40] asio::detail::epoll_reactor::~epoll_reactor() [24] asio::detail::reactive_socket_accept_op_base<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp>::do_perform(asio::detail::reactor_op*)
+  [72] create_policy(unsigned long) [41] asio::detail::socket_holder::~socket_holder() [29] asio::detail::reactive_socket_sendto_op_base<asio::const_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*)
+   [9] void act_on_message<udp_server>(udp_server&, std::string) [37] asio::detail::do_throw_error(std::error_code const&) [31] asio::detail::reactive_socket_recvfrom_op_base<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*)
+  [12] void act_on_message<tcp_con>(tcp_con&, std::string) [74] asio::detail::task_io_service::work_cleanup::~work_cleanup() [7] asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >::operator()(std::error_code const&, unsigned long, int)
+  [46] cache_set_impl(cache_obj*, unsigned char const*, void const*, unsigned int) [65] asio::detail::task_io_service::post_deferred_completions(asio::detail::op_queue<asio::detail::task_io_service_operation>&) [63] asio::detail::op_queue<asio::detail::task_io_service_operation>::~op_queue()
+  [34] is_white_space(char)   [23] asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) [50] asio::detail::write_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::const_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf0<void, tcp_con>, boost::_bi::list1<boost::_bi::value<boost::shared_ptr<tcp_con> > > > >::operator()(std::error_code const&, unsigned long, int)
+  [73] cache_space_used(cache_obj*) [75] asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) [64] boost::detail::sp_counted_impl_p<tcp_con>::~sp_counted_impl_p()
+  [33] ids_to_delete_if_added(policy_obj*, unsigned int) [2] asio::detail::task_io_service::run(std::error_code&) [10] tcp_con::handle_read(std::error_code const&, unsigned long)
+  [14] void get<udp_server>(udp_server&, std::string) [42] asio::detail::task_io_service::~task_io_service() [51] tcp_con::write_message(std::string)
+  [49] void post<tcp_con>(tcp_con&, std::string, std::string) [66] asio::detail::service_registry::do_use_service(asio::io_service::service::key const&, asio::io_service::service* (*)(asio::io_service&)) [30] char* std::string::_S_construct<__gnu_cxx::__normal_iterator<char*, std::string> >(__gnu_cxx::__normal_iterator<char*, std::string>, __gnu_cxx::__normal_iterator<char*, std::string>, std::allocator<char> const&, std::forward_iterator_tag)
+  [27] strip(std::string&)    [76] asio::io_service::service* asio::detail::service_registry::create<asio::detail::epoll_reactor>(asio::io_service&) [43] std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_release()
+  [47] c_delete(void**)       [77] asio::io_service::service* asio::detail::service_registry::create<asio::stream_socket_service<asio::ip::tcp> >(asio::io_service&) [69] std::_Sp_counted_ptr_inplace<std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >, std::allocator<std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> > >, (__gnu_cxx::_Lock_policy)2>::_M_get_deleter(std::type_info const&)
+  [20] cache_get(cache_obj*, unsigned char const*, unsigned int*) [78] asio::io_service::service* asio::detail::service_registry::create<asio::datagram_socket_service<asio::ip::udp> >(asio::io_service&) [44] void std::vector<udp_server, std::allocator<udp_server> >::_M_emplace_back_aux<asio::io_service&, int, safe_cache&>(asio::io_service&, int&&, safe_cache&)
+  [17] cache_set(cache_obj*, unsigned char const*, void const*, unsigned int) [79] asio::io_service::service* asio::detail::service_registry::create<asio::socket_acceptor_service<asio::ip::tcp> >(asio::io_service&) [85] std::vector<udp_server, std::allocator<udp_server> >::reserve(unsigned long)
+  [45] make_copy(void const*, unsigned long) [80] asio::detail::service_registry::service_registry<asio::detail::task_io_service, unsigned long>(asio::io_service&, asio::detail::task_io_service*, unsigned long) [86] std::vector<std::thread, std::allocator<std::thread> >::reserve(unsigned long)
+  [67] make_json(std::string, std::string) [8] asio::detail::reactive_socket_recv_op<asio::mutable_buffers_1, asio::detail::read_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::mutable_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [87] _init
+  [21] tcp_server::start_accept() [81] asio::detail::reactive_socket_send_op<asio::const_buffers_1, asio::detail::write_op<asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::const_buffers_1, asio::detail::transfer_all_t, boost::_bi::bind_t<void, boost::_mfi::mf0<void, tcp_con>, boost::_bi::list1<boost::_bi::value<boost::shared_ptr<tcp_con> > > > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [3] <cycle 1>
+  [13] tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) [11] asio::detail::reactive_socket_accept_op<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>, boost::_bi::list3<boost::_bi::value<tcp_server*>, boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1> (*)()> > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) [52] <cycle 2>
+  [61] udp_server::handle_send(std::error_code const&, unsigned long) [38] asio::detail::reactive_socket_sendto_op<asio::const_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf2<void, udp_server, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<udp_server*>, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long)
+  [19] udp_server::return_error() [82] asio::detail::eventfd_select_interrupter::open_descriptors()

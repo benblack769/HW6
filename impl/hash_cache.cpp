@@ -206,7 +206,17 @@ void destroy_cache(cache_t cache){
     free(cache->table);
     delete cache;
 }
+//taken from stack overflow post
+uint64_t def_hash_fn(key_type str){
+    uint64_t hash = 5381;
+    char c;
 
+    while (c = *str++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+    return hash;
+}
+/*
 uint64_t def_hash_fn(key_type key){
     //xors the bits of the string together
     size_t tot_size = strlen((char*)(key));
@@ -221,3 +231,4 @@ uint64_t def_hash_fn(key_type key){
     }
     return out;
 }
+*/
