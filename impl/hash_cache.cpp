@@ -21,9 +21,9 @@ struct link_obj{
     link_t next;
 };
 void del_link(cache_t cache, link_t * obj);
+void cache_del_impl(cache_t cache, key_type key);
 
 uint64_t def_hash_fn(key_type key);
-
 size_t map_to_location(uint64_t hash_val,size_t table_size){
     return hash_val % table_size;
 }
@@ -45,7 +45,7 @@ struct user_identifier{//declared in replacement.h
 };
 
 cache_t create_cache(uint64_t maxmem,hash_func h_fn){
-    cache_t n_cache = (cache_t)(calloc(1,sizeof(struct cache_obj)));
+    cache_t n_cache = new(cache_obj);
 
     n_cache->maxmem = maxmem;
     n_cache->mem_used = 0;
@@ -101,7 +101,7 @@ bool should_add_evict_deletions(cache_t cache,uint32_t val_size){
         for(size_t di = 0;di < add_res.size; di++){
             // the data given to the policy is the pointer to the key of that the cache is storing,
             //so use that to find the data and delete it
-            cache_delete(cache,(key_type)(add_res.data[di]));
+            cache_del_impl(cache,(key_type)(add_res.data[di]));
         }
     }
     //the array of ids needs to be freed
@@ -132,8 +132,7 @@ void add_to_cache(cache_t cache, key_type key, val_type val, uint32_t val_size){
     }
 }
 
-void cache_set(cache_t cache, key_type key, val_type val, uint32_t val_size){
-    cache->mut.lock();
+void cache_set_impl(cache_t cache, key_type key, val_type val, uint32_t val_size){
     link_t * init_link = querry_hash(cache,key);
     //if the item is already in the list, then delete it
     del_link(cache,init_link);
@@ -142,10 +141,13 @@ void cache_set(cache_t cache, key_type key, val_type val, uint32_t val_size){
         return;
     }
     add_to_cache(cache,key,val,val_size);
+}
+void cache_set(cache_t cache, key_type key, val_type val, uint32_t val_size){
+    cache->mut.lock();
+    cache_set_impl(cache,key,val,val_size);
     cache->mut.unlock();
 }
-val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
-    cache->mut.lock();
+val_type cache_get_impl(cache_t cache, key_type key, uint32_t *val_size){
     link_t hash_l = *querry_hash(cache,key);
     if(hash_l != NULL){
         //if the item is in the cache, tell the policy that fact, and return the value
@@ -158,7 +160,12 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
         *val_size = 0;
         return NULL;
     }
+}
+val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
+    cache->mut.lock();
+    val_type val = cache_get_impl(cache,key,val_size);
     cache->mut.unlock();
+    return val;
 }
 void del_link(cache_t cache,link_t * obj){
     //deletes the thing pointed to by the obj and replaces it with the next thing in the linked list  (a NULL if it is at the end)
@@ -177,9 +184,12 @@ void del_link(cache_t cache,link_t * obj){
         free(myobj);
     }
 }
+void cache_del_impl(cache_t cache, key_type key){
+    del_link(cache,querry_hash(cache,key));
+}
 void cache_delete(cache_t cache, key_type key){
     cache->mut.lock();
-    del_link(cache,querry_hash(cache,key));
+    cache_del_impl(cache,key);
     cache->mut.unlock();
 }
 uint64_t cache_space_used(cache_t cache){

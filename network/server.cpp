@@ -63,15 +63,8 @@ int main(int argc, char** argv)
             return 1;
         }
     }
-    try {
-        run_server(tcp_portnum, num_tcps, udp_portnum, num_udps, maxmem);
-    } catch (ExitException&) {
-        //this is normal, do nothing
-    }
-    //catch(exception & unexpected_except){
-    //    cout << unexpected_except.what();
-    //   return 1;
-    //}
+    run_server(tcp_portnum, num_tcps, udp_portnum, num_udps, maxmem);
+
 
     return 0;
 }
@@ -104,13 +97,9 @@ void get(con_ty& con, string key)
 {
     uint32_t val_size = 0;
     val_type v = cache_get(con.cache(), (key_type)(key.c_str()), &val_size);
-    static uint64_t num_total = 0;
-    static uint64_t num_hits = 0;
-    num_total++;
     if (v != nullptr) {
         string output = make_json(key, string((char*)(v)));
         con.write_message(output);
-        num_hits++;
     } else {
         con.return_error();
     }
@@ -328,7 +317,18 @@ public:
     safe_cache* port_cache; //non-owning
     bufarr recbuf;
 };
-
+void start_thread(asio::io_service * service){
+    try{
+        service->run();
+    }
+    catch(ExitException&){
+        //this is normal, do nothing.
+    }
+    catch(exception & unexpected_except){
+        cout << unexpected_except.what() << endl;
+        exit(1);
+    }
+}
 void run_server(int tcp_port_start, int num_tcp_ports, int udp_port_start, int num_udp_ports, int maxmem)
 {
     asio::io_service my_io_service;
@@ -348,11 +348,11 @@ void run_server(int tcp_port_start, int num_tcp_ports, int udp_port_start, int n
     }
     int64_t num_other_threads = stdthread::hardware_concurrency() - 1;
     using sthread = typename stdthread::thread;
-    /*vector<sthread> o_threads;
+    vector<sthread> o_threads;
     o_threads.reserve(num_other_threads);
     //pulled from asio documentation on how to multithread in ASIO
     for(int64_t t_n = 0; t_n < num_other_threads; t_n++){
-        o_threads.emplace_back(boost::bind(&asio::io_service::run, &my_io_service));
-    }*/
+        o_threads.emplace_back(start_thread,&my_io_service);
+    }
     my_io_service.run();
 }
