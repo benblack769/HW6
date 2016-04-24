@@ -10,7 +10,8 @@ using namespace asio;
 using namespace asio::ip;
 
 constexpr size_t bufsize = (1 << 16) - 32;
-const std::string errstr = "ERROR";
+char * errcstr = "ERROR";
+std::string errstr = "ERROR";
 
 //class udp_connection;
 

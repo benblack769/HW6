@@ -2,14 +2,11 @@
 #include <string>
 #include "cache.h"
 #include "user_con.hpp"
-#include "../json/json.hpp"
 
 using namespace std;
 
 using namespace asio;
 using namespace asio::ip;
-
-using json = nlohmann::json;
 
 using asio::ip::tcp;
 
@@ -20,14 +17,14 @@ string serv_name = "localhost";//"134.10.103.234";
 class tcp_connection{
 public:
     tcp::socket socket;
+    bufarr buffer;
     tcp_connection(asio::io_service & service,ip::tcp::resolver::iterator & resit):
         socket(service){
 
         asio::connect(socket, resit);
     }
 
-    std::string get_message(){
-        bufarr buffer;
+    char * get_message(){
         asio::error_code error;
         size_t length = socket.read_some(asio::buffer(buffer), error);
 
@@ -35,19 +32,16 @@ public:
             throw asio::system_error(error);
         }
 
-        if(length == bufsize){
-            //todo: output some sort of error
-            return errstr;
+        if(length >= bufsize){
+            return errcstr;
         }
-
-        return string(buffer.begin(),buffer.begin()+length);
+        else{
+            buffer[length] = 0;
+            return &buffer[0];
+        }
     }
-    void write_message(string st){
-        st.push_back(char(0));
-        asio::write(socket, asio::buffer(st));
-    }
-    void return_error(std::string myerr){
-        write_message(myerr);
+    void write_message(char * message,size_t size){
+        asio::write(socket, asio::buffer(message,size));
     }
 };
 
@@ -86,23 +80,20 @@ public:
         sock_opt_h def;
         socket.set_option(def);
     }
-    std::string get_message(){
+    char * get_message(){
         bufarr buf;
         size_t length = socket.receive(asio::buffer(buf));
 
-        size_t loc = find_in_buf(buf,char(0));
-        if(loc == string::npos){
-            return errstr;//todo: make a valid error code
+        if(length >= bufsize){
+            return errcstr;//todo: make a valid error code
         }
         else{
-            return string(buf.begin(),buf.begin()+loc);
+            buf[length] = 0;
+            return buf.data();
         }
     }
-    void write_message(std::string s){
-        socket.send(asio::buffer(s.c_str(),s.size()+1));
-    }
-    void return_error(std::string myerr){
-        write_message(myerr);
+    void write_message(char * str,size_t size){
+        socket.send(asio::buffer(str,size));
     }
 };
 struct cache_obj{
@@ -111,6 +102,9 @@ struct cache_obj{
     asio::io_service my_io_service;
     ip::tcp::resolver tcp_resolver;
     ip::udp::resolver udp_resolver;
+
+    bufarr sendarr;
+
     cache_obj():
         my_io_service(),
         tcp_resolver(my_io_service),
@@ -119,77 +113,108 @@ struct cache_obj{
         resit = tcp_resolver.resolve({serv_name, tcp_port});
         reciver = *udp_resolver.resolve({serv_name, udp_port});
     }
-    string send_message_tcp(bool getmes,string head,string word1,string word2=string()){
-        tcp_connection con(my_io_service,resit);
-        if(head == "GET"){
-            int x = 0;
+    size_t make_sendarr(const char * head,char * word1,char * word2){
+        size_t headlen = strlen(head);
+        size_t w1len = strlen(word1);
+        size_t w2len = word2 == nullptr ? 0 : strlen(word2);
+        if(headlen + w1len + w2len + 5 > bufsize){
+            throw runtime_error("data too big for send");
         }
-        string finstr = head + " /" + word1 + (word2.size() == 0 ? "" : "/" + word2);
-        con.write_message(finstr);
-        return getmes ? con.get_message() : string();
+        else{
+            auto arrit = sendarr.begin();
+            arrit = copy(head,head+headlen,arrit);
+            *arrit = ' '; arrit++;
+            *arrit = '/'; arrit++;
+            arrit = copy(word1,word1+w1len,arrit);
+            if(word2 != nullptr){
+                *arrit = '/'; arrit++;
+                arrit = copy(word2,word2+w2len,arrit);
+            }
+            *arrit = char(0); arrit++;
+            size_t length =  &*arrit - &*sendarr.begin();
+            return length;
+        }
     }
-    string send_message_udp(bool getmes,string head,string word1,string word2=string()){
+    char * send_message_tcp(bool getmes,const char * head,char * word1,char * word2=nullptr){
+        tcp_connection con(my_io_service,resit);
+        size_t tot_len = make_sendarr(head,word1,word2);
+        con.write_message(&sendarr[0],tot_len);
+        return getmes ? con.get_message() : nullptr;
+    }
+    char * send_message_udp(bool getmes,const char * head,char * word1,char * word2=nullptr){
         udp_connection con(my_io_service,reciver);
-        string finstr = head + " /" + word1 + (word2.size() == 0 ? "" : "/" + word2);
-        con.write_message(finstr);
-        return getmes ? con.get_message() : string();
+        size_t tot_len = make_sendarr(head,word1,word2);
+        con.write_message(&sendarr[0],tot_len);
+        return getmes ? con.get_message() : nullptr;
     }
 };
-void unpack_json(string json_str, string & key, string & value){
-    json j = json::parse(json_str);
-    key = j["key"];
-    value = j["value"];
+size_t find(char * firststr,size_t strlen,size_t startpos,char c,uint64_t count){
+    uint64_t mycount = 0;
+    for(size_t i = startpos; i < strlen; i++){
+        if(firststr[i] == c){
+            mycount++;
+            if(mycount == count){
+                return i;
+            }
+        }
+    }
+    return string::npos;
+}
+void unpack_json(char * json_str,char *& key, char *& value){
+    size_t len = strlen(json_str);
+
+    size_t startkey = find(json_str,len,0,'"',3) + 1;
+    size_t endkey = find(json_str,len,startkey,'"',1);
+
+    size_t startval = find(json_str,len,endkey,'"',3) + 1;
+    size_t endval = find(json_str,len,startval,'"',1);
+
+    json_str[endkey] = 0;
+    json_str[endval] = 0;
+
+    key = json_str + startkey;
+    value = json_str + startval;
 }
 cache_t get_cache_connection(){
     return new cache_obj();
 }
 cache_t create_cache(uint64_t maxmem,hash_func ){
+    string maxmemstr= to_string(maxmem);
     cache_t outc = new cache_obj();
-    outc->send_message_tcp(false,"POST","memsize",to_string(maxmem));
+    outc->send_message_tcp(false,"POST","memsize",(char *)(maxmemstr.c_str()));
     return outc;
 }
-void cache_set(cache_t cache, key_type key, val_type val, uint32_t val_size){
-    if(val_size > bufsize){
+void cache_set(cache_t cache, key_type key, val_type val, uint32_t val_size){//val_size is ignored
+    if(val_size > bufsize-1){
         return;
     }
     char * val_str = (char *)(val);//val is assumed to be a string
-    cache->send_message_tcp(false,"PUT",(char*)(key),string(val_str,val_str + val_size));
+    cache->send_message_tcp(false,"PUT",(char*)(key),val_str);
 }
 val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
     *val_size = 0;
 
-    string keystr((char*)key);
-    string retval = cache->send_message_udp(true,"GET",keystr);
+    char * keystr = ((char*)key);
+    char * retval = cache->send_message_udp(true,"GET",keystr);
 
-    if(retval == errstr){
+    if(retval == nullptr || strcmp(errcstr,retval) == 0){
         return nullptr;
     }
     else{
-        string valstr,retkeystr;
-        try{
+        char * valstr;
+        char * retkeystr;
         unpack_json(retval,retkeystr,valstr);
 
-        }
-        catch(...){
-            cout << retval << endl;
-            exit(1);
-        }
-
-        if(keystr != retkeystr){
+        if(strcmp(keystr,retkeystr)){
             //this is a network logic error
             cout << keystr <<  endl << retkeystr << endl << endl;
             return nullptr;
         }
-
-        *val_size = valstr.size();
-
-        char * s = new char[valstr.size()+1];
-        strcpy(s,valstr.c_str());
-        return s;
+        return valstr;//this is fine because valstr is stored in the protocol buffer.
     }
 }
 void cache_delete(cache_t cache, key_type key){
-    cache->send_message_tcp(false,"DELETE",string((char*)key));
+    cache->send_message_tcp(false,"DELETE",(char*)key);
 }
 uint64_t cache_space_used(cache_t cache){
     return 0;//not implemented
