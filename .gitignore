@@ -6,5 +6,5 @@ client
 *.exe
 *.csv*
 *.ods*
-valgrind.txt
+*.data*
 client_time

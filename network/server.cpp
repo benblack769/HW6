@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <thread>
 
-using stdthread = std::thread;
+using stdthread = std::thread;//resolves namespace conflict
 using namespace std;
 
 class ExitException : public exception {
@@ -38,8 +38,8 @@ int main(int argc, char** argv)
     int c;
     int tcp_portnum = 10700;
     int udp_portnum = 10900;
-    int num_tcps = 130;
-    int num_udps = 130;
+    int num_tcps = 200;
+    int num_udps = 200;
     int maxmem = 1 << 16;
     while ((c = getopt(argc, argv, "m:p:u:t:s:")) != -1) {
         switch (c) {
@@ -322,7 +322,8 @@ void start_thread(asio::io_service * service){
         service->run();
     }
     catch(ExitException&){
-        //this is normal, do nothing.
+        //this is normal
+        exit(0);
     }
     catch(exception & unexpected_except){
         cout << unexpected_except.what() << endl;
