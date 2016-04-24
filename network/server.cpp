@@ -9,7 +9,9 @@
 #include <ostream>
 #include <string>
 #include <unistd.h>
+#include <thread>
 
+using stdthread = std::thread;
 using namespace std;
 
 class ExitException : public exception {
@@ -32,7 +34,7 @@ void run_server(int tcp_port, int num_tcp_ports, int udp_port, int num_udp_ports
 }*/
 int main(int argc, char** argv)
 {
-    //take mainly off the get_opt wikipedia page
+    //taken mainly off the get_opt wikipedia page
     int c;
     int tcp_portnum = 10700;
     int udp_portnum = 10900;
@@ -178,6 +180,7 @@ void act_on_message(con_ty& con, string message)
     }
 }
 //the connection and server classes are mostly taken from the library documentation
+//note that they are threadsafe as long as multiple clients are not connecting to the same ports
 class tcp_con
     : public boost::enable_shared_from_this<tcp_con> {
 public:
@@ -258,7 +261,6 @@ public:
             boost::bind(&tcp_server::handle_accept, this, new_connection,
                                    asio::placeholders::error));
     }
-
 private:
     void handle_accept(tcp_con::pointer new_connection,
         const asio::error_code& error)
@@ -344,5 +346,13 @@ void run_server(int tcp_port_start, int num_tcp_ports, int udp_port_start, int n
         udps.emplace_back(my_io_service, udp_port_start + i, serv_cache);
         udps.back().start_receive();
     }
+    int64_t num_other_threads = stdthread::hardware_concurrency() - 1;
+    using sthread = typename stdthread::thread;
+    /*vector<sthread> o_threads;
+    o_threads.reserve(num_other_threads);
+    //pulled from asio documentation on how to multithread in ASIO
+    for(int64_t t_n = 0; t_n < num_other_threads; t_n++){
+        o_threads.emplace_back(boost::bind(&asio::io_service::run, &my_io_service));
+    }*/
     my_io_service.run();
 }

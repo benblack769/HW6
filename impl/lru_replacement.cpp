@@ -23,7 +23,7 @@ bool is_empty(policy_t policy){
 }
 
 policy_t create_policy(uint64_t maxmem){
-    policy_t newobj = calloc(1,sizeof(struct policy_obj));
+    policy_t newobj = (policy_t)calloc(1,sizeof(struct policy_obj));
 
     newobj->maxmem = maxmem;
     newobj->top = NULL;
@@ -79,7 +79,7 @@ void remove_info_from_list(policy_t policy,pinfo_t info){
 pinfo_t create_info(policy_t policy, user_id_t id, uint32_t val_size){
     assert(!(policy->maxmem < policy->used_mem + val_size) && "policy is asked to hold more memory than it should");
     //create new object
-    pinfo_t newinf = calloc(1,sizeof(pinfo_s));
+    pinfo_t newinf = (pinfo_t)calloc(1,sizeof(pinfo_s));
     newinf->val_size = val_size;
     newinf->ident = id;
 
@@ -110,7 +110,7 @@ size_t num_to_delete(policy_t policy, uint32_t val_size,pinfo_t * out_t){
     return num_del_ids;
 }
 user_id_t * make_item_array(size_t num_items,pinfo_t bottom){
-    user_id_t * arr = calloc(num_items,sizeof(user_id_t));
+    user_id_t * arr = (user_id_t *)calloc(num_items,sizeof(user_id_t));
     //unsafe traversal of items in the list, placing in arr
     pinfo_t cur_i = bottom;
     for(size_t di = 0; di < num_items; di++){

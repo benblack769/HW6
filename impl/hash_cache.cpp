@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <mutex>
 #include "cache.h"
 #include "helper.h"
 #include "replacement.h"
@@ -35,6 +36,7 @@ struct cache_obj{
     size_t num_elements;
     hash_func h_fn;
     policy_t evic_policy;
+    std::mutex mut;
 };
 const size_t default_table_size = 2503;//medium size prime number
 
@@ -43,13 +45,13 @@ struct user_identifier{//declared in replacement.h
 };
 
 cache_t create_cache(uint64_t maxmem,hash_func h_fn){
-    cache_t n_cache = calloc(1,sizeof(struct cache_obj));
+    cache_t n_cache = (cache_t)(calloc(1,sizeof(struct cache_obj)));
 
     n_cache->maxmem = maxmem;
     n_cache->mem_used = 0;
     n_cache->table_size = default_table_size;
     n_cache->num_elements = 0;
-    n_cache->table = calloc(default_table_size,sizeof(key_val_s));
+    n_cache->table = (link_t *)(calloc(default_table_size,sizeof(key_val_s)));
     n_cache->h_fn = (h_fn == NULL) ? def_hash_fn : h_fn;
     n_cache->evic_policy = create_policy(maxmem);
 
@@ -68,7 +70,7 @@ link_t * querry_hash(cache_t cache, key_type key){
 }
 void assign_to_link(link_t * linkp,key_val_s data){
     if(*linkp == NULL){
-        *linkp = calloc(1,sizeof(struct link_obj));
+        *linkp = (link_t)calloc(1,sizeof(struct link_obj));
     }
     (*linkp)->data = data;
 }
@@ -76,7 +78,7 @@ void resize_table(cache_t cache,uint64_t new_size){
     const size_t old_t_size = cache->table_size;
     link_t * old_table = cache->table;
 
-    cache->table = calloc(new_size,sizeof(link_t));
+    cache->table = (link_t  *)calloc(new_size,sizeof(link_t));
     cache->table_size = new_size;
 
     //add the pointers into the new cache table without changing the data at all
@@ -110,7 +112,7 @@ bool should_add_evict_deletions(cache_t cache,uint32_t val_size){
 }
 void add_to_cache(cache_t cache, key_type key, val_type val, uint32_t val_size){
     //adds in a new item in the location of the cache
-    key_type key_copy = make_copy(key,strlen((char*)key)+1);
+    key_type key_copy = (key_type)make_copy(key,strlen((char*)key)+1);
 
     key_val_s new_item;
     new_item.key = key_copy;
@@ -131,6 +133,7 @@ void add_to_cache(cache_t cache, key_type key, val_type val, uint32_t val_size){
 }
 
 void cache_set(cache_t cache, key_type key, val_type val, uint32_t val_size){
+    cache->mut.lock();
     link_t * init_link = querry_hash(cache,key);
     //if the item is already in the list, then delete it
     del_link(cache,init_link);
@@ -139,8 +142,10 @@ void cache_set(cache_t cache, key_type key, val_type val, uint32_t val_size){
         return;
     }
     add_to_cache(cache,key,val,val_size);
+    cache->mut.unlock();
 }
 val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
+    cache->mut.lock();
     link_t hash_l = *querry_hash(cache,key);
     if(hash_l != NULL){
         //if the item is in the cache, tell the policy that fact, and return the value
@@ -153,6 +158,7 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
         *val_size = 0;
         return NULL;
     }
+    cache->mut.unlock();
 }
 void del_link(cache_t cache,link_t * obj){
     //deletes the thing pointed to by the obj and replaces it with the next thing in the linked list  (a NULL if it is at the end)
@@ -172,10 +178,12 @@ void del_link(cache_t cache,link_t * obj){
     }
 }
 void cache_delete(cache_t cache, key_type key){
+    cache->mut.lock();
     del_link(cache,querry_hash(cache,key));
+    cache->mut.unlock();
 }
 uint64_t cache_space_used(cache_t cache){
-    return cache->mem_used;
+    return cache->mem_used;//should be thread safe (also is not called in networked cache except for in POST destroy, so it should be fine)
 }
 void destroy_cache(cache_t cache){
     //deletes the links
@@ -186,7 +194,7 @@ void destroy_cache(cache_t cache){
     }
     delete_policy(cache->evic_policy);
     free(cache->table);
-    free(cache);
+    delete cache;
 }
 
 uint64_t def_hash_fn(key_type key){
