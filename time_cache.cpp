@@ -239,7 +239,8 @@ int main(int argc,char ** argv){
 	cout << "hit rate = " << hit_rate << "\n";
 
 	if(!is_addon){
-		destroy_cache(get_cache(init_tcp_port,init_udp_port));//closes server
+		cache_t cache = get_cache(init_tcp_port,init_udp_port);
+		destroy_cache(cache);//closes server
 	}
 	return 0;
 }

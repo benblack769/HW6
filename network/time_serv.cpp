@@ -72,67 +72,92 @@ string make_json(string key, string value)
 {
     return "{ \"key\": \"" + key + "\" , \"value\": \"" + value + "\" } ";
 }
-class safe_cache {
+class safe_cache{
 public:
-    cache_t impl = nullptr;
-    safe_cache(cache_t newc)
-    {
+    cache_t impl=nullptr;
+    safe_cache(cache_t newc){
         impl = newc;
     }
-    safe_cache(safe_cache&) = delete;
-    ~safe_cache()
-    {
-        if (impl != nullptr) {
+    safe_cache(safe_cache &) = delete;
+    ~safe_cache(){
+        if(impl != nullptr){
             destroy_cache(impl);
             impl = nullptr;
         }
     }
-    cache_t get()
-    {
+    cache_t get(){
         return impl;
     }
 };
-template <typename con_ty>
-void get(con_ty& con, string key)
-{
+uint64_t get_time_ns(){
+	struct timespec t;
+	clock_gettime(0,&t);
+ 	return 1000000000ULL * t.tv_sec + t.tv_nsec;
+}
+struct time_s{
+    uint64_t tot_time;
+    uint64_t user_counts;
+    uint64_t inter_t;
+}impl_time={0,0,0},my_time = {0,0,0};
+void start_t(time_s & t){
+	t.inter_t = get_time_ns();
+}
+void end_t(time_s & t){
+	t.tot_time += get_time_ns() - t.inter_t;
+	t.user_counts++;
+}
+void print_time(time_s & t){
+    cout << t.tot_time / (1000000 * double(t.user_counts)) << endl;
+}
+template<typename con_ty>
+void get(con_ty & con,string key){
     uint32_t val_size = 0;
-    val_type v = cache_get(con.cache(), (key_type)(key.c_str()), &val_size);
-    if (v != nullptr) {
-        string output = make_json(key, string((char*)(v)));
+	start_t(impl_time);
+    val_type v = cache_get(con.cache(),(key_type)(key.c_str()),&val_size);
+	end_t(impl_time);
+	if(v != nullptr){
+        string output = make_json(key,string((char *)(v)));
         con.write_message(output);
-    } else {
+    }else{
         con.return_error();
     }
 }
-template <typename con_ty>
-void put(con_ty& con, string key, string value)
-{
-    cache_set(con.cache(), (key_type)(key.c_str()), (void*)(value.c_str()), value.size()+1);
+template<typename con_ty>
+void put(con_ty & con,string key,string value){
+	start_t(impl_time);
+    cache_set(con.cache(),(key_type)(key.c_str()),(void*)(value.c_str()),value.size());
+	end_t(impl_time);
 }
-template <typename con_ty>
-void delete_(con_ty& con, string key)
-{
-    cache_delete(con.cache(), (key_type)(key.c_str()));
+template<typename con_ty>
+void delete_(con_ty & con,string key){
+	start_t(impl_time);
+	cache_delete(con.cache(),(key_type)(key.c_str()));
+	end_t(impl_time);
 }
-template <typename con_ty>
-void head(con_ty&)
-{
+template<typename con_ty>
+void head(con_ty &){
     //todo:implement!
+    print_time(impl_time);
+    print_time(my_time);
+	impl_time = {0,0,0};
+	my_time = {0,0,0};
 }
-template <typename con_ty>
-void post(con_ty& con, string post_type, string extrainfo)
-{
+template<typename con_ty>
+void post(con_ty & con,string post_type,string extrainfo){
     strip(post_type);
-    if (post_type == "shutdown") {
+    if(post_type == "shutdown"){
         throw ExitException();
-    } else if (post_type == "memsize") {
-        if (cache_space_used(con.cache()) == 0) {
+    }
+    else if(post_type == "memsize"){
+        if(cache_space_used(con.cache()) == 0){
             destroy_cache(con.cache());
-            con.cache() = create_cache(stoll(extrainfo), NULL);
-        } else {
+            con.cache() = create_cache(stoll(extrainfo),NULL);
+        }
+        else{
             con.return_error();
         }
-    } else {
+    }
+    else{
         throw runtime_error("bad POST message");
     }
 }
@@ -211,6 +236,7 @@ public:
     void handle_read(const asio::error_code& error,
         size_t bytes_written)
     {
+        start_t(my_time);
         if (error == asio::error::eof) {
             string s(b.begin(), b.begin() + bytes_written);
             strip(s);
@@ -224,6 +250,7 @@ public:
         {
             throw runtime_error("did not find end of file before buffer end");
         }
+        end_t(my_time);
     }
     void handle_write()
     {
@@ -254,12 +281,13 @@ private:
     void handle_accept(tcp_con::pointer new_connection,
         const asio::error_code& error)
     {
+        start_t(my_time);
         if (!error) {
             new_connection->start();
         } else {
             throw asio::system_error(error);
         }
-
+        end_t(my_time);
         start_accept();
     }
 
@@ -295,6 +323,7 @@ public:
     }
     void handle_receive(const asio::error_code& error, size_t bytes_written)
     {
+	    start_t(my_time);
         if (!error) {
             size_t endloc = find_in_buf(recbuf, char(0));
             if (endloc != string::npos) {
@@ -307,6 +336,7 @@ public:
         } else {
             throw asio::system_error(error);
         }
+        end_t(my_time);
         start_receive();
     }
     void handle_send(const asio::error_code&, size_t)
