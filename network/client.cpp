@@ -17,16 +17,15 @@ string serv_name = "localhost";//"134.10.103.234";
 class tcp_connection{
 public:
     tcp::socket socket;
-    bufarr buffer;
     tcp_connection(asio::io_service & service,ip::tcp::resolver::iterator & resit):
         socket(service){
 
         asio::connect(socket, resit);
     }
 
-    char * get_message(){
+    char * get_message(bufarr & recbuf){
         asio::error_code error;
-        size_t length = socket.read_some(asio::buffer(buffer), error);
+        size_t length = socket.read_some(asio::buffer(recbuf), error);
 
         if (error != asio::error::eof && error){
             throw asio::system_error(error);
@@ -36,8 +35,8 @@ public:
             return errcstr;
         }
         else{
-            buffer[length] = 0;
-            return &buffer[0];
+            recbuf[length] = 0;
+            return &recbuf[0];
         }
     }
     void write_message(char * message,size_t size){
@@ -80,16 +79,16 @@ public:
         sock_opt_h def;
         socket.set_option(def);
     }
-    char * get_message(){
+    char * get_message(bufarr & recbuf){
         bufarr buf;
-        size_t length = socket.receive(asio::buffer(buf));
+        size_t length = socket.receive(asio::buffer(recbuf));
 
         if(length >= bufsize){
             return errcstr;//todo: make a valid error code
         }
         else{
-            buf[length] = 0;
-            return buf.data();
+            recbuf[length] = 0;
+            return recbuf.data();
         }
     }
     void write_message(char * str,size_t size){
@@ -139,13 +138,13 @@ struct cache_obj{
         tcp_connection con(my_io_service,resit);
         size_t tot_len = make_sendarr(head,word1,word2);
         con.write_message(&sendarr[0],tot_len);
-        return getmes ? con.get_message() : nullptr;
+        return getmes ? con.get_message(sendarr) : nullptr;
     }
     char * send_message_udp(bool getmes,const char * head,char * word1,char * word2=nullptr){
         udp_connection con(my_io_service,reciver);
         size_t tot_len = make_sendarr(head,word1,word2);
         con.write_message(&sendarr[0],tot_len);
-        return getmes ? con.get_message() : nullptr;
+        return getmes ? con.get_message(sendarr) : nullptr;
     }
 };
 size_t find(char * firststr,size_t strlen,size_t startpos,char c,uint64_t count){
@@ -166,7 +165,7 @@ void unpack_json(char * json_str,char *& key, char *& value){
     size_t startkey = find(json_str,len,0,'"',3) + 1;
     size_t endkey = find(json_str,len,startkey,'"',1);
 
-    size_t startval = find(json_str,len,endkey,'"',3) + 1;
+    size_t startval = find(json_str,len,endkey+1,'"',3) + 1;
     size_t endval = find(json_str,len,startval,'"',1);
 
     json_str[endkey] = 0;
@@ -196,7 +195,6 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
 
     char * keystr = ((char*)key);
     char * retval = cache->send_message_udp(true,"GET",keystr);
-
     if(retval == nullptr || strcmp(errcstr,retval) == 0){
         return nullptr;
     }

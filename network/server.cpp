@@ -70,28 +70,28 @@ int main(int argc, char** argv)
 }
 size_t make_json(bufarr & buf,char * key, char * value)
 {
-    char begstr[] = "{ \"key\": \"";
-    char midstr[] = "\" , \"value\": \"";
-    char endstr[] = "\" } ";
+    string begstr = "{ \"key\": \"";
+    string midstr = "\" , \"value\": \"";
+    string endstr = "\" } ";
 
-    size_t begsize = sizeof(begstr)-1;//minus 1 because we don't want null termination
     size_t keysize = strlen(key);
-    size_t midsize = sizeof(midstr)-1;
     size_t valsize = strlen(value);
-    size_t endsize = sizeof(endstr)-1;
 
-    if(begsize + keysize + midsize + valsize + endsize + 1 > bufsize){
+    size_t end_size = begstr.size() + keysize + midstr.size() + valsize + endstr.size() + 2;
+    if(end_size > bufsize){
         throw runtime_error("value and key too big to jsonify");
     }
 
     auto ptr = buf.begin();
-    ptr = copy(begstr,begstr+begsize,ptr);
+    ptr = copy(begstr.begin(),begstr.end(),ptr);
     ptr = copy(key,key+keysize,ptr);
-    ptr = copy(midstr,midstr+midsize,ptr);
+    ptr = copy(midstr.begin(),midstr.end(),ptr);
     ptr = copy(value,value+valsize,ptr);
-    ptr = copy(endstr,endstr+endsize,ptr);
+    ptr = copy(endstr.begin(),endstr.end(),ptr);
     *ptr = 0;ptr++;
-    return &*ptr - &*(buf.begin());
+    *ptr = 0;ptr++;
+    //printf("%s\n\n\n",buf.data());
+    return end_size;
 }
 class safe_cache {
 public:
@@ -118,10 +118,11 @@ void get(con_ty& con, char * key)
 {
     uint32_t val_size = 0;
     val_type v = cache_get(con.cache(), (key_type)(key), &val_size);
+
     if (v != nullptr) {
         bufarr buf;
-        size_t bufsize = make_json(buf,key,(char*)(v));
-        con.write_message(buf.data(),bufsize);
+        size_t jsonsize = make_json(buf,key,(char*)(v));
+        con.write_message(buf.data(),jsonsize);
     } else {
         con.return_error();
     }
@@ -182,7 +183,6 @@ void act_on_message(con_ty& con, char * message,size_t messize)
     message[first_space] = 0;//null termination of head
     string fword(message);//should't allocate due to small string optimization
 
-    message[first_slash] = 0;//null termination of first string
     char * info1 = message + first_slash + 1;
 
     char * info2 = message + second_slash + 1;//null terminated at end
@@ -190,16 +190,16 @@ void act_on_message(con_ty& con, char * message,size_t messize)
     bool second_exists = second_slash != string::npos;
 
     size_t end_first = second_exists ? second_slash+1 : messize;
-    message[end_first-1] = 0;//null termination of second string
+    message[end_first-1] = 0;//null termination of first string
 
     //makes sure there is no garbage on end of words
-    message[whitespace_begin(message,end_first)] = 0;
-    message[whitespace_begin(message,messize)] = 0;
+    //message[whitespace_begin(message,end_first)] = 0;
+    //message[whitespace_begin(message,messize)] = 0;
 
     if (fword == "GET") {
         get(con, info1);
     } else if (fword == "PUT") {
-        put(con,info1,info2,second_slash+1-messize);
+        put(con,info1,info2,messize-end_first);
     } else if (fword == "DELETE") {
         delete_(con, info1);
     } else if (fword == "HEAD") {
@@ -212,9 +212,8 @@ void act_on_message(con_ty& con, char * message,size_t messize)
 }
 template<typename con_ty>
 void process_message(con_ty & con,char * recbuf,size_t bytes_written){
-    size_t endloc = min(bytes_written,find_in_buf(recbuf, char(0))) + 1;//end is past the end
-    if (endloc != string::npos) {
-        size_t endarr = whitespace_begin(recbuf,endloc)+1;
+    if (bytes_written < bufsize-1) {
+        size_t endarr = whitespace_begin(recbuf,bytes_written)+1;
         recbuf[endarr-1] = 0;
         act_on_message(con, recbuf,endarr);
     } else {
@@ -223,7 +222,7 @@ void process_message(con_ty & con,char * recbuf,size_t bytes_written){
 }
 
 //the connection and server classes are mostly taken from the library documentation
-//note that they are threadsafe as long as multiple clients are not connecting to the same ports
+//I am fairly sure the shared objects are threadsafe, but not 100%.
 class tcp_con
     : public boost::enable_shared_from_this<tcp_con> {
 public:
@@ -327,6 +326,7 @@ public:
     }
     void write_message(char * str,size_t size)
     {
+        //printf("%s\n%d\n",str,size);
         socket_.async_send_to(asio::buffer(str, size), endpoint,
             boost::bind(&udp_server::handle_send, this, asio::placeholders::error(), asio::placeholders::bytes_transferred()));
     }
@@ -394,7 +394,7 @@ void run_server(int tcp_port_start, int num_tcp_ports, int udp_port_start, int n
         udps.emplace_back(my_io_service, udp_port_start + i, serv_cache);
         udps.back().start_receive();
     }
-    int64_t num_other_threads = stdthread::hardware_concurrency() - 1;
+    int64_t num_other_threads =  stdthread::hardware_concurrency() - 1;
     using sthread = typename stdthread::thread;
     vector<sthread> o_threads;
     o_threads.reserve(num_other_threads);

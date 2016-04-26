@@ -108,7 +108,7 @@ uint64_t timeit(timed_fn_ty timed_fn){
 action_data get_action(gen_ty & generator,cache_t cache){
 	uint64_t get_item = uniform_rand_item(generator);
 	string & item = keys[get_item];
-	val_type v;
+	val_type v = nullptr;
 	uint64_t time = timeit([&](){
 		uint32_t null_val = 0;
 		v = cache_get(cache,to_key(item),&null_val);
@@ -116,7 +116,7 @@ action_data get_action(gen_ty & generator,cache_t cache){
 	bool hit = v != nullptr;
 	if(hit){
 		if(strcmp((const char *)v,values[get_item].c_str())){
-			printf("value returned not what expected\n");
+			printf("value returned not what expected:\n%s\n%s\n\n",v,values[get_item].c_str());
 		}
 	}
 	return action_data(time,1,hit,1);
