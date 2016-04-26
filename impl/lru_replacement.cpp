@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdio.h>
 #include "replacement.h"
 
 struct policy_obj{

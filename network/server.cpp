@@ -68,9 +68,30 @@ int main(int argc, char** argv)
 
     return 0;
 }
-string make_json(string key, string value)
+size_t make_json(bufarr & buf,char * key, char * value)
 {
-    return "{ \"key\": \"" + key + "\" , \"value\": \"" + value + "\" } ";
+    char begstr[] = "{ \"key\": \"";
+    char midstr[] = "\" , \"value\": \"";
+    char endstr[] = "\" } ";
+
+    size_t begsize = sizeof(begstr)-1;//minus 1 because we don't want null termination
+    size_t keysize = strlen(key);
+    size_t midsize = sizeof(midstr)-1;
+    size_t valsize = strlen(value);
+    size_t endsize = sizeof(endstr)-1;
+
+    if(begsize + keysize + midsize + valsize + endsize + 1 > bufsize){
+        throw runtime_error("value and key too big to jsonify");
+    }
+
+    auto ptr = buf.begin();
+    ptr = copy(begstr,begstr+begsize,ptr);
+    ptr = copy(key,key+keysize,ptr);
+    ptr = copy(midstr,midstr+midsize,ptr);
+    ptr = copy(value,value+valsize,ptr);
+    ptr = copy(endstr,endstr+endsize,ptr);
+    *ptr = 0;ptr++;
+    return &*ptr - &*(buf.begin());
 }
 class safe_cache {
 public:
@@ -93,26 +114,27 @@ public:
     }
 };
 template <typename con_ty>
-void get(con_ty& con, string key)
+void get(con_ty& con, char * key)
 {
     uint32_t val_size = 0;
-    val_type v = cache_get(con.cache(), (key_type)(key.c_str()), &val_size);
+    val_type v = cache_get(con.cache(), (key_type)(key), &val_size);
     if (v != nullptr) {
-        string output = make_json(key, string((char*)(v)));
-        con.write_message(output);
+        bufarr buf;
+        size_t bufsize = make_json(buf,key,(char*)(v));
+        con.write_message(buf.data(),bufsize);
     } else {
         con.return_error();
     }
 }
 template <typename con_ty>
-void put(con_ty& con, string key, string value)
+void put(con_ty& con, char * keypart, char * valuepart,size_t valarrsize)
 {
-    cache_set(con.cache(), (key_type)(key.c_str()), (void*)(value.c_str()), value.size()+1);
+    cache_set(con.cache(), (key_type)(keypart), (val_type)(valuepart), valarrsize);
 }
 template <typename con_ty>
-void delete_(con_ty& con, string key)
+void delete_(con_ty& con, char * key)
 {
-    cache_delete(con.cache(), (key_type)(key.c_str()));
+    cache_delete(con.cache(), (key_type)(key));
 }
 template <typename con_ty>
 void head(con_ty&)
@@ -120,15 +142,19 @@ void head(con_ty&)
     //todo:implement!
 }
 template <typename con_ty>
-void post(con_ty& con, string post_type, string extrainfo)
+void post(con_ty& con, char * post_type, char * extrainfo)
 {
-    strip(post_type);
-    if (post_type == "shutdown") {
+    //speed does not matter here
+    string post_ty(post_type);
+    string extinfo(extrainfo);
+
+    strip(post_ty);
+    if (post_ty == "shutdown") {
         throw ExitException();
-    } else if (post_type == "memsize") {
+    } else if (post_ty == "memsize") {
         if (cache_space_used(con.cache()) == 0) {
             destroy_cache(con.cache());
-            con.cache() = create_cache(stoll(extrainfo), NULL);
+            con.cache() = create_cache(stoll(extinfo), NULL);
         } else {
             con.return_error();
         }
@@ -136,28 +162,44 @@ void post(con_ty& con, string post_type, string extrainfo)
         throw runtime_error("bad POST message");
     }
 }
+size_t find(char * buf,char c,size_t start,size_t end){
+    for(size_t i = start; i < end; i++){
+        if(buf[i] == c){
+            return i;
+        }
+    }
+    return string::npos;
+}
+
 template <typename con_ty>
-void act_on_message(con_ty& con, string message)
+void act_on_message(con_ty& con, char * message,size_t messize)
+    //messize is size of char array, not of string
 {
-    size_t end_of_line = min(min(message.find('\n'), message.find('\r')), message.size() + 1);
+    size_t first_space = find(message,' ',0,messize);
+    size_t first_slash = find(message,'/',first_space + 1,messize);
+    size_t second_slash = find(message,'/',first_slash + 1,messize);
 
-    size_t first_space = message.find(' ');
-    size_t first_slash = message.find('/', first_space + 1);
-    size_t second_slash = message.find('/', first_slash + 1);
+    message[first_space] = 0;//null termination of head
+    string fword(message);//should't allocate due to small string optimization
 
-    auto begining = message.begin();
-    string fword = string(begining, begining + first_space);
-    string info1 = string(begining + first_slash + 1, begining + min(second_slash, end_of_line));
-    string info2 = second_slash == string::npos ? string() : string(begining + second_slash + 1, begining + end_of_line);
+    message[first_slash] = 0;//null termination of first string
+    char * info1 = message + first_slash + 1;
 
-    strip(fword);
-    strip(info1);
-    strip(info2);
+    char * info2 = message + second_slash + 1;//null terminated at end
+
+    bool second_exists = second_slash != string::npos;
+
+    size_t end_first = second_exists ? second_slash+1 : messize;
+    message[end_first-1] = 0;//null termination of second string
+
+    //makes sure there is no garbage on end of words
+    message[whitespace_begin(message,end_first)] = 0;
+    message[whitespace_begin(message,messize)] = 0;
 
     if (fword == "GET") {
         get(con, info1);
     } else if (fword == "PUT") {
-        put(con, info1, info2);
+        put(con,info1,info2,second_slash+1-messize);
     } else if (fword == "DELETE") {
         delete_(con, info1);
     } else if (fword == "HEAD") {
@@ -168,6 +210,18 @@ void act_on_message(con_ty& con, string message)
         throw runtime_error("bad message");
     }
 }
+template<typename con_ty>
+void process_message(con_ty & con,char * recbuf,size_t bytes_written){
+    size_t endloc = min(bytes_written,find_in_buf(recbuf, char(0))) + 1;//end is past the end
+    if (endloc != string::npos) {
+        size_t endarr = whitespace_begin(recbuf,endloc)+1;
+        recbuf[endarr-1] = 0;
+        act_on_message(con, recbuf,endarr);
+    } else {
+        con.return_error();
+    }
+}
+
 //the connection and server classes are mostly taken from the library documentation
 //note that they are threadsafe as long as multiple clients are not connecting to the same ports
 class tcp_con
@@ -186,17 +240,17 @@ public:
 
     void start()
     {
-        asio::async_read(socket_, asio::buffer(b),
+        asio::async_read(socket_, asio::buffer(buf,bufsize),
             boost::bind(&tcp_con::handle_read, shared_from_this(), asio::placeholders::error(), asio::placeholders::bytes_transferred()));
     }
-    void write_message(string s)
+    void write_message(char * str, size_t size)
     {
-        asio::async_write(socket_, asio::buffer(s),
+        asio::async_write(socket_, asio::buffer(str,size),
             boost::bind(&tcp_con::handle_write, shared_from_this()));
     }
     void return_error()
     {
-        write_message("ERROR");
+        write_message(errcstr,sizeof(errcstr));
     }
     cache_t& cache()
     {
@@ -212,9 +266,7 @@ public:
         size_t bytes_written)
     {
         if (error == asio::error::eof) {
-            string s(b.begin(), b.begin() + bytes_written);
-            strip(s);
-            act_on_message(*this, s);
+            process_message(*this,buf,bytes_written);
         }
         else if (error)
         {
@@ -231,7 +283,7 @@ public:
 
     tcp::socket socket_;
     safe_cache* port_cache; //non-owning
-    bufarr b;
+    char buf[bufsize];
 };
 
 class tcp_server {
@@ -273,14 +325,14 @@ public:
         , port_cache(&incache)
     {
     }
-    void write_message(string s)
+    void write_message(char * str,size_t size)
     {
-        socket_.async_send_to(asio::buffer(s.c_str(), s.size() + 1), endpoint,
+        socket_.async_send_to(asio::buffer(str, size), endpoint,
             boost::bind(&udp_server::handle_send, this, asio::placeholders::error(), asio::placeholders::bytes_transferred()));
     }
     void return_error()
     {
-        write_message("ERROR");
+        write_message(errcstr,sizeof(errcstr));
     }
     cache_t& cache()
     {
@@ -289,21 +341,15 @@ public:
 
     void start_receive()
     {
-        socket_.async_receive_from(asio::buffer(recbuf), endpoint,
-            boost::bind(&udp_server::handle_receive, this,
+        shared_ptr<bufarr> recbuf(new(bufarr));
+        socket_.async_receive_from(asio::buffer(*recbuf), endpoint,
+            boost::bind(&udp_server::handle_receive, this,recbuf,
                                        asio::placeholders::error(), asio::placeholders::bytes_transferred()));
     }
-    void handle_receive(const asio::error_code& error, size_t bytes_written)
+    void handle_receive(shared_ptr<bufarr> recbuf, const asio::error_code& error, size_t bytes_written)
     {
         if (!error) {
-            size_t endloc = find_in_buf(recbuf, char(0));
-            if (endloc != string::npos) {
-                string act_str(recbuf.begin(), recbuf.begin() + endloc);
-                strip(act_str);
-                act_on_message(*this, act_str);
-            } else {
-                return_error();
-            }
+            process_message(*this,recbuf->data(),bytes_written);
         } else {
             throw asio::system_error(error);
         }
@@ -312,12 +358,13 @@ public:
     void handle_send(const asio::error_code&, size_t)
     {
     }
+    //these are apparently threadsafe according to stack overflow
     udp::socket socket_;
     udp::endpoint endpoint;
+
     safe_cache* port_cache; //non-owning
-    bufarr recbuf;
 };
-void start_thread(asio::io_service * service){
+void run_loop(asio::io_service * service){
     try{
         service->run();
     }
@@ -347,13 +394,14 @@ void run_server(int tcp_port_start, int num_tcp_ports, int udp_port_start, int n
         udps.emplace_back(my_io_service, udp_port_start + i, serv_cache);
         udps.back().start_receive();
     }
-    int64_t num_other_threads = 0;//stdthread::hardware_concurrency() - 1;
+    int64_t num_other_threads = stdthread::hardware_concurrency() - 1;
     using sthread = typename stdthread::thread;
     vector<sthread> o_threads;
     o_threads.reserve(num_other_threads);
     //pulled from asio documentation on how to multithread in ASIO
     for(int64_t t_n = 0; t_n < num_other_threads; t_n++){
-        o_threads.emplace_back(start_thread,&my_io_service);
+        o_threads.emplace_back(run_loop,&my_io_service);
     }
-    my_io_service.run();
+    //infinite loop
+    run_loop(&my_io_service);
 }

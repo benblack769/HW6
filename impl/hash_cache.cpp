@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <mutex>
+#include <stdio.h>
 #include "cache.h"
 #include "helper.h"
 #include "replacement.h"

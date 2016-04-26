@@ -114,6 +114,11 @@ action_data get_action(gen_ty & generator,cache_t cache){
 		v = cache_get(cache,to_key(item),&null_val);
 	});
 	bool hit = v != nullptr;
+	if(hit){
+		if(strcmp((const char *)v,values[get_item].c_str())){
+			printf("value returned not what expected\n");
+		}
+	}
 	return action_data(time,1,hit,1);
 }
 action_data delete_action(gen_ty & generator,cache_t cache){

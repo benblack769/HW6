@@ -5,12 +5,13 @@
 #include <unistd.h>
 //#include <bind/bind.hpp>
 //#include <ctime>
+#include <vector>
 
 using namespace asio;
 using namespace asio::ip;
 
 constexpr size_t bufsize = (1 << 16) - 32;
-char * errcstr = "ERROR";
+char errcstr[] = "ERROR";
 std::string errstr = "ERROR";
 
 //class udp_connection;
@@ -19,7 +20,8 @@ std::string errstr = "ERROR";
 //                    udp_connection * con);
 using bufarr = std::array<char,bufsize>;
 
-size_t find_in_buf(bufarr & buf,char c){
+template<typename bufty>
+size_t find_in_buf(bufty & buf,char c){
     for(size_t pos = 0; pos < bufsize; pos++){
         if(buf[pos] == c){
             return pos;
@@ -32,8 +34,17 @@ bool is_white_space(char c){
     return c == char(0) || c == ' ' || c == '\n' || c == '\r' || c == '\t';
 }
 
+size_t whitespace_begin(char * str,size_t size){
+    for(int i = size-1; i >= 0;i--){
+        if(!is_white_space(str[i])){
+            return i + 1;
+        }
+    }
+    return 0;
+}
 void strip(std::string & str){
-    for(int i = str.size()-1; i >= 0;i--){
+    size_t strs = str.size();
+    for(int i = strs-1; i >= 0;i--){
         if(!is_white_space(str[i])){
             str.resize(i+1);
             break;
