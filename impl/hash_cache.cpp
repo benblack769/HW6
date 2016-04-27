@@ -95,21 +95,6 @@ void resize_table(cache_t cache,uint64_t new_size){
     }
     free(old_table);
 }
-bool should_add_evict_deletions(cache_t cache,uint32_t val_size){
-    struct id_arr add_res = ids_to_delete_if_added(cache->evic_policy,val_size);
-    if(add_res.should_add){
-        for(size_t di = 0;di < add_res.size; di++){
-            // the data given to the policy is the pointer to the key of that the cache is storing,
-            //so use that to find the data and delete it
-            cache_del_impl(cache,(key_type)(add_res.data[di]));
-        }
-    }
-    //the array of ids needs to be freed
-    if(add_res.data != NULL){
-        free(add_res.data);
-    }
-    return add_res.should_add;
-}
 void assign_to_link(link_t * linkp,key_val_s data){
     if(*linkp == NULL){
         *linkp = (link_t)calloc(1,sizeof(struct link_obj));
@@ -127,7 +112,7 @@ void add_to_cache(cache_t cache,link_t link, key_type key, val_type val, uint32_
     new_item.val_size = val_size;
     //give the policy the pointer to the key so that it can read the value of the key when
     //the policy teels it about evictions in ids_to_delete_if_added
-    new_item.policy_info = create_info(cache->evic_policy,(void*)(key_copy),val_size);
+    new_item.policy_info = create_info(cache->evic_policy,(void*)(link),val_size);
 
     link->data = new_item;
 
@@ -139,6 +124,14 @@ void add_to_cache(cache_t cache,link_t link, key_type key, val_type val, uint32_
         resize_table(cache,cache->table_size*2);
     }
 }
+void make_room_for(cache_t cache,uint32_t val_size){
+    user_id_t id;
+    while(should_pop_this(cache->evic_policy,val_size,&id)){
+        link_t link = (link_t)(id);
+        del_link(cache,link);
+    }
+}
+
 /*
  * cache set is very careful that maxmem is never exceeded. In order to do this while
  * maintaining a single querry_hash call, it makes a placeholder object that is invalid
@@ -158,7 +151,8 @@ void cache_set_impl(cache_t cache, key_type key, val_type val, uint32_t val_size
     link_t mylink = *init_link;//now a valid link in the linked list but with invaid data
 
     //if the policy tells the cache not to add the item, do not add it, instead remove it from list
-    if(should_add_evict_deletions(cache,val_size)){
+    if(should_add(cache->evic_policy,val_size)){
+        make_room_for(cache,val_size);
         add_to_cache(cache,mylink,key,val,val_size);
     }
     else{

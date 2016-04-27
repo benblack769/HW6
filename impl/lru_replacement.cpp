@@ -98,51 +98,19 @@ void delete_info(policy_t policy,pinfo_t info){
 
     free(info);
 }
-size_t num_to_delete(policy_t policy, uint32_t val_size,pinfo_t * out_t){
-    size_t num_del_ids = 0;
-    pinfo_t cur_t = policy->bottom;
-    uint64_t tot_mem = policy->used_mem + val_size;
-    while(tot_mem > policy->maxmem && cur_t != NULL){
-        tot_mem -= cur_t->val_size;
-        cur_t = cur_t->high;
-        num_del_ids++;
-    }
-    *out_t = cur_t;
-    return num_del_ids;
-}
-user_id_t * make_item_array(size_t num_items,pinfo_t bottom){
-    user_id_t * arr = (user_id_t *)calloc(num_items,sizeof(user_id_t));
-    //unsafe traversal of items in the list, placing in arr
-    pinfo_t cur_i = bottom;
-    for(size_t di = 0; di < num_items; di++){
-        arr[di] = cur_i->ident;
-        cur_i = cur_i->high;
-    }
-    return arr;
-}
-
-struct id_arr ids_to_delete_if_added(policy_t policy, uint32_t val_size){
-    pinfo_t final_item = NULL;
-    size_t num_del_ids = num_to_delete(policy,val_size,&final_item);
-
-    //if the val_size is greater than the maxmem, don't bother adding the item
-    if(val_size > policy->maxmem){
-        struct id_arr retval = {NULL,0,false};
-        return retval;
-    }
-    //if it doesn't need to delete anything, then return that
-    else if(num_del_ids == 0){
-        struct id_arr retval = {NULL,0,true};
-        return retval;
-    }
-    user_id_t * id_arr = make_item_array(num_del_ids,policy->bottom);
-
-    struct id_arr retval = {id_arr,num_del_ids,true};
-    return retval;//caller frees arr
-}
-
 void info_gotten(policy_t policy,pinfo_t info){
     remove_info_from_list(policy,info);
 
     move_info_to_head(policy,info);
+}
+
+bool should_add(policy_t policy,uint32_t val_size){
+    return val_size <= policy->maxmem;
+}
+bool should_pop_this(policy_t policy,uint32_t valsize,user_id_t * outval){
+    uint64_t tot_mem = policy->used_mem + valsize;
+    if(policy->bottom != NULL){
+        *outval = policy->bottom->ident;
+    }
+    return tot_mem > policy->maxmem;
 }
