@@ -20,8 +20,9 @@ typedef struct link_obj* link_t;
 struct link_obj{
     key_val_s data;
     link_t next;
+    link_t * prev_next_ptr;//the pointer to the thing pointing to it
 };
-void del_link(cache_t cache, link_t * obj);
+void del_link(cache_t cache, link_t obj);
 void cache_del_impl(cache_t cache, key_type key);
 
 uint64_t def_hash_fn(key_type key);
@@ -74,6 +75,7 @@ void assign_to_link(link_t * linkp,key_val_s data){
         *linkp = (link_t)calloc(1,sizeof(struct link_obj));
     }
     (*linkp)->data = data;
+    (*linkp)->prev_next_ptr = linkp;
 }
 void resize_table(cache_t cache,uint64_t new_size){
     const size_t old_t_size = cache->table_size;
@@ -84,14 +86,16 @@ void resize_table(cache_t cache,uint64_t new_size){
 
     //add the pointers into the new cache table without changing the data at all
     for(size_t i = 0; i < old_t_size;i++){
-        link_t cur_l = old_table[i];
-        while(cur_l != NULL){
-            link_t next_l = cur_l->next;
+        link_t * prev_l = &old_table[i];
+        while(*prev_l != NULL){
+            link_t cur_l = *prev_l;
+            link_t * next_l = &cur_l->next;
 
+            link_t * hash_loc = querry_hash(cache,cur_l->data.key);
             cur_l->next = NULL;
-            *querry_hash(cache,cur_l->data.key) = cur_l;
+            cur_l->prev_next_ptr = hash_loc;
 
-            cur_l = next_l;
+            prev_l = next_l;
         }
     }
     free(old_table);
@@ -136,7 +140,7 @@ void add_to_cache(cache_t cache, key_type key, val_type val, uint32_t val_size){
 void cache_set_impl(cache_t cache, key_type key, val_type val, uint32_t val_size){
     link_t * init_link = querry_hash(cache,key);
     //if the item is already in the list, then delete it
-    del_link(cache,init_link);
+    del_link(cache,*init_link);
     //if the policy tells the cache not to add the item, do not add it
     if(!should_add_evict_deletions(cache,val_size)){
         return;
@@ -168,25 +172,29 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
     cache->mut.unlock();
     return val;
 }
-void del_link(cache_t cache,link_t * obj){
+void del_link(cache_t cache,link_t obj){
     //deletes the thing pointed to by the obj and replaces it with the next thing in the linked list  (a NULL if it is at the end)
-    link_t myobj = *obj;
-    if(*obj != NULL){
-        *obj = myobj->next;
 
-        cache->mem_used -= myobj->data.val_size;
+    if(obj != NULL){
+        //extracts obj from doubly linked list
+        *(obj->prev_next_ptr) = obj->next;
+        if(obj->next != NULL){
+            obj->next->prev_next_ptr = obj->prev_next_ptr;
+        }
+
+        cache->mem_used -= obj->data.val_size;
         cache->num_elements--;
 
-        free((uint8_t*)myobj->data.key);
-        free((void *)myobj->data.val);
+        free((uint8_t*)obj->data.key);
+        free((void *)obj->data.val);
 
-        delete_info(cache->evic_policy,myobj->data.policy_info);
+        delete_info(cache->evic_policy,obj->data.policy_info);
 
-        free(myobj);
+        free(obj);
     }
 }
 void cache_del_impl(cache_t cache, key_type key){
-    del_link(cache,querry_hash(cache,key));
+    del_link(cache,*querry_hash(cache,key));
 }
 void cache_delete(cache_t cache, key_type key){
     cache->mut.lock();
@@ -200,7 +208,7 @@ void destroy_cache(cache_t cache){
     //deletes the links
     for(size_t i = 0; i < cache->table_size; i++){
         while(cache->table[i] != NULL){
-            del_link(cache,&cache->table[i]);
+            del_link(cache,cache->table[i]);
         }
     }
     delete_policy(cache->evic_policy);
