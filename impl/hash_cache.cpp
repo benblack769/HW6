@@ -24,6 +24,8 @@ struct link_obj{
 };
 void del_link(cache_t cache, link_t obj);
 void cache_del_impl(cache_t cache, key_type key);
+void release_link_data(cache_t cache,link_t obj);
+void extract_link(link_t obj);
 
 uint64_t def_hash_fn(key_type key);
 size_t map_to_location(uint64_t hash_val,size_t table_size){
@@ -70,13 +72,6 @@ link_t * querry_hash(cache_t cache, key_type key){
     }
     return cur_item;
 }
-void assign_to_link(link_t * linkp,key_val_s data){
-    if(*linkp == NULL){
-        *linkp = (link_t)calloc(1,sizeof(struct link_obj));
-    }
-    (*linkp)->data = data;
-    (*linkp)->prev_next_ptr = linkp;
-}
 void resize_table(cache_t cache,uint64_t new_size){
     const size_t old_t_size = cache->table_size;
     link_t * old_table = cache->table;
@@ -86,16 +81,16 @@ void resize_table(cache_t cache,uint64_t new_size){
 
     //add the pointers into the new cache table without changing the data at all
     for(size_t i = 0; i < old_t_size;i++){
-        link_t * prev_l = &old_table[i];
-        while(*prev_l != NULL){
-            link_t cur_l = *prev_l;
-            link_t * next_l = &cur_l->next;
+        link_t cur_l = old_table[i];
+        while(cur_l != NULL){
+            link_t next_l = cur_l->next;
 
             link_t * hash_loc = querry_hash(cache,cur_l->data.key);
+            *hash_loc = cur_l;
             cur_l->next = NULL;
             cur_l->prev_next_ptr = hash_loc;
 
-            prev_l = next_l;
+            cur_l = next_l;
         }
     }
     free(old_table);
@@ -115,7 +110,14 @@ bool should_add_evict_deletions(cache_t cache,uint32_t val_size){
     }
     return add_res.should_add;
 }
-void add_to_cache(cache_t cache, key_type key, val_type val, uint32_t val_size){
+void assign_to_link(link_t * linkp,key_val_s data){
+    if(*linkp == NULL){
+        *linkp = (link_t)calloc(1,sizeof(struct link_obj));
+    }
+    (*linkp)->data = data;
+    (*linkp)->prev_next_ptr = linkp;
+}
+void add_to_cache(cache_t cache,link_t link, key_type key, val_type val, uint32_t val_size){
     //adds in a new item in the location of the cache
     key_type key_copy = (key_type)make_copy(key,strlen((char*)key)+1);
 
@@ -127,7 +129,8 @@ void add_to_cache(cache_t cache, key_type key, val_type val, uint32_t val_size){
     //the policy teels it about evictions in ids_to_delete_if_added
     new_item.policy_info = create_info(cache->evic_policy,(void*)(key_copy),val_size);
 
-    assign_to_link(querry_hash(cache,key),new_item);
+    link->data = new_item;
+
     cache->mem_used += val_size;
     cache->num_elements++;
 
@@ -136,16 +139,33 @@ void add_to_cache(cache_t cache, key_type key, val_type val, uint32_t val_size){
         resize_table(cache,cache->table_size*2);
     }
 }
-
+/*
+ * cache set is very careful that maxmem is never exceeded. In order to do this while
+ * maintaining a single querry_hash call, it makes a placeholder object that is invalid
+ * while it deletes things as requested by LRU. This way, the position of the new link
+ * is maintained by extract_link, and does not need to be recomputed.
+ */
 void cache_set_impl(cache_t cache, key_type key, val_type val, uint32_t val_size){
     link_t * init_link = querry_hash(cache,key);
-    //if the item is already in the list, then delete it
-    del_link(cache,*init_link);
-    //if the policy tells the cache not to add the item, do not add it
-    if(!should_add_evict_deletions(cache,val_size)){
-        return;
+    if(*init_link != NULL){
+        //if the item is already in the list, then free the associated memory (but not the object itself)
+        release_link_data(cache,*init_link);
     }
-    add_to_cache(cache,key,val,val_size);
+    else{
+        //else add the new element, but with empty data
+        assign_to_link(init_link,key_val_s());
+    }
+    link_t mylink = *init_link;//now a valid link in the linked list but with invaid data
+
+    //if the policy tells the cache not to add the item, do not add it, instead remove it from list
+    if(should_add_evict_deletions(cache,val_size)){
+        add_to_cache(cache,mylink,key,val,val_size);
+    }
+    else{
+        //else delete the object
+        extract_link(mylink);
+        free(mylink);
+    }
 }
 void cache_set(cache_t cache, key_type key, val_type val, uint32_t val_size){
     cache->mut.lock();
@@ -172,16 +192,8 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
     cache->mut.unlock();
     return val;
 }
-void del_link(cache_t cache,link_t obj){
-    //deletes the thing pointed to by the obj and replaces it with the next thing in the linked list  (a NULL if it is at the end)
-
+void release_link_data(cache_t cache,link_t obj){
     if(obj != NULL){
-        //extracts obj from doubly linked list
-        *(obj->prev_next_ptr) = obj->next;
-        if(obj->next != NULL){
-            obj->next->prev_next_ptr = obj->prev_next_ptr;
-        }
-
         cache->mem_used -= obj->data.val_size;
         cache->num_elements--;
 
@@ -189,7 +201,23 @@ void del_link(cache_t cache,link_t obj){
         free((void *)obj->data.val);
 
         delete_info(cache->evic_policy,obj->data.policy_info);
+    }
+}
+void extract_link(link_t obj){
+    if(obj != NULL){
+        //extracts obj from doubly linked list
+        *(obj->prev_next_ptr) = obj->next;
+        if(obj->next != NULL){
+            obj->next->prev_next_ptr = obj->prev_next_ptr;
+        }
+    }
+}
 
+void del_link(cache_t cache,link_t obj){
+    //deletes the thing pointed to by the obj and replaces it with the next thing in the linked list  (a NULL if it is at the end)
+    extract_link(obj);
+    release_link_data(cache,obj);
+    if(obj != NULL){
         free(obj);
     }
 }
@@ -220,7 +248,7 @@ uint64_t def_hash_fn(key_type str){
     uint64_t hash = 5381;
     char c;
 
-    while (c = *str++)
+    while ((c = *str++))
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
     return hash;
