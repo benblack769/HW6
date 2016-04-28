@@ -1,0 +1,85 @@
+
+Commit: Confirmed gets are working (f27bae8)
+
+number of threads = 127
+average time in ms = 1.38992
+average throughput = 91372.2
+hit rate = 0.901657
+
+number of threads = 127
+average time in ms = 1.38277
+average throughput = 91844.7
+hit rate = 0.902425
+
+number of threads = 127
+average time in ms = 1.38067
+average throughput = 91984.2
+hit rate = 0.902181
+
+Commit: global cache lock finished (241baea)
+
+number of threads = 127
+average time in ms = 0.638076
+average throughput = 199036
+hit rate = 0.902466
+
+number of threads = 127
+average time in ms = 0.638338
+average throughput = 198954
+hit rate = 0.90127
+
+number of threads = 127
+average time in ms = 0.642086
+average throughput = 197793
+hit rate = 0.90149
+
+Commit: String optimization fully working (38733aa)
+
+number of threads = 127
+average time in ms = 0.599648
+average throughput = 211791
+hit rate = 0.90226
+
+number of threads = 127
+average time in ms = 0.598738
+average throughput = 212113
+hit rate = 0.902265
+
+number of threads = 127
+average time in ms = 0.600186
+average throughput = 211601
+hit rate = 0.902193
+
+link optimization finished (100ed9c)
+
+number of threads = 127
+average time in ms = 0.577014
+average throughput = 220099
+hit rate = 0.902652
+
+number of threads = 127
+average time in ms = 0.582899
+average throughput = 217876
+hit rate = 0.901495
+
+number of threads = 127
+average time in ms = 0.581293
+average throughput = 218478
+hit rate = 0.901929
+
+lru optimization tested (5c9bbb7)
+
+number of threads = 127
+average time in ms = 0.573625
+average throughput = 221399
+hit rate = 0.901964
+
+number of threads = 127
+average time in ms = 0.584762
+average throughput = 217182
+hit rate = 0.902039
+
+number of threads = 127
+average time in ms = 0.57845
+average throughput = 219552
+hit rate = 0.901453
