@@ -14,6 +14,8 @@
 using stdthread = std::thread;//resolves namespace conflict
 using namespace std;
 
+constexpr int64_t THREADS_PER_VCORE = 2;
+
 class ExitException : public exception {
     virtual const char* what() const throw()
     {
@@ -394,7 +396,7 @@ void run_server(int tcp_port_start, int num_tcp_ports, int udp_port_start, int n
         udps.emplace_back(my_io_service, udp_port_start + i, serv_cache);
         udps.back().start_receive();
     }
-    int64_t num_other_threads =  stdthread::hardware_concurrency() - 1;
+    int64_t num_other_threads =  THREADS_PER_VCORE * stdthread::hardware_concurrency() - 1;
     using sthread = typename stdthread::thread;
     vector<sthread> o_threads;
     o_threads.reserve(num_other_threads);

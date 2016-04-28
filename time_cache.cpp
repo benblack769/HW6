@@ -25,7 +25,6 @@ constexpr uint64_t maxmem = 0.90 * mem_to_store;
 constexpr double APROX_MEAN_WEIGHTED_VALUE_SIZE = 461.258;//measured with unig.cpp
 constexpr uint64_t tot_num_items = uint64_t(mem_to_store / APROX_MEAN_WEIGHTED_VALUE_SIZE);
 constexpr size_t NUM_THREADS = 98;//at most two minus the number of ports of the server
-constexpr uint64_t num_actions = 5000000 / NUM_THREADS;
 
 string values[tot_num_items];
 string keys[tot_num_items];
@@ -162,16 +161,16 @@ action_data run_rand_actions(gen_ty & generator,cache_t cache,uint64_t num_actio
 	return data;
 }
 action_data arr[NUM_THREADS];
-void run_requests(cache_t cache,uint64_t t_num){
-	gen_ty generator(t_num);
+void run_requests(cache_t cache,uint64_t t_num,uint64_t num_actions){
+	gen_ty generator(get_time_ns()+t_num);
 	arr[t_num] = run_rand_actions(generator,cache,num_actions);
 }
-action_data time_threads(uint64_t tcp_port_start,uint64_t udp_port_start){
+action_data time_threads(uint64_t tcp_port_start,uint64_t udp_port_start,uint64_t tot_num_actions){
 	thread ts[NUM_THREADS];
 	cache_t caches[NUM_THREADS];
 	for(uint64_t t_n = 0; t_n < NUM_THREADS; t_n++){
 		caches[t_n] = get_cache(tcp_port_start+t_n,udp_port_start+t_n);
-		ts[t_n] = thread(run_requests,caches[t_n],t_n);
+		ts[t_n] = thread(run_requests,caches[t_n],t_n,tot_num_actions/NUM_THREADS);
 	}
 	for(uint64_t t_n = 0; t_n < NUM_THREADS; t_n++){
 		ts[t_n].join();
@@ -231,17 +230,21 @@ int main(int argc,char ** argv){
 
 		end_connection(cache);
 	}
-	//busywork while waiting for other client timers to connect
-	//time_threads(tcp_start,udp_start);
+	//busywork while waiting for other client timers to be manually connected
+	time_threads(tcp_start,udp_start,1000000);
+	cout << "busywork finished" << endl;
 	//actual timing
-	action_data data = time_threads(tcp_start,udp_start);
+	action_data data = time_threads(tcp_start,udp_start,3000000);
 	double av_ms_time = data.get_av_ms_time();
 	double hit_rate = data.get_hit_rate();
 
 	cout << "number of threads = " << NUM_THREADS << "\n";
 	cout << "average time in ms = " << av_ms_time << "\n";
 	cout << "average throughput = " <<  NUM_THREADS / (av_ms_time / 1000.0) << "\n";
-	cout << "hit rate = " << hit_rate << "\n";
+	cout << "hit rate = " << hit_rate << endl;
+
+	//more busywork while the other client is completeing
+	time_threads(tcp_start,udp_start,1000000);
 
 	if(!is_addon){
 		cache_t cache = get_cache(init_tcp_port,init_udp_port);
