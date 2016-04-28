@@ -23,7 +23,6 @@ struct link_obj{
     link_t * prev_next_ptr;//the pointer to the thing pointing to it
 };
 void del_link(cache_t cache, link_t obj);
-void cache_del_impl(cache_t cache, key_type key);
 void release_link_data(cache_t cache,link_t obj);
 void extract_link(link_t obj);
 
@@ -247,19 +246,3 @@ uint64_t def_hash_fn(key_type str){
 
     return hash;
 }
-/*
-uint64_t def_hash_fn(key_type key){
-    //xors the bits of the string together
-    size_t tot_size = strlen((char*)(key));
-    const size_t out_size = sizeof(uint64_t);
-    uint64_t out = 0;
-    for(size_t i = 0; i < tot_size / out_size;i++){
-        out ^= ((uint64_t *)(key))[i];
-    }
-    for(size_t i = 0;i < tot_size%out_size; i++){
-        size_t index = i + tot_size - tot_size%out_size;
-        out ^= ((uint64_t)(key[index])) << (i*BITS_IN_BYTE);
-    }
-    return out;
-}
-*/
