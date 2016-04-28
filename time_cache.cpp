@@ -19,12 +19,18 @@ constexpr uint64_t MILS_PER_NANO = 1000000;
 uint64_t get_time_ns();
 discrete_distribution<uint64_t> init_dist();
 
+//variables to keep HW8 comparable and consistent
+constexpr bool USE_CONST_SIZES = true;
+constexpr size_t CONST_KEY_SIZE = 8;
+constexpr size_t CONST_VALUE_SIZE = 16;
+
 constexpr uint64_t ns_in_s = 1000000000ULL;
-constexpr uint64_t mem_to_store = 10000000ULL;
-constexpr uint64_t maxmem = 0.90 * mem_to_store;
-constexpr double APROX_MEAN_WEIGHTED_VALUE_SIZE = 461.258;//measured with unig.cpp
+constexpr uint64_t mem_to_store = USE_CONST_SIZES ? 1000000ULL : 10000000ULL;
+constexpr uint64_t maxmem = 0.95 * mem_to_store;
+constexpr double APROX_MEAN_WEIGHTED_VALUE_SIZE = USE_CONST_SIZES ? CONST_VALUE_SIZE : 461.258;//measured with unig.cpp
 constexpr uint64_t tot_num_items = uint64_t(mem_to_store / APROX_MEAN_WEIGHTED_VALUE_SIZE);
-constexpr size_t NUM_THREADS = 98;//at most two minus the number of ports of the server
+constexpr size_t NUM_THREADS = 97;//at most two minus the number of ports of the server
+
 
 string values[tot_num_items];
 string keys[tot_num_items];
@@ -33,13 +39,13 @@ using gen_ty = std::default_random_engine;
 
 uint64_t rand_key_size(gen_ty & generator){
 	normal_distribution<double> norm_dsit(30,8);
-	return max(int64_t(2),int64_t(norm_dsit(generator)));
+	return USE_CONST_SIZES ? CONST_KEY_SIZE : max(int64_t(2),int64_t(norm_dsit(generator)));
 }
 
 uint64_t rand_val_size(gen_ty & generator){
 	static discrete_distribution<uint64_t> val_dist = init_dist();
 	//todo add large values to distribution
-	return val_dist(generator);
+	return USE_CONST_SIZES ? CONST_VALUE_SIZE : val_dist(generator);
 }
 char rand_char(gen_ty & generator){
     uniform_int_distribution<char> lower_lettters_dist(97,96+26-1);//lower case letters
@@ -231,10 +237,12 @@ int main(int argc,char ** argv){
 		end_connection(cache);
 	}
 	//busywork while waiting for other client timers to be manually connected
+	//
+
 	time_threads(tcp_start,udp_start,1000000);
-	cout << "busywork finished" << endl;
+	//cout << "busywork finished" << endl;
 	//actual timing
-	action_data data = time_threads(tcp_start,udp_start,3000000);
+	action_data data = time_threads(tcp_start,udp_start,5000000);
 	double av_ms_time = data.get_av_ms_time();
 	double hit_rate = data.get_hit_rate();
 
@@ -244,7 +252,7 @@ int main(int argc,char ** argv){
 	cout << "hit rate = " << hit_rate << endl;
 
 	//more busywork while the other client is completeing
-	time_threads(tcp_start,udp_start,1000000);
+	//time_threads(tcp_start,udp_start,1000000);
 
 	if(!is_addon){
 		cache_t cache = get_cache(init_tcp_port,init_udp_port);
