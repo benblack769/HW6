@@ -11,6 +11,7 @@
 #include <array>
 #include <algorithm>
 #include <unistd.h>
+#include <unordered_set>
 
 using namespace std;
 
@@ -20,12 +21,14 @@ uint64_t get_time_ns();
 discrete_distribution<uint64_t> init_dist();
 
 //variables to keep HW8 comparable and consistent
-constexpr bool USE_CONST_SIZES = false;
+constexpr bool USE_CONST_SIZES = true;
 constexpr size_t CONST_KEY_SIZE = 8;
 constexpr size_t CONST_VALUE_SIZE = 16;
 
+constexpr uint64_t num_iterations = 3000000;
+
 constexpr uint64_t ns_in_s = 1000000000ULL;
-constexpr uint64_t mem_to_store = USE_CONST_SIZES ? 1000000ULL : 10000000ULL;
+constexpr uint64_t mem_to_store = 10000000ULL;
 constexpr uint64_t maxmem = (USE_CONST_SIZES ? 0.95 : 0.90) * mem_to_store;
 constexpr double APROX_MEAN_WEIGHTED_VALUE_SIZE = USE_CONST_SIZES ? CONST_VALUE_SIZE : 461.258;//measured with unig.cpp
 constexpr uint64_t tot_num_items = uint64_t(mem_to_store / APROX_MEAN_WEIGHTED_VALUE_SIZE);
@@ -74,10 +77,17 @@ void init_values(gen_ty & generator,uint64_t num_items){
 	}
 }
 void init_keys(gen_ty & generator,uint64_t num_items){
+	unordered_set<string> all_keys;
+	all_keys.reserve(num_items);
 	for(uint64_t i = 0; i < num_items; i++){
-		//the chance that keys will not be unique is minimal, and so
-		//should not affect performance that much and so I will ignore it.
-		keys[i] = rand_str(generator,rand_key_size(generator));
+		//gauentees key uniqueness
+		string gen_str;
+		do{
+			gen_str = rand_str(generator,rand_key_size(generator));
+		}
+		while(all_keys.count(gen_str));
+		keys[i] = gen_str;
+		all_keys.insert(gen_str);
 	}
 }
 struct action_data{
@@ -224,23 +234,26 @@ int main(int argc,char ** argv){
 	uint64_t tcp_start,udp_start;
 	bool is_addon = false;
 	get_port_start(argc,argv,is_addon,tcp_start,udp_start);
-
+	cout << "values generated" << endl;
 	uint64_t init_tcp_port = tcp_start+NUM_THREADS+1;
 	uint64_t init_udp_port = udp_start+NUM_THREADS+1;
 	if (!is_addon){
 	    tcp_port = to_string(init_tcp_port);
 	    udp_port = to_string(init_udp_port);
 		cache_t cache = create_cache(maxmem,NULL);
+		cout << "connection created" << endl;
 
 	    populate_cache(cache);
+		cout << "values populated" << endl;
 
 		end_connection(cache);
 	}
+	cout << "connection ended" << endl;
 	//busywork while waiting for other client timers to be manually connected
 	//time_threads(tcp_start,udp_start,1000000);
 	//cout << "busywork finished" << endl;
 	//actual timing
-	action_data data = time_threads(tcp_start,udp_start,10000000);
+	action_data data = time_threads(tcp_start,udp_start,num_iterations);
 	double av_ms_time = data.get_av_ms_time();
 	double hit_rate = data.get_hit_rate();
 
@@ -253,7 +266,7 @@ int main(int argc,char ** argv){
 	//time_threads(tcp_start,udp_start,1000000);
 
 	if(!is_addon){
-		cache_t cache = get_cache(init_tcp_port,init_udp_port);
+		cache_t cache = get_cache(init_tcp_port+1,init_udp_port+1);
 		destroy_cache(cache);//closes server
 	}
 	return 0;

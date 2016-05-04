@@ -13,6 +13,7 @@ using namespace asio::ip;
 constexpr size_t bufsize = (1 << 16) - 32;
 char errcstr[] = "ERROR";
 std::string errstr = "ERROR";
+//constexpr size_t MIN_TCP_SIZE = 1024;//must be less than bufsize
 
 //class udp_connection;
 

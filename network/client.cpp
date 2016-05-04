@@ -20,16 +20,22 @@ public:
     tcp_connection(asio::io_service & service,ip::tcp::resolver::iterator & resit):
         socket(service){
 
-        asio::connect(socket, resit);
+        bool worked = false;
+        do{
+        try{
+            asio::connect(socket, resit);
+            worked = true;
+        }
+        catch(...){
+            worked = false;
+        }
+        }
+        while(!worked);
     }
 
     char * get_message(bufarr & recbuf){
         asio::error_code error;
-        size_t length = socket.read_some(asio::buffer(recbuf), error);
-
-        if (error != asio::error::eof && error){
-            throw asio::system_error(error);
-        }
+        size_t length = socket.receive(asio::buffer(recbuf));
 
         if(length >= bufsize){
             return errcstr;
@@ -40,7 +46,7 @@ public:
         }
     }
     void write_message(char * message,size_t size){
-        asio::write(socket, asio::buffer(message,size));
+        socket.send(asio::buffer(message,size));
     }
 };
 
@@ -130,6 +136,9 @@ struct cache_obj{
                 arrit = copy(word2,word2+w2len,arrit);
             }
             *arrit = char(0); arrit++;
+            for(int i = 0; i < 1000; i++)
+                *arrit = char(0); arrit++;
+
             size_t length =  &*arrit - &*sendarr.begin();
             return length;
         }
@@ -205,7 +214,7 @@ val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
 
         if(strcmp(keystr,retkeystr)){
             //this is a network logic error
-            cout << keystr <<  endl << retkeystr << endl << endl;
+            cout << "key failed:\n" << keystr <<  endl << retkeystr << endl << endl;
             return nullptr;
         }
         return valstr;//this is fine because valstr is stored in the protocol buffer.

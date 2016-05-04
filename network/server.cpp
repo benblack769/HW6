@@ -15,6 +15,8 @@ using stdthread = std::thread;//resolves namespace conflict
 using namespace std;
 
 constexpr int64_t THREADS_PER_VCORE = 2;
+class port_servs;
+void disconnect(port_servs * servs);
 
 class ExitException : public exception {
     virtual const char* what() const throw()
@@ -91,8 +93,6 @@ size_t make_json(bufarr & buf,char * key, char * value)
     ptr = copy(value,value+valsize,ptr);
     ptr = copy(endstr.begin(),endstr.end(),ptr);
     *ptr = 0;ptr++;
-    *ptr = 0;ptr++;
-    //printf("%s\n\n\n",buf.data());
     return end_size;
 }
 class safe_cache {
@@ -153,7 +153,7 @@ void post(con_ty& con, char * post_type, char * extrainfo)
 
     strip(post_ty);
     if (post_ty == "shutdown") {
-        throw ExitException();
+        disconnect(con.all_ports);
     } else if (post_ty == "memsize") {
         if (cache_space_used(con.cache()) == 0) {
             destroy_cache(con.cache());
@@ -230,9 +230,9 @@ class tcp_con
 public:
     typedef boost::shared_ptr<tcp_con> pointer;
 
-    static pointer create(asio::io_service& io_service, safe_cache* cache)
+    static pointer create(asio::io_service& io_service,port_servs * in_all_ports, safe_cache* cache)
     {
-        return pointer(new tcp_con(io_service, cache));
+        return pointer(new tcp_con(io_service,in_all_ports, cache));
     }
     tcp::socket& socket()
     {
@@ -241,41 +241,42 @@ public:
 
     void start()
     {
-        asio::async_read(socket_, asio::buffer(buf,bufsize),
+        socket_.async_receive(asio::buffer(buf,bufsize),
             boost::bind(&tcp_con::handle_read, shared_from_this(), asio::placeholders::error(), asio::placeholders::bytes_transferred()));
     }
     void write_message(char * str, size_t size)
     {
-        asio::async_write(socket_, asio::buffer(str,size),
+        socket_.async_send(asio::buffer(str,size),
             boost::bind(&tcp_con::handle_write, shared_from_this()));
     }
     void return_error()
     {
-        write_message(errcstr,sizeof(errcstr));
+        write_message(errcstr, sizeof(errcstr));
     }
     cache_t& cache()
     {
         return port_cache->impl;
     }
-    tcp_con(asio::io_service& io_service, safe_cache* in_cache)
+    tcp_con(asio::io_service& io_service, port_servs * in_all_ports, safe_cache* in_cache)
         : socket_(io_service)
         , port_cache(in_cache)
+        , all_ports(in_all_ports)
     {
     }
 
     void handle_read(const asio::error_code& error,
         size_t bytes_written)
     {
-        if (error == asio::error::eof) {
-            process_message(*this,buf,bytes_written);
+        if(error == asio::error::operation_aborted){
+            //this is normal behavior when the server shuts down,
+            //and shouldn't really happen in other circumstances.
         }
         else if (error)
         {
             throw asio::system_error(error);
         }
-        else
-        {
-            throw runtime_error("did not find end of file before buffer end");
+        else{
+            process_message(*this,buf,bytes_written);
         }
     }
     void handle_write()
@@ -284,46 +285,57 @@ public:
 
     tcp::socket socket_;
     safe_cache* port_cache; //non-owning
+    port_servs * all_ports; //parent
     char buf[bufsize];
 };
 
 class tcp_server {
 public:
-    tcp_server(asio::io_service& io_service, int portnum, safe_cache& in_cache)
-        : acceptor_(io_service, tcp::endpoint(tcp::v4(), portnum))
+    tcp_server(asio::io_service& io_service,port_servs * in_all_ports, int portnum, safe_cache& in_cache)
+        : acceptor_(io_service,tcp::endpoint(ip::tcp::v4(), portnum))
         , port_cache(&in_cache)
+        , all_ports(in_all_ports)
     {
+        /*asio::ip::tcp::endpoint endpoint(asio::ip::tcp::v4(), portnum);
+        acceptor_.open(endpoint.protocol());
+        acceptor_.set_option(asio::ip::tcp::acceptor::reuse_address(true));
+        acceptor_.bind(endpoint);
+        acceptor_.listen();*/
     }
 
     void start_accept()
     {
-        tcp_con::pointer new_connection = tcp_con::create(acceptor_.get_io_service(), port_cache);
+        tcp_con::pointer new_connection = tcp_con::create(acceptor_.get_io_service(),all_ports,port_cache);
 
         acceptor_.async_accept(new_connection->socket(),
             boost::bind(&tcp_server::handle_accept, this, new_connection,
                                    asio::placeholders::error));
     }
-private:
     void handle_accept(tcp_con::pointer new_connection,
         const asio::error_code& error)
     {
         if (!error) {
             new_connection->start();
+            start_accept();
+        }
+        else if(error == asio::error::operation_aborted){
+            //this is normal behavior when the server shuts down,
+            //and shouldn't really happen in other circumstances.
         } else {
             throw asio::system_error(error);
         }
-
-        start_accept();
     }
 
     tcp::acceptor acceptor_;
     safe_cache* port_cache; //non-owning
+    port_servs * all_ports; //parent
 };
 class udp_server {
 public:
-    udp_server(asio::io_service& io_service, int udp_port, safe_cache& incache)
+    udp_server(asio::io_service& io_service,port_servs * in_all_ports, int udp_port, safe_cache& incache)
         : socket_(io_service, udp::endpoint(udp::v4(), udp_port))
         , port_cache(&incache)
+        , all_ports(in_all_ports)
     {
     }
     void write_message(char * str,size_t size)
@@ -352,10 +364,13 @@ public:
     {
         if (!error) {
             process_message(*this,recbuf->data(),bytes_written);
-        } else {
+            start_receive();
+        } else if(error == asio::error::operation_aborted){
+            //this is normal behavior when the server shuts down,
+            //and shouldn't really happen in other circumstances.
+        }else{
             throw asio::system_error(error);
         }
-        start_receive();
     }
     void handle_send(const asio::error_code&, size_t)
     {
@@ -365,18 +380,37 @@ public:
     udp::endpoint endpoint;
 
     safe_cache* port_cache; //non-owning
+    port_servs * all_ports; //parent
 };
 void run_loop(asio::io_service * service){
-    try{
-        service->run();
+    service->run();
+}
+class port_servs{
+public:
+    vector<tcp_server> tcps;
+    vector<udp_server> udps;
+    port_servs(asio::io_service & service,safe_cache & cache,int tcp_port_start, int num_tcp_ports, int udp_port_start, int num_udp_ports){
+        tcps.reserve(num_tcp_ports);
+        udps.reserve(num_udp_ports);
+        for (int i = 0; i < num_tcp_ports; i++) {
+            tcps.emplace_back(service,this, tcp_port_start + i, cache);
+            tcps.back().start_accept();
+        }
+        for (int i = 0; i < num_udp_ports; i++) {
+            udps.emplace_back(service,this, udp_port_start + i, cache);
+            udps.back().start_receive();
+        }
     }
-    catch(ExitException&){
-        //this is normal
-        exit(0);
+    ~port_servs(){
+        disconnect(this);
     }
-    catch(exception & unexpected_except){
-        cout << unexpected_except.what() << endl;
-        exit(1);
+};
+void disconnect(port_servs * servs){
+    for(tcp_server & tserv : servs->tcps){
+        tserv.acceptor_.close();
+    }
+    for(udp_server & userv : servs->udps){
+        userv.socket_.close();
     }
 }
 void run_server(int tcp_port_start, int num_tcp_ports, int udp_port_start, int num_udp_ports, int maxmem)
@@ -384,19 +418,9 @@ void run_server(int tcp_port_start, int num_tcp_ports, int udp_port_start, int n
     asio::io_service my_io_service;
     safe_cache serv_cache(create_cache(maxmem, nullptr));
 
-    vector<tcp_server> tcps;
-    tcps.reserve(num_tcp_ports);
-    vector<udp_server> udps;
-    udps.reserve(num_udp_ports);
-    for (int i = 0; i < num_tcp_ports; i++) {
-        tcps.emplace_back(my_io_service, tcp_port_start + i, serv_cache);
-        tcps.back().start_accept();
-    }
-    for (int i = 0; i < num_udp_ports; i++) {
-        udps.emplace_back(my_io_service, udp_port_start + i, serv_cache);
-        udps.back().start_receive();
-    }
-    int64_t num_other_threads =  THREADS_PER_VCORE * stdthread::hardware_concurrency() - 1;
+    port_servs serv(my_io_service,serv_cache, tcp_port_start, num_tcp_ports, udp_port_start, num_udp_ports);
+
+    int64_t num_other_threads = THREADS_PER_VCORE * stdthread::hardware_concurrency() - 1;
     using sthread = typename stdthread::thread;
     vector<sthread> o_threads;
     o_threads.reserve(num_other_threads);
@@ -406,4 +430,7 @@ void run_server(int tcp_port_start, int num_tcp_ports, int udp_port_start, int n
     }
     //infinite loop
     run_loop(&my_io_service);
+    for(sthread & t : o_threads){
+        t.join();
+    }
 }
