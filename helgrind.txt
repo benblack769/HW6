@@ -1,0 +1,712 @@
+==13421== Helgrind, a thread error detector
+==13421== Copyright (C) 2007-2013, and GNU GPL'd, by OpenWorks LLP et al.
+==13421== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==13421== Command: ./server
+==13421== 
+==13421== ---Thread-Announcement------------------------------------------
+==13421== 
+==13421== Thread #2 was created
+==13421==    at 0x4F3743E: clone (clone.S:74)
+==13421==    by 0x572D199: do_clone.constprop.3 (createthread.c:75)
+==13421==    by 0x572E8BA: create_thread (createthread.c:245)
+==13421==    by 0x572E8BA: pthread_create@@GLIBC_2.2.5 (pthread_create.c:611)
+==13421==    by 0x4C30E0D: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x528F4D2: std::thread::_M_start_thread(std::shared_ptr<std::thread::_Impl_base>, void (*)()) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x406214: std::thread::thread<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.113] (thread:137)
+==13421==    by 0x4085AB: void __gnu_cxx::new_allocator<std::thread>::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.145] (new_allocator.h:120)
+==13421==    by 0x40AA5C: std::enable_if<std::__and_<std::allocator_traits<std::allocator<std::thread> >::__construct_helper<std::thread, void (&)(asio::io_service*), asio::io_service*>::type>::value, void>::type std::allocator_traits<std::allocator<std::thread> >::_S_construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.174] (alloc_traits.h:256)
+==13421==    by 0x40BAA5: decltype (_S_construct({parm#1}, {parm#2}, (forward<void (&)(asio::io_service*)>)({parm#3}), (forward<asio::io_service*>)({parm#3}))) std::allocator_traits<std::allocator<std::thread> >::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.227] (alloc_traits.h:402)
+==13421==    by 0x4100F8: void std::vector<std::thread, std::allocator<std::thread> >::emplace_back<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.288] (vector.tcc:96)
+==13421==    by 0x41034D: run_server(int, int, int, int, int) (server.cpp:463)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #2: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416667: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:362)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421== 
+==13421== ---Thread-Announcement------------------------------------------
+==13421== 
+==13421== Thread #3 was created
+==13421==    at 0x4F3743E: clone (clone.S:74)
+==13421==    by 0x572D199: do_clone.constprop.3 (createthread.c:75)
+==13421==    by 0x572E8BA: create_thread (createthread.c:245)
+==13421==    by 0x572E8BA: pthread_create@@GLIBC_2.2.5 (pthread_create.c:611)
+==13421==    by 0x4C30E0D: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x528F4D2: std::thread::_M_start_thread(std::shared_ptr<std::thread::_Impl_base>, void (*)()) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x406214: std::thread::thread<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.113] (thread:137)
+==13421==    by 0x4085AB: void __gnu_cxx::new_allocator<std::thread>::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.145] (new_allocator.h:120)
+==13421==    by 0x40AA5C: std::enable_if<std::__and_<std::allocator_traits<std::allocator<std::thread> >::__construct_helper<std::thread, void (&)(asio::io_service*), asio::io_service*>::type>::value, void>::type std::allocator_traits<std::allocator<std::thread> >::_S_construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.174] (alloc_traits.h:256)
+==13421==    by 0x40BAA5: decltype (_S_construct({parm#1}, {parm#2}, (forward<void (&)(asio::io_service*)>)({parm#3}), (forward<asio::io_service*>)({parm#3}))) std::allocator_traits<std::allocator<std::thread> >::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.227] (alloc_traits.h:402)
+==13421==    by 0x4100F8: void std::vector<std::thread, std::allocator<std::thread> >::emplace_back<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.288] (vector.tcc:96)
+==13421==    by 0x41034D: run_server(int, int, int, int, int) (server.cpp:463)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #3: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416667: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:362)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #2: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416395: asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) (task_io_service.ipp:268)
+==13421==    by 0x41877A: asio::detail::epoll_reactor::start_op(int, int, asio::detail::epoll_reactor::descriptor_state*&, asio::detail::reactor_op*, bool, bool) (epoll_reactor.ipp:233)
+==13421==    by 0x414BB9: asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) (reactive_socket_service_base.ipp:213)
+==13421==    by 0x40C445: void asio::detail::reactive_socket_service_base::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service_base::base_implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&) (reactive_socket_service_base.hpp:286)
+==13421==    by 0x40D3AC: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::stream_socket_service<asio::ip::tcp>::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (stream_socket_service.hpp:356)
+==13421==    by 0x40E96F: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::mutable_buffers_1 const&, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (basic_stream_socket.hpp:568)
+==13421==    by 0x4128C4: tcp_con::start() (server.cpp:256)
+==13421==    by 0x412ECB: tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) (server.cpp:337)
+==13421==    by 0x404FF4: boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>::operator()(tcp_server*, boost::shared_ptr<tcp_con>, std::error_code const&) const (mem_fn_template.hpp:280)
+==13421== 
+==13421== ---Thread-Announcement------------------------------------------
+==13421== 
+==13421== Thread #6 was created
+==13421==    at 0x4F3743E: clone (clone.S:74)
+==13421==    by 0x572D199: do_clone.constprop.3 (createthread.c:75)
+==13421==    by 0x572E8BA: create_thread (createthread.c:245)
+==13421==    by 0x572E8BA: pthread_create@@GLIBC_2.2.5 (pthread_create.c:611)
+==13421==    by 0x4C30E0D: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x528F4D2: std::thread::_M_start_thread(std::shared_ptr<std::thread::_Impl_base>, void (*)()) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x406214: std::thread::thread<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.113] (thread:137)
+==13421==    by 0x4085AB: void __gnu_cxx::new_allocator<std::thread>::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.145] (new_allocator.h:120)
+==13421==    by 0x40AA5C: std::enable_if<std::__and_<std::allocator_traits<std::allocator<std::thread> >::__construct_helper<std::thread, void (&)(asio::io_service*), asio::io_service*>::type>::value, void>::type std::allocator_traits<std::allocator<std::thread> >::_S_construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.174] (alloc_traits.h:256)
+==13421==    by 0x40BAA5: decltype (_S_construct({parm#1}, {parm#2}, (forward<void (&)(asio::io_service*)>)({parm#3}), (forward<asio::io_service*>)({parm#3}))) std::allocator_traits<std::allocator<std::thread> >::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.227] (alloc_traits.h:402)
+==13421==    by 0x4100F8: void std::vector<std::thread, std::allocator<std::thread> >::emplace_back<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.288] (vector.tcc:96)
+==13421==    by 0x41034D: run_server(int, int, int, int, int) (server.cpp:463)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #6: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416667: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:362)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421== 
+==13421== ---Thread-Announcement------------------------------------------
+==13421== 
+==13421== Thread #5 was created
+==13421==    at 0x4F3743E: clone (clone.S:74)
+==13421==    by 0x572D199: do_clone.constprop.3 (createthread.c:75)
+==13421==    by 0x572E8BA: create_thread (createthread.c:245)
+==13421==    by 0x572E8BA: pthread_create@@GLIBC_2.2.5 (pthread_create.c:611)
+==13421==    by 0x4C30E0D: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x528F4D2: std::thread::_M_start_thread(std::shared_ptr<std::thread::_Impl_base>, void (*)()) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x406214: std::thread::thread<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.113] (thread:137)
+==13421==    by 0x4085AB: void __gnu_cxx::new_allocator<std::thread>::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.145] (new_allocator.h:120)
+==13421==    by 0x40AA5C: std::enable_if<std::__and_<std::allocator_traits<std::allocator<std::thread> >::__construct_helper<std::thread, void (&)(asio::io_service*), asio::io_service*>::type>::value, void>::type std::allocator_traits<std::allocator<std::thread> >::_S_construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.174] (alloc_traits.h:256)
+==13421==    by 0x40BAA5: decltype (_S_construct({parm#1}, {parm#2}, (forward<void (&)(asio::io_service*)>)({parm#3}), (forward<asio::io_service*>)({parm#3}))) std::allocator_traits<std::allocator<std::thread> >::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.227] (alloc_traits.h:402)
+==13421==    by 0x4100F8: void std::vector<std::thread, std::allocator<std::thread> >::emplace_back<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.288] (vector.tcc:96)
+==13421==    by 0x41034D: run_server(int, int, int, int, int) (server.cpp:463)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #5: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416667: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:362)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #6: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416395: asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) (task_io_service.ipp:268)
+==13421==    by 0x41877A: asio::detail::epoll_reactor::start_op(int, int, asio::detail::epoll_reactor::descriptor_state*&, asio::detail::reactor_op*, bool, bool) (epoll_reactor.ipp:233)
+==13421==    by 0x414BB9: asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) (reactive_socket_service_base.ipp:213)
+==13421==    by 0x40C445: void asio::detail::reactive_socket_service_base::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service_base::base_implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&) (reactive_socket_service_base.hpp:286)
+==13421==    by 0x40D3AC: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::stream_socket_service<asio::ip::tcp>::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (stream_socket_service.hpp:356)
+==13421==    by 0x40E96F: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::mutable_buffers_1 const&, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (basic_stream_socket.hpp:568)
+==13421==    by 0x4128C4: tcp_con::start() (server.cpp:256)
+==13421==    by 0x412ECB: tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) (server.cpp:337)
+==13421==    by 0x404FF4: boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>::operator()(tcp_server*, boost::shared_ptr<tcp_con>, std::error_code const&) const (mem_fn_template.hpp:280)
+==13421== 
+==13421== ---Thread-Announcement------------------------------------------
+==13421== 
+==13421== Thread #7 was created
+==13421==    at 0x4F3743E: clone (clone.S:74)
+==13421==    by 0x572D199: do_clone.constprop.3 (createthread.c:75)
+==13421==    by 0x572E8BA: create_thread (createthread.c:245)
+==13421==    by 0x572E8BA: pthread_create@@GLIBC_2.2.5 (pthread_create.c:611)
+==13421==    by 0x4C30E0D: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x528F4D2: std::thread::_M_start_thread(std::shared_ptr<std::thread::_Impl_base>, void (*)()) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x406214: std::thread::thread<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.113] (thread:137)
+==13421==    by 0x4085AB: void __gnu_cxx::new_allocator<std::thread>::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.145] (new_allocator.h:120)
+==13421==    by 0x40AA5C: std::enable_if<std::__and_<std::allocator_traits<std::allocator<std::thread> >::__construct_helper<std::thread, void (&)(asio::io_service*), asio::io_service*>::type>::value, void>::type std::allocator_traits<std::allocator<std::thread> >::_S_construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.174] (alloc_traits.h:256)
+==13421==    by 0x40BAA5: decltype (_S_construct({parm#1}, {parm#2}, (forward<void (&)(asio::io_service*)>)({parm#3}), (forward<asio::io_service*>)({parm#3}))) std::allocator_traits<std::allocator<std::thread> >::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.227] (alloc_traits.h:402)
+==13421==    by 0x4100F8: void std::vector<std::thread, std::allocator<std::thread> >::emplace_back<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.288] (vector.tcc:96)
+==13421==    by 0x41034D: run_server(int, int, int, int, int) (server.cpp:463)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #7: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416667: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:362)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #5: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416395: asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) (task_io_service.ipp:268)
+==13421==    by 0x41877A: asio::detail::epoll_reactor::start_op(int, int, asio::detail::epoll_reactor::descriptor_state*&, asio::detail::reactor_op*, bool, bool) (epoll_reactor.ipp:233)
+==13421==    by 0x414BB9: asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) (reactive_socket_service_base.ipp:213)
+==13421==    by 0x40C445: void asio::detail::reactive_socket_service_base::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service_base::base_implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&) (reactive_socket_service_base.hpp:286)
+==13421==    by 0x40D3AC: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::stream_socket_service<asio::ip::tcp>::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (stream_socket_service.hpp:356)
+==13421==    by 0x40E96F: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::mutable_buffers_1 const&, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (basic_stream_socket.hpp:568)
+==13421==    by 0x4128C4: tcp_con::start() (server.cpp:256)
+==13421==    by 0x412ECB: tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) (server.cpp:337)
+==13421==    by 0x404FF4: boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>::operator()(tcp_server*, boost::shared_ptr<tcp_con>, std::error_code const&) const (mem_fn_template.hpp:280)
+==13421== 
+==13421== ---Thread-Announcement------------------------------------------
+==13421== 
+==13421== Thread #4 was created
+==13421==    at 0x4F3743E: clone (clone.S:74)
+==13421==    by 0x572D199: do_clone.constprop.3 (createthread.c:75)
+==13421==    by 0x572E8BA: create_thread (createthread.c:245)
+==13421==    by 0x572E8BA: pthread_create@@GLIBC_2.2.5 (pthread_create.c:611)
+==13421==    by 0x4C30E0D: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x528F4D2: std::thread::_M_start_thread(std::shared_ptr<std::thread::_Impl_base>, void (*)()) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x406214: std::thread::thread<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.113] (thread:137)
+==13421==    by 0x4085AB: void __gnu_cxx::new_allocator<std::thread>::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.145] (new_allocator.h:120)
+==13421==    by 0x40AA5C: std::enable_if<std::__and_<std::allocator_traits<std::allocator<std::thread> >::__construct_helper<std::thread, void (&)(asio::io_service*), asio::io_service*>::type>::value, void>::type std::allocator_traits<std::allocator<std::thread> >::_S_construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.174] (alloc_traits.h:256)
+==13421==    by 0x40BAA5: decltype (_S_construct({parm#1}, {parm#2}, (forward<void (&)(asio::io_service*)>)({parm#3}), (forward<asio::io_service*>)({parm#3}))) std::allocator_traits<std::allocator<std::thread> >::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.227] (alloc_traits.h:402)
+==13421==    by 0x4100F8: void std::vector<std::thread, std::allocator<std::thread> >::emplace_back<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.288] (vector.tcc:96)
+==13421==    by 0x41034D: run_server(int, int, int, int, int) (server.cpp:463)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #4: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416667: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:362)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #3: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416395: asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) (task_io_service.ipp:268)
+==13421==    by 0x41877A: asio::detail::epoll_reactor::start_op(int, int, asio::detail::epoll_reactor::descriptor_state*&, asio::detail::reactor_op*, bool, bool) (epoll_reactor.ipp:233)
+==13421==    by 0x414BB9: asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) (reactive_socket_service_base.ipp:213)
+==13421==    by 0x40C445: void asio::detail::reactive_socket_service_base::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service_base::base_implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&) (reactive_socket_service_base.hpp:286)
+==13421==    by 0x40D3AC: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::stream_socket_service<asio::ip::tcp>::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (stream_socket_service.hpp:356)
+==13421==    by 0x40E96F: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::mutable_buffers_1 const&, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (basic_stream_socket.hpp:568)
+==13421==    by 0x4128C4: tcp_con::start() (server.cpp:256)
+==13421==    by 0x412ECB: tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) (server.cpp:337)
+==13421==    by 0x404FF4: boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>::operator()(tcp_server*, boost::shared_ptr<tcp_con>, std::error_code const&) const (mem_fn_template.hpp:280)
+==13421== 
+==13421== ---Thread-Announcement------------------------------------------
+==13421== 
+==13421== Thread #1 is the program's root thread
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #1: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416667: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:362)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x410360: run_server(int, int, int, int, int) (server.cpp:466)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #1: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416395: asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) (task_io_service.ipp:268)
+==13421==    by 0x41877A: asio::detail::epoll_reactor::start_op(int, int, asio::detail::epoll_reactor::descriptor_state*&, asio::detail::reactor_op*, bool, bool) (epoll_reactor.ipp:233)
+==13421==    by 0x414BB9: asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) (reactive_socket_service_base.ipp:213)
+==13421==    by 0x40C445: void asio::detail::reactive_socket_service_base::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service_base::base_implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&) (reactive_socket_service_base.hpp:286)
+==13421==    by 0x40D3AC: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::stream_socket_service<asio::ip::tcp>::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (stream_socket_service.hpp:356)
+==13421==    by 0x40E96F: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::mutable_buffers_1 const&, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (basic_stream_socket.hpp:568)
+==13421==    by 0x4128C4: tcp_con::start() (server.cpp:256)
+==13421==    by 0x412ECB: tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) (server.cpp:337)
+==13421==    by 0x404FF4: boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>::operator()(tcp_server*, boost::shared_ptr<tcp_con>, std::error_code const&) const (mem_fn_template.hpp:280)
+==13421== 
+==13421== ---Thread-Announcement------------------------------------------
+==13421== 
+==13421== Thread #8 was created
+==13421==    at 0x4F3743E: clone (clone.S:74)
+==13421==    by 0x572D199: do_clone.constprop.3 (createthread.c:75)
+==13421==    by 0x572E8BA: create_thread (createthread.c:245)
+==13421==    by 0x572E8BA: pthread_create@@GLIBC_2.2.5 (pthread_create.c:611)
+==13421==    by 0x4C30E0D: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x528F4D2: std::thread::_M_start_thread(std::shared_ptr<std::thread::_Impl_base>, void (*)()) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x406214: std::thread::thread<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.113] (thread:137)
+==13421==    by 0x4085AB: void __gnu_cxx::new_allocator<std::thread>::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.145] (new_allocator.h:120)
+==13421==    by 0x40AA5C: std::enable_if<std::__and_<std::allocator_traits<std::allocator<std::thread> >::__construct_helper<std::thread, void (&)(asio::io_service*), asio::io_service*>::type>::value, void>::type std::allocator_traits<std::allocator<std::thread> >::_S_construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.174] (alloc_traits.h:256)
+==13421==    by 0x40BAA5: decltype (_S_construct({parm#1}, {parm#2}, (forward<void (&)(asio::io_service*)>)({parm#3}), (forward<asio::io_service*>)({parm#3}))) std::allocator_traits<std::allocator<std::thread> >::construct<std::thread, void (&)(asio::io_service*), asio::io_service*>(std::allocator<std::thread>&, std::thread*, void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.227] (alloc_traits.h:402)
+==13421==    by 0x4100F8: void std::vector<std::thread, std::allocator<std::thread> >::emplace_back<void (&)(asio::io_service*), asio::io_service*>(void (&)(asio::io_service*), asio::io_service*&&) [clone .lto_priv.288] (vector.tcc:96)
+==13421==    by 0x41034D: run_server(int, int, int, int, int) (server.cpp:463)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #8: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416667: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:362)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #8: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416395: asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) (task_io_service.ipp:268)
+==13421==    by 0x41877A: asio::detail::epoll_reactor::start_op(int, int, asio::detail::epoll_reactor::descriptor_state*&, asio::detail::reactor_op*, bool, bool) (epoll_reactor.ipp:233)
+==13421==    by 0x414BB9: asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) (reactive_socket_service_base.ipp:213)
+==13421==    by 0x40C445: void asio::detail::reactive_socket_service_base::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service_base::base_implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&) (reactive_socket_service_base.hpp:286)
+==13421==    by 0x40D3AC: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::stream_socket_service<asio::ip::tcp>::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (stream_socket_service.hpp:356)
+==13421==    by 0x40E96F: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::mutable_buffers_1 const&, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (basic_stream_socket.hpp:568)
+==13421==    by 0x4128C4: tcp_con::start() (server.cpp:256)
+==13421==    by 0x412ECB: tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) (server.cpp:337)
+==13421==    by 0x404FF4: boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>::operator()(tcp_server*, boost::shared_ptr<tcp_con>, std::error_code const&) const (mem_fn_template.hpp:280)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #4: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416395: asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) (task_io_service.ipp:268)
+==13421==    by 0x41877A: asio::detail::epoll_reactor::start_op(int, int, asio::detail::epoll_reactor::descriptor_state*&, asio::detail::reactor_op*, bool, bool) (epoll_reactor.ipp:233)
+==13421==    by 0x414BB9: asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) (reactive_socket_service_base.ipp:213)
+==13421==    by 0x40C445: void asio::detail::reactive_socket_service_base::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service_base::base_implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&) (reactive_socket_service_base.hpp:286)
+==13421==    by 0x40D3AC: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::stream_socket_service<asio::ip::tcp>::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (stream_socket_service.hpp:356)
+==13421==    by 0x40E96F: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::mutable_buffers_1 const&, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (basic_stream_socket.hpp:568)
+==13421==    by 0x4128C4: tcp_con::start() (server.cpp:256)
+==13421==    by 0x412ECB: tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) (server.cpp:337)
+==13421==    by 0x404FF4: boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>::operator()(tcp_server*, boost::shared_ptr<tcp_con>, std::error_code const&) const (mem_fn_template.hpp:280)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #3: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x4112F1: void asio::detail::posix_event::unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:70)
+==13421==    by 0x4165D4: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:345)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x572E181: start_thread (pthread_create.c:312)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #2: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x4112F1: void asio::detail::posix_event::unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:70)
+==13421==    by 0x4165D4: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:345)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x572E181: start_thread (pthread_create.c:312)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #7: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x416395: asio::detail::task_io_service::post_immediate_completion(asio::detail::task_io_service_operation*, bool) (task_io_service.ipp:268)
+==13421==    by 0x41877A: asio::detail::epoll_reactor::start_op(int, int, asio::detail::epoll_reactor::descriptor_state*&, asio::detail::reactor_op*, bool, bool) (epoll_reactor.ipp:233)
+==13421==    by 0x414BB9: asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) (reactive_socket_service_base.ipp:213)
+==13421==    by 0x40C445: void asio::detail::reactive_socket_service_base::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service_base::base_implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&) (reactive_socket_service_base.hpp:286)
+==13421==    by 0x40D3AC: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::stream_socket_service<asio::ip::tcp>::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::mutable_buffers_1 const&, int, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (stream_socket_service.hpp:356)
+==13421==    by 0x40E96F: asio::async_result<asio::handler_type<boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >, void (std::error_code, unsigned long)>::type>::type asio::basic_stream_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::async_receive<asio::mutable_buffers_1, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > > >(asio::mutable_buffers_1 const&, boost::_bi::bind_t<void, boost::_mfi::mf2<void, tcp_con, std::error_code const&, unsigned long>, boost::_bi::list3<boost::_bi::value<boost::shared_ptr<tcp_con> >, boost::arg<1>, boost::arg<2> > >&&) (basic_stream_socket.hpp:568)
+==13421==    by 0x4128C4: tcp_con::start() (server.cpp:256)
+==13421==    by 0x412ECB: tcp_server::handle_accept(boost::shared_ptr<tcp_con>, std::error_code const&) (server.cpp:337)
+==13421==    by 0x404FF4: boost::_mfi::mf2<void, tcp_server, boost::shared_ptr<tcp_con>, std::error_code const&>::operator()(tcp_server*, boost::shared_ptr<tcp_con>, std::error_code const&) const (mem_fn_template.hpp:280)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #1: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x4112F1: void asio::detail::posix_event::unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:70)
+==13421==    by 0x4165D4: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:345)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x410360: run_server(int, int, int, int, int) (server.cpp:466)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #7: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x4112F1: void asio::detail::posix_event::unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:70)
+==13421==    by 0x4165D4: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:345)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x572E181: start_thread (pthread_create.c:312)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Possible data race during write of size 4 at 0x6C40F10 by thread #3
+==13421== Locks held: none
+==13421==    at 0x417EA2: asio::detail::epoll_reactor::descriptor_state::set_ready_events(unsigned int) (epoll_reactor.hpp:64)
+==13421==    by 0x41549A: asio::detail::epoll_reactor::run(bool, asio::detail::op_queue<asio::detail::task_io_service_operation>&) (epoll_reactor.ipp:429)
+==13421==    by 0x416621: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:355)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x572E181: start_thread (pthread_create.c:312)
+==13421==  Address 0x6c40f10 is 16 bytes inside a block of size 152 alloc'd
+==13421==    at 0x4C2C500: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x40CC33: asio::detail::epoll_reactor::descriptor_state* asio::detail::object_pool_access::create<asio::detail::epoll_reactor::descriptor_state>() (object_pool.hpp:34)
+==13421==    by 0x410EC6: asio::detail::object_pool<asio::detail::epoll_reactor::descriptor_state>::alloc() (object_pool.hpp:88)
+==13421==    by 0x415739: asio::detail::epoll_reactor::allocate_descriptor_state() (epoll_reactor.ipp:511)
+==13421==    by 0x41854A: asio::detail::epoll_reactor::register_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&) (epoll_reactor.ipp:150)
+==13421==    by 0x414A3A: asio::detail::reactive_socket_service_base::do_assign(asio::detail::reactive_socket_service_base::base_implementation_type&, int, int const&, std::error_code&) (reactive_socket_service_base.ipp:182)
+==13421==    by 0x404714: asio::detail::reactive_socket_service<asio::ip::tcp>::assign(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::ip::tcp const&, int const&, std::error_code&) (reactive_socket_service.hpp:128)
+==13421==    by 0x4043C9: asio::stream_socket_service<asio::ip::tcp>::assign(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::ip::tcp const&, int const&, std::error_code&) (stream_socket_service.hpp:156)
+==13421==    by 0x403DCD: asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::assign(asio::ip::tcp const&, int const&, std::error_code&) (basic_socket.hpp:331)
+==13421==    by 0x406832: asio::detail::reactive_socket_accept_op_base<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp>::do_perform(asio::detail::reactor_op*) (reactive_socket_accept_op.hpp:65)
+==13421==    by 0x417A28: asio::detail::reactor_op::perform() (reactor_op.hpp:39)
+==13421==    by 0x415AFF: asio::detail::epoll_reactor::descriptor_state::perform_io(unsigned int) (epoll_reactor.ipp:622)
+==13421==  Block was alloc'd by thread #7
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Possible data race during write of size 8 at 0x6C40F00 by thread #3
+==13421== Locks held: none
+==13421==    at 0x40CBBB: void asio::detail::op_queue_access::next<asio::detail::task_io_service_operation, asio::detail::task_io_service_operation>(asio::detail::task_io_service_operation*&, asio::detail::task_io_service_operation*) (op_queue.hpp:40)
+==13421==    by 0x410E36: asio::detail::op_queue<asio::detail::task_io_service_operation>::push(asio::detail::task_io_service_operation*) (op_queue.hpp:106)
+==13421==    by 0x4154B0: asio::detail::epoll_reactor::run(bool, asio::detail::op_queue<asio::detail::task_io_service_operation>&) (epoll_reactor.ipp:430)
+==13421==    by 0x416621: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:355)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==  Address 0x6c40f00 is 0 bytes inside a block of size 152 alloc'd
+==13421==    at 0x4C2C500: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x40CC33: asio::detail::epoll_reactor::descriptor_state* asio::detail::object_pool_access::create<asio::detail::epoll_reactor::descriptor_state>() (object_pool.hpp:34)
+==13421==    by 0x410EC6: asio::detail::object_pool<asio::detail::epoll_reactor::descriptor_state>::alloc() (object_pool.hpp:88)
+==13421==    by 0x415739: asio::detail::epoll_reactor::allocate_descriptor_state() (epoll_reactor.ipp:511)
+==13421==    by 0x41854A: asio::detail::epoll_reactor::register_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&) (epoll_reactor.ipp:150)
+==13421==    by 0x414A3A: asio::detail::reactive_socket_service_base::do_assign(asio::detail::reactive_socket_service_base::base_implementation_type&, int, int const&, std::error_code&) (reactive_socket_service_base.ipp:182)
+==13421==    by 0x404714: asio::detail::reactive_socket_service<asio::ip::tcp>::assign(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::ip::tcp const&, int const&, std::error_code&) (reactive_socket_service.hpp:128)
+==13421==    by 0x4043C9: asio::stream_socket_service<asio::ip::tcp>::assign(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::ip::tcp const&, int const&, std::error_code&) (stream_socket_service.hpp:156)
+==13421==    by 0x403DCD: asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::assign(asio::ip::tcp const&, int const&, std::error_code&) (basic_socket.hpp:331)
+==13421==    by 0x406832: asio::detail::reactive_socket_accept_op_base<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp>::do_perform(asio::detail::reactor_op*) (reactive_socket_accept_op.hpp:65)
+==13421==    by 0x417A28: asio::detail::reactor_op::perform() (reactor_op.hpp:39)
+==13421==    by 0x415AFF: asio::detail::epoll_reactor::descriptor_state::perform_io(unsigned int) (epoll_reactor.ipp:622)
+==13421==  Block was alloc'd by thread #7
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421==  Lock at 0x5C5BD90 was first observed
+==13421==    at 0x4C321AA: pthread_mutex_init (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41744D: asio::detail::posix_mutex::posix_mutex() (posix_mutex.ipp:33)
+==13421==    by 0x415E4C: asio::detail::task_io_service::task_io_service(asio::io_service&, unsigned long) (task_io_service.ipp:97)
+==13421==    by 0x411538: asio::detail::service_registry::service_registry<asio::detail::task_io_service, unsigned long>(asio::io_service&, asio::detail::task_io_service*, unsigned long) (service_registry.hpp:27)
+==13421==    by 0x41687A: asio::io_service::io_service() (io_service.ipp:38)
+==13421==    by 0x410286: run_server(int, int, int, int, int) (server.cpp:452)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421==  Address 0x5c5bd90 is 48 bytes inside a block of size 216 alloc'd
+==13421==    at 0x4C2C500: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x411522: asio::detail::service_registry::service_registry<asio::detail::task_io_service, unsigned long>(asio::io_service&, asio::detail::task_io_service*, unsigned long) (service_registry.hpp:27)
+==13421==    by 0x41687A: asio::io_service::io_service() (io_service.ipp:38)
+==13421==    by 0x410286: run_server(int, int, int, int, int) (server.cpp:452)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421==  Block was alloc'd by thread #1
+==13421== 
+==13421== Possible data race during write of size 8 at 0x6C40F00 by thread #3
+==13421== Locks held: 1, at address 0x5C5BD90
+==13421==    at 0x40CBBB: void asio::detail::op_queue_access::next<asio::detail::task_io_service_operation, asio::detail::task_io_service_operation>(asio::detail::task_io_service_operation*&, asio::detail::task_io_service_operation*) (op_queue.hpp:40)
+==13421==    by 0x410E5A: asio::detail::op_queue<asio::detail::task_io_service_operation>::push(asio::detail::task_io_service_operation*) (op_queue.hpp:109)
+==13421==    by 0x415CD7: asio::detail::task_io_service::task_cleanup::~task_cleanup() (task_io_service.ipp:50)
+==13421==    by 0x41662D: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:349)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==  Address 0x6c40f00 is 0 bytes inside a block of size 152 alloc'd
+==13421==    at 0x4C2C500: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x40CC33: asio::detail::epoll_reactor::descriptor_state* asio::detail::object_pool_access::create<asio::detail::epoll_reactor::descriptor_state>() (object_pool.hpp:34)
+==13421==    by 0x410EC6: asio::detail::object_pool<asio::detail::epoll_reactor::descriptor_state>::alloc() (object_pool.hpp:88)
+==13421==    by 0x415739: asio::detail::epoll_reactor::allocate_descriptor_state() (epoll_reactor.ipp:511)
+==13421==    by 0x41854A: asio::detail::epoll_reactor::register_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&) (epoll_reactor.ipp:150)
+==13421==    by 0x414A3A: asio::detail::reactive_socket_service_base::do_assign(asio::detail::reactive_socket_service_base::base_implementation_type&, int, int const&, std::error_code&) (reactive_socket_service_base.ipp:182)
+==13421==    by 0x404714: asio::detail::reactive_socket_service<asio::ip::tcp>::assign(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::ip::tcp const&, int const&, std::error_code&) (reactive_socket_service.hpp:128)
+==13421==    by 0x4043C9: asio::stream_socket_service<asio::ip::tcp>::assign(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::ip::tcp const&, int const&, std::error_code&) (stream_socket_service.hpp:156)
+==13421==    by 0x403DCD: asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::assign(asio::ip::tcp const&, int const&, std::error_code&) (basic_socket.hpp:331)
+==13421==    by 0x406832: asio::detail::reactive_socket_accept_op_base<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp>::do_perform(asio::detail::reactor_op*) (reactive_socket_accept_op.hpp:65)
+==13421==    by 0x417A28: asio::detail::reactor_op::perform() (reactor_op.hpp:39)
+==13421==    by 0x415AFF: asio::detail::epoll_reactor::descriptor_state::perform_io(unsigned int) (epoll_reactor.ipp:622)
+==13421==  Block was alloc'd by thread #7
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421==  Lock at 0x5C5BD90 was first observed
+==13421==    at 0x4C321AA: pthread_mutex_init (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41744D: asio::detail::posix_mutex::posix_mutex() (posix_mutex.ipp:33)
+==13421==    by 0x415E4C: asio::detail::task_io_service::task_io_service(asio::io_service&, unsigned long) (task_io_service.ipp:97)
+==13421==    by 0x411538: asio::detail::service_registry::service_registry<asio::detail::task_io_service, unsigned long>(asio::io_service&, asio::detail::task_io_service*, unsigned long) (service_registry.hpp:27)
+==13421==    by 0x41687A: asio::io_service::io_service() (io_service.ipp:38)
+==13421==    by 0x410286: run_server(int, int, int, int, int) (server.cpp:452)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421==  Address 0x5c5bd90 is 48 bytes inside a block of size 216 alloc'd
+==13421==    at 0x4C2C500: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x411522: asio::detail::service_registry::service_registry<asio::detail::task_io_service, unsigned long>(asio::io_service&, asio::detail::task_io_service*, unsigned long) (service_registry.hpp:27)
+==13421==    by 0x41687A: asio::io_service::io_service() (io_service.ipp:38)
+==13421==    by 0x410286: run_server(int, int, int, int, int) (server.cpp:452)
+==13421==    by 0x412247: main (server.cpp:71)
+==13421==  Block was alloc'd by thread #1
+==13421== 
+==13421== Possible data race during read of size 4 at 0x6C40F10 by thread #3
+==13421== Locks held: 1, at address 0x5C5BD90
+==13421==    at 0x416637: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:359)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x572E181: start_thread (pthread_create.c:312)
+==13421==    by 0x4F3747C: clone (clone.S:111)
+==13421==  Address 0x6c40f10 is 16 bytes inside a block of size 152 alloc'd
+==13421==    at 0x4C2C500: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x40CC33: asio::detail::epoll_reactor::descriptor_state* asio::detail::object_pool_access::create<asio::detail::epoll_reactor::descriptor_state>() (object_pool.hpp:34)
+==13421==    by 0x410EC6: asio::detail::object_pool<asio::detail::epoll_reactor::descriptor_state>::alloc() (object_pool.hpp:88)
+==13421==    by 0x415739: asio::detail::epoll_reactor::allocate_descriptor_state() (epoll_reactor.ipp:511)
+==13421==    by 0x41854A: asio::detail::epoll_reactor::register_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&) (epoll_reactor.ipp:150)
+==13421==    by 0x414A3A: asio::detail::reactive_socket_service_base::do_assign(asio::detail::reactive_socket_service_base::base_implementation_type&, int, int const&, std::error_code&) (reactive_socket_service_base.ipp:182)
+==13421==    by 0x404714: asio::detail::reactive_socket_service<asio::ip::tcp>::assign(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::ip::tcp const&, int const&, std::error_code&) (reactive_socket_service.hpp:128)
+==13421==    by 0x4043C9: asio::stream_socket_service<asio::ip::tcp>::assign(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::ip::tcp const&, int const&, std::error_code&) (stream_socket_service.hpp:156)
+==13421==    by 0x403DCD: asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::assign(asio::ip::tcp const&, int const&, std::error_code&) (basic_socket.hpp:331)
+==13421==    by 0x406832: asio::detail::reactive_socket_accept_op_base<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp>::do_perform(asio::detail::reactor_op*) (reactive_socket_accept_op.hpp:65)
+==13421==    by 0x417A28: asio::detail::reactor_op::perform() (reactor_op.hpp:39)
+==13421==    by 0x415AFF: asio::detail::epoll_reactor::descriptor_state::perform_io(unsigned int) (epoll_reactor.ipp:622)
+==13421==  Block was alloc'd by thread #7
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Possible data race during read of size 8 at 0x6C40F08 by thread #3
+==13421== Locks held: none
+==13421==    at 0x4178B0: asio::detail::task_io_service_operation::complete(asio::detail::task_io_service&, std::error_code const&, unsigned long) (task_io_service_operation.hpp:37)
+==13421==    by 0x4166A5: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:371)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x572E181: start_thread (pthread_create.c:312)
+==13421==    by 0x4F3747C: clone (clone.S:111)
+==13421==  Address 0x6c40f08 is 8 bytes inside a block of size 152 alloc'd
+==13421==    at 0x4C2C500: operator new(unsigned long) (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x40CC33: asio::detail::epoll_reactor::descriptor_state* asio::detail::object_pool_access::create<asio::detail::epoll_reactor::descriptor_state>() (object_pool.hpp:34)
+==13421==    by 0x410EC6: asio::detail::object_pool<asio::detail::epoll_reactor::descriptor_state>::alloc() (object_pool.hpp:88)
+==13421==    by 0x415739: asio::detail::epoll_reactor::allocate_descriptor_state() (epoll_reactor.ipp:511)
+==13421==    by 0x41854A: asio::detail::epoll_reactor::register_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&) (epoll_reactor.ipp:150)
+==13421==    by 0x414A3A: asio::detail::reactive_socket_service_base::do_assign(asio::detail::reactive_socket_service_base::base_implementation_type&, int, int const&, std::error_code&) (reactive_socket_service_base.ipp:182)
+==13421==    by 0x404714: asio::detail::reactive_socket_service<asio::ip::tcp>::assign(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::ip::tcp const&, int const&, std::error_code&) (reactive_socket_service.hpp:128)
+==13421==    by 0x4043C9: asio::stream_socket_service<asio::ip::tcp>::assign(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, asio::ip::tcp const&, int const&, std::error_code&) (stream_socket_service.hpp:156)
+==13421==    by 0x403DCD: asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >::assign(asio::ip::tcp const&, int const&, std::error_code&) (basic_socket.hpp:331)
+==13421==    by 0x406832: asio::detail::reactive_socket_accept_op_base<asio::basic_socket<asio::ip::tcp, asio::stream_socket_service<asio::ip::tcp> >, asio::ip::tcp>::do_perform(asio::detail::reactor_op*) (reactive_socket_accept_op.hpp:65)
+==13421==    by 0x417A28: asio::detail::reactor_op::perform() (reactor_op.hpp:39)
+==13421==    by 0x415AFF: asio::detail::epoll_reactor::descriptor_state::perform_io(unsigned int) (epoll_reactor.ipp:622)
+==13421==  Block was alloc'd by thread #7
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #8: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x4112F1: void asio::detail::posix_event::unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:70)
+==13421==    by 0x4165D4: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:345)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x572E181: start_thread (pthread_create.c:312)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #6: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x4112F1: void asio::detail::posix_event::unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:70)
+==13421==    by 0x4165D4: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:345)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x572E181: start_thread (pthread_create.c:312)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #4: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x4112F1: void asio::detail::posix_event::unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:70)
+==13421==    by 0x4165D4: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:345)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x572E181: start_thread (pthread_create.c:312)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #5: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x4112F1: void asio::detail::posix_event::unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:70)
+==13421==    by 0x4165D4: asio::detail::task_io_service::do_run_one(asio::detail::scoped_lock<asio::detail::posix_mutex>&, asio::detail::task_io_service_thread_info&, std::error_code const&) (task_io_service.ipp:345)
+==13421==    by 0x4161D7: asio::detail::task_io_service::run(std::error_code&) (task_io_service.ipp:148)
+==13421==    by 0x41693C: asio::io_service::run() (io_service.ipp:58)
+==13421==    by 0x4134D0: run_loop(asio::io_service*) (server.cpp:415)
+==13421==    by 0x403D11: void std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::_M_invoke<0ul>(std::_Index_tuple<0ul>) (functional:1531)
+==13421==    by 0x403AC6: std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)>::operator()() (functional:1520)
+==13421==    by 0x4037AF: std::thread::_Impl<std::_Bind_simple<void (*(asio::io_service*))(asio::io_service*)> >::_M_run() (thread:115)
+==13421==    by 0x528F38F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13421==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x572E181: start_thread (pthread_create.c:312)
+==13421== 
+==13421== ----------------------------------------------------------------
+==13421== 
+==13421== Thread #2: pthread_cond_{signal,broadcast}: dubious: associated lock is not held by any thread
+==13421==    at 0x4C2F0D7: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13421==    by 0x41144F: bool asio::detail::posix_event::maybe_unlock_and_signal_one<asio::detail::scoped_lock<asio::detail::posix_mutex> >(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (posix_event.hpp:82)
+==13421==    by 0x4167CC: asio::detail::task_io_service::wake_one_thread_and_unlock(asio::detail::scoped_lock<asio::detail::posix_mutex>&) (task_io_service.ipp:456)
+==13421==    by 0x41646D: asio::detail::task_io_service::post_deferred_completions(asio::detail::op_queue<asio::detail::task_io_service_operation>&) (task_io_service.ipp:307)
+==13421==    by 0x4152D1: asio::detail::epoll_reactor::deregister_descriptor(int, asio::detail::epoll_reactor::descriptor_state*&, bool) (epoll_reactor.ipp:340)
+==13421==    by 0x4147A3: asio::detail::reactive_socket_service_base::close(asio::detail::reactive_socket_service_base::base_implementation_type&, std::error_code&) (reactive_socket_service_base.ipp:103)
+==13421==    by 0x40B7B9: asio::socket_acceptor_service<asio::ip::tcp>::close(asio::detail::reactive_socket_service<asio::ip::tcp>::implementation_type&, std::error_code&) (socket_acceptor_service.hpp:186)
+==13421==    by 0x40FD98: asio::basic_socket_acceptor<asio::ip::tcp, asio::socket_acceptor_service<asio::ip::tcp> >::close() (basic_socket_acceptor.hpp:465)
+==13421==    by 0x4101D2: disconnect(port_servs*) (server.cpp:444)
+==13421==    by 0x4092EC: void post<tcp_con>(tcp_con&, char*, char*) (server.cpp:168)
+==13421==    by 0x40D7F9: void act_on_message<tcp_con>(tcp_con&, char*, unsigned long) (server.cpp:222)
+==13421==    by 0x40EBED: void process_message<tcp_con>(tcp_con&, char*, unsigned long) (server.cpp:232)
+==13421== 
+==13421== 
+==13421== For counts of detected and suppressed errors, rerun with: -v
+==13421== Use --history-level=approx or =none to gain increased speed, at
+==13421== the cost of reduced accuracy of conflicting-access information
+==13421== ERROR SUMMARY: 2690 errors from 30 contexts (suppressed: 1057419 from 398)

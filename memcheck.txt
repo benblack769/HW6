@@ -1,0 +1,37 @@
+==13026== Memcheck, a memory error detector
+==13026== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
+==13026== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==13026== Command: ./server
+==13026== 
+==13026== Thread 4:
+==13026== Syscall param sendmsg(msg.msg_iov[0]) points to uninitialised byte(s)
+==13026==    at 0x4F325BD: ??? (syscall-template.S:81)
+==13026==    by 0x40C068: asio::detail::reactive_socket_sendto_op_base<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp> >::do_perform(asio::detail::reactor_op*) (in /home/benblack/Documents/Systems/HW6/server)
+==13026==    by 0x408DD3: asio::detail::reactive_socket_service_base::start_op(asio::detail::reactive_socket_service_base::base_implementation_type&, int, asio::detail::reactor_op*, bool, bool, bool) (in /home/benblack/Documents/Systems/HW6/server)
+==13026==    by 0x40B1FA: void get<udp_server>(udp_server&, char*) (in /home/benblack/Documents/Systems/HW6/server)
+==13026==    by 0x40A11A: udp_server::handle_receive(std::shared_ptr<std::array<char, 65504ul> >, std::error_code const&, unsigned long) (in /home/benblack/Documents/Systems/HW6/server)
+==13026==    by 0x4079EC: asio::detail::reactive_socket_recvfrom_op<asio::mutable_buffers_1, asio::ip::basic_endpoint<asio::ip::udp>, boost::_bi::bind_t<void, boost::_mfi::mf3<void, udp_server, std::shared_ptr<std::array<char, 65504ul> >, std::error_code const&, unsigned long>, boost::_bi::list4<boost::_bi::value<udp_server*>, boost::_bi::value<std::shared_ptr<std::array<char, 65504ul> > >, boost::arg<1>, boost::arg<2> > > >::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) (in /home/benblack/Documents/Systems/HW6/server)
+==13026==    by 0x408584: asio::detail::epoll_reactor::descriptor_state::do_complete(asio::detail::task_io_service*, asio::detail::task_io_service_operation*, std::error_code const&, unsigned long) (in /home/benblack/Documents/Systems/HW6/server)
+==13026==    by 0x40E0FC: run_loop(asio::io_service*) (in /home/benblack/Documents/Systems/HW6/server)
+==13026==    by 0x528938F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+==13026==    by 0x5728181: start_thread (pthread_create.c:312)
+==13026==    by 0x4F3147C: clone (clone.S:111)
+==13026==  Address 0x9035c25 is on thread 4's stack
+==13026==  in frame #3, created by void get<udp_server>(udp_server&, char*) (???)
+==13026== 
+==13026== 
+==13026== HEAP SUMMARY:
+==13026==     in use at exit: 72,704 bytes in 1 blocks
+==13026==   total heap usage: 211,738 allocs, 211,737 frees, 2,039,988,676 bytes allocated
+==13026== 
+==13026== LEAK SUMMARY:
+==13026==    definitely lost: 0 bytes in 0 blocks
+==13026==    indirectly lost: 0 bytes in 0 blocks
+==13026==      possibly lost: 0 bytes in 0 blocks
+==13026==    still reachable: 72,704 bytes in 1 blocks
+==13026==         suppressed: 0 bytes in 0 blocks
+==13026== Rerun with --leak-check=full to see details of leaked memory
+==13026== 
+==13026== For counts of detected and suppressed errors, rerun with: -v
+==13026== Use --track-origins=yes to see where uninitialised values come from
+==13026== ERROR SUMMARY: 18890 errors from 1 contexts (suppressed: 0 from 0)

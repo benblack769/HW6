@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <mutex>
 #include <stdio.h>
 #include "cache.h"
 #include "helper.h"
@@ -39,7 +38,6 @@ struct cache_obj{
     size_t num_elements;
     hash_func h_fn;
     policy_t evic_policy;
-    std::mutex mut;
 };
 const size_t default_table_size = 2503;//medium size prime number
 
@@ -137,7 +135,7 @@ void make_room_for(cache_t cache,uint32_t val_size){
  * while it deletes things as requested by LRU. This way, the position of the new link
  * is maintained by extract_link, and does not need to be recomputed.
  */
-void cache_set_impl(cache_t cache, key_type key, val_type val, uint32_t val_size){
+void cache_set(cache_t cache, key_type key, val_type val, uint32_t val_size){
     link_t * init_link = querry_hash(cache,key);
     if(*init_link != NULL){
         //if the item is already in the list, then free the associated memory (but not the object itself)
@@ -160,12 +158,7 @@ void cache_set_impl(cache_t cache, key_type key, val_type val, uint32_t val_size
         free(mylink);
     }
 }
-void cache_set(cache_t cache, key_type key, val_type val, uint32_t val_size){
-    cache->mut.lock();
-    cache_set_impl(cache,key,val,val_size);
-    cache->mut.unlock();
-}
-val_type cache_get_impl(cache_t cache, key_type key, uint32_t *val_size){
+val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
     link_t hash_l = *querry_hash(cache,key);
     if(hash_l != NULL){
         //if the item is in the cache, tell the policy that fact, and return the value
@@ -178,12 +171,6 @@ val_type cache_get_impl(cache_t cache, key_type key, uint32_t *val_size){
         *val_size = 0;
         return NULL;
     }
-}
-val_type cache_get(cache_t cache, key_type key, uint32_t *val_size){
-    cache->mut.lock();
-    val_type val = cache_get_impl(cache,key,val_size);
-    cache->mut.unlock();
-    return val;
 }
 void release_link_data(cache_t cache,link_t obj){
     if(obj != NULL){
@@ -214,13 +201,8 @@ void del_link(cache_t cache,link_t obj){
         free(obj);
     }
 }
-void cache_del_impl(cache_t cache, key_type key){
-    del_link(cache,*querry_hash(cache,key));
-}
 void cache_delete(cache_t cache, key_type key){
-    cache->mut.lock();
-    cache_del_impl(cache,key);
-    cache->mut.unlock();
+    del_link(cache,*querry_hash(cache,key));
 }
 uint64_t cache_space_used(cache_t cache){
     return cache->mem_used;//should be thread safe (also is not called in networked cache except for in POST destroy, so it should be fine)

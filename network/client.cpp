@@ -20,17 +20,15 @@ public:
     tcp_connection(asio::io_service & service,ip::tcp::resolver::iterator & resit):
         socket(service){
 
-        bool worked = false;
+        //hackish fix to a weird bind error
+        asio::error_code error;
         do{
-        try{
-            asio::connect(socket, resit);
-            worked = true;
+            asio::connect(socket, resit, error);
+            if(error && error.value() != linux_specifc__address_not_available__error){
+                throw asio::system_error(error);
+            }
         }
-        catch(...){
-            worked = false;
-        }
-        }
-        while(!worked);
+        while(error);
     }
 
     char * get_message(bufarr & recbuf){

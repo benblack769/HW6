@@ -10,6 +10,8 @@
 using namespace asio;
 using namespace asio::ip;
 
+const int linux_specifc__address_not_available__error = 99;
+
 constexpr size_t bufsize = (1 << 16) - 32;
 char errcstr[] = "ERROR";
 std::string errstr = "ERROR";

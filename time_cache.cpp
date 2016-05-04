@@ -21,7 +21,7 @@ uint64_t get_time_ns();
 discrete_distribution<uint64_t> init_dist();
 
 //variables to keep HW8 comparable and consistent
-constexpr bool USE_CONST_SIZES = true;
+constexpr bool USE_CONST_SIZES = false;
 constexpr size_t CONST_KEY_SIZE = 8;
 constexpr size_t CONST_VALUE_SIZE = 16;
 
