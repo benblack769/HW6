@@ -9,3 +9,4 @@ client
 *.data*
 *.out
 client_time
+client_test

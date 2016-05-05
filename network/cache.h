@@ -11,7 +11,9 @@ extern std::string tcp_port;
 extern std::string udp_port;
 // For a given key string, return a pseudo-random integer:
 typedef uint64_t (*hash_func)(key_type key);
-//extern "C"{
+#ifdef TEST
+extern "C"{
+#endif
 // Create a new cache object with a given maximum memory capacity.
 cache_t create_cache(uint64_t maxmem, hash_func);
 //for connecting to a cache that one does not create
@@ -39,4 +41,6 @@ void destroy_cache(cache_t cache);
 //for destroying a cache that one does not create
 void end_connection(cache_t cache);
 void call_head_no_return(cache_t cache);
-//};
+#ifdef TEST
+};
+#endif
