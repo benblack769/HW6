@@ -29,7 +29,7 @@ TIMOUT_VAL = 0x91
 class TestRes:
     def __init__(self,exec_name,testnum):
         p = subprocess.Popen(["./server"])
-        time.sleep(0.01)
+        time.sleep(0.1)
         pobj = subprocess.Popen([exec_name,str(testnum)],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         try:
             out, err = pobj.communicate(timeout=5.0)

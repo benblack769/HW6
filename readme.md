@@ -8,10 +8,12 @@ On the cache side, I locked the cache top to bottom and got substantially better
 
 Every performance run was also a test for basic correctness, measuring hit rate and whether the value returned is what I expected. On occasion, the following buggy behavior occurred.
 
-* Crashes at startup with segfault
-* Hit rate drops to 0.5% on some runs (I threw out all of this data).
+* Occasionally crashes at startup with segfault
+* Occasionally, hit rate drops to 0.5% on some runs (I threw out all of this data).
 
-The last one definitely did not happen before I made the cache multi-threaded, so I am clearly not keeping something safe I really should.  I am not sure about how safe the ASIO sockets, acceptors and other objects are (io_service is definitely safe), so I may have made a bad assumption there. Running valgrind with the helgrind tool spits out many errors (a record of these errors can be can be found in helgrind.txt). All of the errors are deep within the library, meaning I probably am not protecting the objects in my udp and tcp server properly. I tried to look through examples in the documentation to find correct usage, but failed to fix the errors.
+The first error seems to occur whether or not the cache is multhreaded or single threaded. This is especially weird because valgrind memcheck found no errors, either single or multhreaded.
+
+I do not recall the second one happening before I made the cache multi-threaded, so I am clearly not keeping something safe I really should.  I am not sure about how safe the ASIO sockets, acceptors and other objects are (io_service is definitely safe), so I may have made a bad assumption there. Running valgrind with the helgrind tool spits out many errors (a record of these errors can be can be found in helgrind.txt). All of the errors are deep within the library, meaning I probably am not protecting the objects in my udp and tcp server properly. I tried to look through examples in the documentation to find correct usage, but failed to fix the errors.
 
 ## Optimization: HW8
 
